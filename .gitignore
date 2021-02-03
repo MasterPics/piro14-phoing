@@ -260,4 +260,8 @@ pip-selfcheck.json
 !.vscode/extensions.json
 *.code-workspace
 
+
+### SECRET KEY ###
+secrets.json
+
 # End of https://www.toptal.com/developers/gitignore/api/python,venv,vscode,django,macos
