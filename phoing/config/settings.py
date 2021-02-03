@@ -25,6 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # secrets.json의 경로
+ROOT_DIR = os.path.dirname(BASE_DIR)
 SECRETS_PATH = os.path.join(ROOT_DIR, 'secrets.json')
 # json파일을 파이썬 객체로 변환
 secrets = json.loads(open(SECRETS_PATH).read())
