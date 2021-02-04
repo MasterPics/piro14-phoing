@@ -66,4 +66,4 @@ def profile_create(request):
     else:
         signup_form = ProfileForm()
 
-    return render(request, 'myApp/profile_create.html', {'form': signup_form})
+    return render(request, 'myApp/profile/profile_create.html', {'form': signup_form})
