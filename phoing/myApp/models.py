@@ -11,7 +11,7 @@ class User(AbstractUser):
         ('other use', 'other use'),
     )
     category = models.CharField(max_length=20, choices=CATEGORY)
-    image = models.ImageField(upload_to=uuid_name_upload_to)
+    image = models.ImageField(upload_to=uuid_name_upload_to, blank=True)
 
 
 class Post(models.Model):
