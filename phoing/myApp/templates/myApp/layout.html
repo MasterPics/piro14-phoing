@@ -1,0 +1,48 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHOING</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="https://kit.fontawesome.com/0b02921f0e.js" crossorigin="anonymous"></script>
+    <script src="main.js" defer></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
+</head>
+<body>
+    <head>
+        <nav id="nav">
+            <div class="nav__logo">
+                <a href="#"><i class="fas fa-camera"></i> PHOING</a>
+            </div>
+            <ul class="nav__menu">
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Portfolio</a></li>
+                <li><a href="#">Reference</a></li>
+                <li><a href="#">Place</a></li>
+                <li><a href="#">Collaboration</a></li>
+            </ul>
+            <ul class="nav__profile">
+                <li><a href="#">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+            </ul>
+            <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>            
+        </nav>
+    </head>
+   <section class="container">
+    {% block content %}
+    {% endblock %}
+   </section>
+    <footer id="footer">
+            <ul class="footer__left">
+                <li class="footer__logo">PHOING</li>
+                <li>Copyright PHOING All right reserved</li>
+                <li><a href="#">개인정보처리방침</a></li>
+            </ul>
+            <ul class="footer__right">
+                <li><i class="fab fa-instagram"></i></li>
+                <li><i class="fab fa-facebook-square"></i></li>
+                <li><i class="fab fa-youtube-square"></i></li>
+            </ul>
+    </footer>
+</body>
+</html>
