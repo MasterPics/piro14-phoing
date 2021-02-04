@@ -1,0 +1,19 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/profile_delete.css' %}">
+{% endblock stylesheet %}
+
+{% block content %}
+<div class="container">
+    <div class="profile_delete">
+        <h1>User delete</h1><br>
+        <form action="{% url 'myApp:profile_delete' user.pk %}" method="POST">
+            {% csrf_token %}
+            <p>정말로 탈퇴하시겠습니까?</p>
+            <input class="delete_btn" type="submit" value="탈퇴"/>
+        </form>
+    </div>
+</div>
+{% endblock content%}
