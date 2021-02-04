@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import User, Portfolio, Post
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http.response import HttpResponse
+from .forms import *
 
 
 def main_list(request):
@@ -52,3 +54,20 @@ def profile_update(request, profile_id):
         form = ProfileForm(instance=profile)
         ctx = {'form': form}
         return render(request, 'myApp/profile_update.html', ctx)
+
+
+def profile_create(request):
+    # if request.user.is_authenticated:
+    #     return redirect('myApp:profile_detail')
+        
+    if request.method == 'POST':
+        signup_form = ProfileForm(request.POST, request.FILES)
+        if signup_form.is_valid():
+            user = signup_form.save()
+            user.image = request.FILES['image']
+            return redirect('myApp:profile_detail', user.id)
+    
+    else:
+        signup_form = ProfileForm()
+
+    return render(request, 'myApp/profile_create.html', {'form':signup_form})
