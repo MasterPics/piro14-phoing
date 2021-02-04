@@ -13,7 +13,7 @@ class User(AbstractUser):
         ('other use', 'other use'),
     )
     category = models.CharField(max_length=20, choices=CATEGORY)
-    image = models.ImageField(upload_to=uuid_name_upload_to, blank=True)
+    image = models.ImageField(upload_to=uuid_name_upload_to)
 
 
 class Post(models.Model):
@@ -41,7 +41,7 @@ class Contact(Post):  # also Collaborate
 
 class Portfolio(Post):
     like_users = models.ManyToManyField(to=User, related_name='like_users')
-    view_count = models.PositiveIntegerField()
+    view_count = models.PositiveIntegerField(default=0)
 
 
 class Comment(models.Model):
