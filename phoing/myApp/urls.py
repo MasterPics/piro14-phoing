@@ -1,4 +1,5 @@
 from django.urls import path
+from . import views
 
 app_name = 'myApp'
 
@@ -9,6 +10,8 @@ urlpatterns = [
          view=views.profile_delete, name='profile_delete'),
     path('profile/<int:pk>/portfolio',
          view=views.profile_portfolio, name='profile_portfolio'),
-    path('<int:profile_id>/update/',
+    path('profile/<int:profile_id>/update/',
          view=views.profile_update, name='profile_update'),
+    path('profile/create/', view=views.profile_create, name='profile_create'),
+
 ]
