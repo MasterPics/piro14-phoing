@@ -10,7 +10,7 @@ urlpatterns = [
          view=views.profile_delete, name='profile_delete'),
     path('profile/<int:pk>/portfolio',
          view=views.profile_portfolio, name='profile_portfolio'),
-    path('profile/<int:profile_id>/update/',
+    path('profile/<int:pk>/update/',
          view=views.profile_update, name='profile_update'),
     path('profile/create/', view=views.profile_create, name='profile_create'),
 
