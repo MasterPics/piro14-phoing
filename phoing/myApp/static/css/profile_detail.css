@@ -1,0 +1,140 @@
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style-type: none;
+  font-family: "Courier New", serif;
+}
+.container {
+  background-color: black;
+  padding-top: 90px;
+  padding-bottom: 410px;
+}
+.footer {
+  margin-top: 0;
+}
+/********** choose section ***********/
+.choose {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding-left: 2%;
+  margin: 0 25%;
+}
+.choose_profile {
+  border: 2px solid purple;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: purple;
+  color: white;
+  margin-right: 2%;
+  padding: 1%;
+}
+.choose_portfolio {
+  border: 2px solid black;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: black;
+  color: white;
+  margin-right: 2%;
+  padding: 1%;
+}
+.choose_portfolio:hover {
+  border: 2px solid purple;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: purple;
+  color: white;
+  margin-right: 2%;
+  padding: 1%;
+}
+/********** profile section ***********/
+
+.profile_container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 5px;
+  margin: 5% 27%;
+  margin-top: 8px;
+  background-color: white;
+  opacity: 98%;
+  border-radius: 5px;
+  font-size: 1.1em;
+}
+
+.profile_image {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  margin: 40px;
+}
+/********** profile_info section ***********/
+
+.profile_info_container {
+  width: 100%;
+}
+.profile_username {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.profile_email {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.profile_category {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.profile_info {
+  margin-right: 5%;
+  color: #878787;
+}
+.profile_username {
+}
+.profile_email {
+}
+.profile_category {
+}
+
+/********** button section ***********/
+
+.profile_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.edit_btn {
+  border: 2px solid white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: white;
+  margin-right: 2%;
+  padding: 1%;
+}
+.delete_btn {
+  border: 2px solid white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: white;
+  padding: 1%;
+}
+.edit_btn:hover {
+  border: 2px solid white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: black;
+  background-color: white;
+  padding: 1%;
+}
+.delete_btn:hover {
+  border: 2px solid white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: black;
+  background-color: white;
+  padding: 1%;
+}

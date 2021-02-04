@@ -1,0 +1,64 @@
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style-type: none;
+  font-family: "Courier New", serif;
+}
+.container {
+  background-color: black;
+  padding-top: 10px;
+  padding-bottom: 410px;
+}
+/********** choose section ***********/
+.choose {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding-left: 2%;
+  margin: 0 25%;
+}
+.choose_profile {
+  border: 2px solid black;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: black;
+  color: white;
+  margin-right: 2%;
+  padding: 1%;
+}
+.choose_profile:hover {
+  border: 2px solid purple;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: purple;
+  color: white;
+  margin-right: 2%;
+  padding: 1%;
+}
+.choose_portfolio {
+  border: 2px solid purple;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: purple;
+  color: white;
+  margin-right: 2%;
+  padding: 1%;
+}
+/********** portfolio section ***********/
+
+.profile_container {
+  padding: 5px;
+  margin: 5% 27%;
+  margin-top: 8px;
+  color: white;
+}
+
+.portfolio_image {
+  width: 100%;
+
+  margin-bottom: 10px;
+}
+.portfolio_info {
+  padding: 33%;
+}
