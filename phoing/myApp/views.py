@@ -31,6 +31,7 @@ def profile_create(request):
         signup_form = ProfileForm(request.POST, request.FILES)
         if signup_form.is_valid():
             user = signup_form.save()
+            user.image = request.FILES['image']
             return redirect('myApp:profile_detail', user.id)
     
     else:
