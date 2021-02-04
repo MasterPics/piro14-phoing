@@ -37,3 +37,6 @@ def profile_create(request):
         signup_form = ProfileForm()
 
     return render(request, 'myApp/profile_create.html', {'form':signup_form})
+
+
+    
