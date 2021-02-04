@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 class ProfileForm(UserCreationForm):
     class Meta:
         model = get_user_model()
-        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'category')    # +('image')
+        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'category') +('image',)
         
     
 
