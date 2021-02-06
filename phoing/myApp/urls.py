@@ -22,7 +22,7 @@ urlpatterns = [
     path('contact/<int:pk>/update/',
          view=views.contact_update, name='contact_update'),
     path('contact/create/', view=views.contact_create, name='contact_create'),
-    #  path('contact/save/', views.ContactSave.as_view(), name='contact_save'),
+    # path('contact/save/', views.ContactSave.as_view(), name='contact_save'),
 
 
     path('portfolio/', view=views.portfolio_list, name='portfolio_list'),
@@ -35,3 +35,5 @@ urlpatterns = [
     path('portfolio/create/', view=views.portfolio_create, name='portfolio_create'),
 
 ]
+
+
