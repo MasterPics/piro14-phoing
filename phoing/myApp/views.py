@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http.response import HttpResponse
 from .forms import *
+from django.contrib.auth import login as auth_login
 
 
 def main_list(request):
@@ -55,12 +56,17 @@ def profile_update(request, pk):
 
 
 def profile_create(request):
-    
+
     if request.method == 'POST':
         signup_form = ProfileForm(request.POST, request.FILES)
         if signup_form.is_valid():
             user = signup_form.save()
             user.image = request.FILES['image']
+
+            # automatic login
+            auth_login(request, user,
+                       backend='django.contrib.auth.backends.ModelBackend')
+
             return redirect('myApp:profile_detail', user.id)
 
     else:

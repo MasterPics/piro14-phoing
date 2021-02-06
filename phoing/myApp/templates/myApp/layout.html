@@ -10,12 +10,24 @@
     <script src="{% static 'js/main.js' %}" defer></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+    <style>
+        * {
+            font-family: 'NanumSquare', sans-serif;
+        }
+    </style> -->
+
+
+
+
 </head>
 <body>
     <head>
         <nav id="nav">
             <div class="nav__logo">
-                <a href="#"><i class="fas fa-camera"></i> PHOING</a>
+                <a href="{% url 'myApp:main_list' %}"><i class="fas fa-camera"></i> PHOING</a>
             </div>
             <ul class="nav__menu">
                 <li><a href="#">Contact</a></li>
@@ -25,7 +37,25 @@
                 <li><a href="#">Collaboration</a></li>
             </ul>
             <ul class="nav__profile">
-                <li><a href="#">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+                
+                
+                
+
+                {% if not user.is_authenticated %}
+                <li><a href="{% url 'login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
+                <li><a href="{% url 'login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+                {% else %}
+                    {% url 'myApp:profile_detail' user.id as profile_path %}
+                    {% if request.path ==  profile_path %}
+                        <li><a href="{% url 'logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
+                    {% else %}
+                        <li><a href="{% url 'logout' %}?next={{ request.path }}" onclick="return confirm('Are you sure?');">Log Out</a></li>
+                    {% endif %}
+                        
+                
+                <li><a href="{% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+                {% endif %}
+                
             </ul>
             <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>            
         </nav>
