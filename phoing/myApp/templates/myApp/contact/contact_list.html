@@ -1,0 +1,54 @@
+{% extends 'myApp/layout.html' %}
+{% load static %}
+
+{% block content %}
+
+{% for contact in contacts %}
+<p>{{ contact.user }}</p>
+
+<a href="{% url 'myApp:contact_detail' contact.pk %}">
+    <p>{{ contact.title }}</p>
+</a>
+
+<div class="save save-{{post.id}}">
+    {% if request.user in contact.save_users %}
+    <i class="fas fa-heart" onclick="onClickSave({{ contact.pk }})"></i>
+    <span class="save__content"> 이 게시물을 저장하셨습니다. </span>
+    {% else %}
+    <i class="far fa-heart" onclick="onClickSave({{ contact.pk }})"></i>
+    <span class="save__content"> 이 게시물을 저장하지 않았습니다.</span>
+    {% endif %}
+    {{ contact.save_users.count }}
+</div>
+
+{% endfor %}
+<a class="update_btn" href="{% url 'myApp:contact_create' %}">contact 만들기</a>
+<!--
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const onClickSave = async (id) => {
+        const url = "save/";
+
+        const {
+            data
+        } = await axios.post(url, {
+            id
+        })
+
+        modify(data.id, data.save_users);
+    }
+    const modify = (id, save) => {
+        const heart = document.querySelector(`.save-${id} i`);
+        const like_con = document.querySelector(`.save-${id} .save__content`);
+
+        if (like === false) {
+            heart.className = "far fa-heart";
+            like_con.innerHTML = "게시물이 마음에 드시면 좋아요를 눌러주세요!";
+        } else {
+            heart.className = "fas fa-heart";
+            like_con.innerHTML = "이 게시물에 좋아요를 누르셨습니다!";
+        }
+    }
+</script>
+-->
+{% endblock content %}

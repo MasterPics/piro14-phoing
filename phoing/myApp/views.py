@@ -12,6 +12,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
+
 def main_list(request):
     ctx = {}
     return render(request, 'myApp/main/main_list.html', context=ctx)

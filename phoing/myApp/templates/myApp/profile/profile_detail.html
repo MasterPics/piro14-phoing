@@ -6,10 +6,14 @@
 {% endblock stylesheet %}
 
 {% block content %}
-    <div class="container">
-        <div class="choose">
-            <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">Profile</a>
-            <a class="choose_portfolio" href="{% url 'myApp:profile_portfolio' user.pk %}">Portfoilo</a>  
+<div class="container">
+    <div class="choose">
+        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">Profile</a>
+        <a class="choose_portfolio" href="{% url 'myApp:profile_portfolio' user.pk %}">Portfoilo</a>
+    </div>
+    <div class="profile_container">
+        <div>
+            <img class="profile_image" src="{{user.image.url}}" alt="profile_image" width="20%">
         </div>
         <div class="profile_container">
             <div>
@@ -47,10 +51,28 @@
                     </li>
                 </ul>
             </div>
+            <div class="profile_email">
+                <div class="profile_info">email</div>
+                {% if not user.email %}
+                <div class="profile_info_email">이메일 정보가 없습니다.</div>
+                {% else %}
+                <div class="profile_info_email">{{user.email}}</div>
+                {% endif %}
+            </div>
+            <div class="profile_category">
+                <div class="profile_info">category</div>
+                <div class="profile_info_category">{{user.category}}</div>
+            </div>
         </div>
         <div class="profile_button">
             <a class="edit_btn" href="{% url 'myApp:profile_update' user.pk %}">프로필 수정</a> 
             <a class="delete_btn" href="{% url 'myApp:profile_delete' user.pk %}">탈퇴</a>
         </div>
     </div>
+    <!-- check edit url -->
+    <div class="profile_button">
+        <a class="edit_btn" href="#">회원정보 수정</a>
+        <a class="delete_btn" href="{% url 'myApp:profile_delete' user.pk %}">탈퇴</a>
+    </div>
+</div>
 {% endblock content%}
