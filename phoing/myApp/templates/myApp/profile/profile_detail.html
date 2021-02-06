@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'css/profile_detail.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile/profile_detail.css' %}">
 {% endblock stylesheet %}
 
 {% block content %}
@@ -16,27 +16,40 @@
                 <img class="profile_image" src="{{user.image.url}}" alt="profile_image" width="20%">
             </div>    
             <div class="profile_info_container">
-                <div class="profile_username">
-                    <div class="profile_info">username</div>
-                    <div class="profile_info_username">{{user.username}}</div>
-                </div>
-                <div class="profile_email">
-                    <div class="profile_info">email</div>
-                    {% if not user.email %}
-                        <div class="profile_info_email">이메일 정보가 없습니다.</div>
-                    {% else %}
-                        <div class="profile_info_email">{{user.email}}</div>
-                    {% endif %}
-                </div>
-                <div class="profile_category">
-                    <div class="profile_info">category</div>
-                    <div class="profile_info_category">{{user.category}}</div>
-                </div>
+                <ul>
+                    <li>
+                        <div class="profile_username">
+                            <div class="profile_info">username</div>
+                            <div class="profile_info_username">{{user.username}}</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="profile_email">
+                            <div class="profile_info">email</div>
+                            {% if not user.email %}
+                                <!-- <div class="profile_info_email">이메일 정보가 없습니다.</div> -->
+                            {% else %}
+                                <div class="profile_info_email">{{user.email}}</div>
+                            {% endif %}
+                        </div>
+                    </li>
+                    <li>
+                        <div class="profile_category">
+                            <div class="profile_info">category</div>
+                            <div class="profile_info_category">{{user.category}}</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="profile_category">
+                            <div class="profile_info">category</div>
+                            <div class="profile_info_category">{{user.category}}</div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
-        <!-- check edit url -->
         <div class="profile_button">
-            <a class="edit_btn" href="{% url 'myApp:profile_update' user.pk %}">회원정보 수정</a> 
+            <a class="edit_btn" href="{% url 'myApp:profile_update' user.pk %}">프로필 수정</a> 
             <a class="delete_btn" href="{% url 'myApp:profile_delete' user.pk %}">탈퇴</a>
         </div>
     </div>
