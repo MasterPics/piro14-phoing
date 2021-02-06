@@ -1,10 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import User, Portfolio, Post
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http.response import HttpResponse
 from .forms import *
+from .models import *
+import random
+from django.http import JsonResponse
+import json
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.contrib.auth import login as auth_login
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 
 def main_list(request):
@@ -14,15 +24,16 @@ def main_list(request):
 ###################### profile section ######################
 
 
+@login_required
 def profile_detail(request, pk):
-    user = User.objects.get(pk=pk)
+    user = get_object_or_404(User, pk=pk)
     ctx = {'user': user, }
     return render(request, 'myApp/profile/profile_detail.html', context=ctx)
 
 
-# @login_required
+@login_required
 def profile_delete(request, pk):
-    user = User.objects.get(pk=pk)
+    user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
         user.delete()
         messages.success(request, "탈퇴되었습니다.")
@@ -32,13 +43,7 @@ def profile_delete(request, pk):
         return render(request, 'myApp/profile/profile_delete.html', context=ctx)
 
 
-def profile_portfolio(request, pk):
-    user = User.objects.get(pk=pk)
-    portfolios = Portfolio.objects.filter(user=user)
-    ctx = {'user': user, 'portfolios': portfolios}
-    return render(request, 'myApp/profile/profile_portfolio.html', context=ctx)
-
-
+@login_required
 def profile_update(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -56,6 +61,9 @@ def profile_update(request, pk):
 
 
 def profile_create(request):
+    # if request.user.is_authenticated:
+    #     return redirect('myApp:profile_detail')
+
 
     if request.method == 'POST':
         signup_form = ProfileForm(request.POST, request.FILES)
@@ -73,3 +81,125 @@ def profile_create(request):
         signup_form = ProfileForm()
 
     return render(request, 'myApp/profile/profile_create.html', {'form': signup_form})
+
+
+@login_required
+def profile_portfolio(request, pk):
+    user = User.objects.get(pk=pk)
+    portfolios = Portfolio.objects.filter(user=user)
+    ctx = {'user': user, 'portfolios': portfolios}
+    return render(request, 'myApp/profile/profile_portfolio.html', context=ctx)
+
+###################### portfolio section ######################
+
+
+def portfolio_list(request):
+    random_ports = Portfolio.objects.order_by("?")
+
+    photographer = User.objects.filter(category='photographer')
+    model = User.objects.filter(category='model')
+    h_m = User.objects.filter(category='H&M')
+    stylist = User.objects.filter(category='stylist')
+    other_use = User.objects.filter(category='other use')
+
+    # order by: random 으로 선택
+    photographer_ports = Portfolio.objects.filter(
+        user=photographer).order_by("?")
+    model_ports = Portfolio.objects.filter(user=model).order_by("?")
+    h_m_ports = Portfolio.objects.filter(user=h_m).order_by("?")
+    stylist_ports = Portfolio.objects.filter(user=stylist).order_by("?")
+    other_use_ports = Portfolio.objects.filter(user=other_use).order_by("?")
+    ctx = {'random_ports': random_ports,
+           'photographer_ports': photographer_ports, 'model_ports': model, 'h_m_ports': h_m_ports, 'stylist_ports': stylist_ports, 'other_use_ports': other_use_ports}
+    return render(request, 'myApp/portfolio/portfolio_list.html', context=ctx)
+
+
+def portfolio_detail(request, pk):
+    port = Portfolio.objects.get(pk=pk)
+    tags = port.tags
+    images = port.images
+    owner = port.user
+    owner_port = Portfolio.objects.filter(user=owner)
+    login_user = request.user
+    ctx = {'port': port,
+           'tags': tags, 'images': images,
+           'owner': owner,
+           'owner_port': owner_port,
+           'login_user': login_user, }
+    return render(request, 'myApp/portfolio/portfolio_detail.html', context=ctx)
+
+
+def portfolio_delete(request, pk):
+    port = Portfolio.objects.get(pk=pk)
+    if request.method == 'POST':
+        port.delete()
+        messages.success(request, "삭제되었습니다.")
+        return redirect('myApp:profile_portfolio')
+    else:
+        ctx = {'port': port}
+        return render(request, 'myApp/portfolio/portfolio_delete.html', context=ctx)
+
+
+def portfolio_update(request, pk):
+    portfolio = get_object_or_404(Portfolio, pk=pk)
+    if request.method == 'POST':
+        form = PortfolioForm(request.POST, request.FILES)
+        if form.is_valid():
+            portfolio = form.save()
+            portfolio.image = request.FILES['image']
+            return redirect('myApp:portfolio_detail', portfolio.id)
+    else:
+        form = PortfolioForm()
+        ctx = {'form': form}
+        return render(request, 'myApp/portfolio/portfolio_update.html', ctx)
+
+
+def portfolio_create(request):
+    if request.method == 'POST':
+        form = PortfolioForm(request.POST, request.FILES,)
+        if form.is_valid():
+            portfolio = form.save()
+            portfolio.image = request.FILES['image']
+            return redirect('myApp:portfolio_detail', portfolio.id)
+
+    else:
+        form = PortfolioForm()
+        ctx = {'form': form}
+
+    return render(request, 'myApp/portfolio/portfolio_create.html', ctx)
+
+
+class PortfolioLike(View):
+    template_name = 'portfolio/portfolio_list.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(PortfolioLike, self).dispatch(request, *args, **kwargs)
+
+    def portfolio(self, request):
+
+        data = json.loads(request.body)
+        portfolio_id = data["id"]
+        portfolio = Portfolio.objects.get(id=portfolio_id)
+        portfolio.like = not portfolio.like
+        portfolio.save()
+
+        return JsonResponse({'id': portfolio_id, 'like': portfolio.like})
+
+
+class PortfolioSave(View):
+    template_name = 'portfolio/portfolio_list.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(PortfolioSave, self).dispatch(request, *args, **kwargs)
+
+    def portfolio(self, request):
+
+        data = json.loads(request.body)
+        portfolio_id = data["id"]
+        portfolio = Portfolio.objects.get(id=portfolio_id)
+        portfolio.save = not portfolio.save
+        portfolio.save()
+
+        return JsonResponse({'id': portfolio_id, 'save': portfolio.save})

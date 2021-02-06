@@ -1,21 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'myApp/layout.html' %}
+{% block stylesheet %}
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+        list-style-type: none;
+        font-family: "Noto Serif", serif;
+    }
+    label{
+        font-size:1.3rem;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>폼 수정하기</title>
-</head>
+    .clear{
+        font-size:1.5rem;
+    }
 
-<body>
-    <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
-        <input type="submit" value="저장하기">
-    </form>
-    
-</body>
+    .form-group{
+        margin:20px 60px;
+        display: grid;
+        grid-template-columns: 200px 1fr;
+    }
 
-</html>
+    .image > label{
+        font-size:1rem;
+    }
+
+
+   .username input,
+   .first_name input,
+   .last_name input,
+   .email input,
+   .category input,
+   .password1 input,
+   .password2 input {
+    border:0; 
+    padding:1px; 
+    font-size:1.3em; 
+    border:solid 1px #ccc; 
+    margin-top:4px; 
+    width:80%;
+    border-radius: 3px;
+   }
+
+   .username input:focus,
+   .first_name input:focus,
+   .last_name input:focus,
+   .email input:focus,
+   .category input:focus,
+   .password1 input:focus,
+   .password2 input:focus { 
+    outline: none !important;
+    border-color: #719ECE;
+    box-shadow: 0 0 10px #719ECE;
+   }
+
+   select{
+    border:0; 
+    padding:1px; 
+    font-size:1.1rem; 
+    border:solid 1px #ccc; 
+    margin-top:5px; 
+    width:50%;
+    border-radius: 3px;
+   }
+
+   input.update_btn {
+    background-color: rgb(224, 224, 224);
+    border: none;
+    border-radius: 8px;
+    margin-top: 20px;
+    padding: 5px 10px;
+    margin-left:60px;
+   }
+
+   input.update_btn:hover {
+    cursor: pointer;
+  }
+
+  .image a, .image .form-id{
+      margin-left:2px;
+  }
+
+
+
+</style>
+{% endblock stylesheet %}
+{% block content %}
+<div class='container'>
+    <div class='row'>
+        <div class='col-md-12'>
+            <h1 style="margin-top: 80px; margin-left: 60px; margin-bottom: 40px; font-size:36px;">Update Profile</h1>
+            <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data">    
+                {% csrf_token %}
+                {% for field in form.visible_fields %}
+                    <div class="form-group">
+                        <label for="form-id" class="col-sm-2 {{field.name}} ">{{field.label}}</label>
+                        <div class='col-sm-10 {{field.name}}'>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <p class="help-block">{{ field.help_text }}</p>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+                <input type="submit" class="update_btn " />
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content%}
+
+

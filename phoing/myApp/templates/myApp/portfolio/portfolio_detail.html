@@ -1,0 +1,59 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/portfolio_detail.css' %}">
+{% endblock stylesheet %}
+
+{% block content %}
+    <div class="container">
+        <div class="portfolio_container">  
+            <div class="portfolio_info_container">
+                <div class="portfolio_owner">
+                    <div class="portfolio_content">{{owner.username}}</div>
+                </div>
+                <div class="portfolio_detail">
+                    <div>
+                        <img class="portfolio_content" src="{{port.thumbnail.url}}" alt="prot_image" width="20%">
+                    </div>    
+                    <div class="portfolio_content">{{port.title}}</div>
+                    <div class="portfolio_content">{{port.desc}}</div>
+                    <div class="portfolio_content">{{port.created_at}}</div>
+                    <div class="portfolio_content">{{port.updated_at}}</div>
+                    <div class="portfolio_like_user">
+                        <div class="portfolio_content">{{port.like_user}}</div>
+                    </div>
+                    <div class="portfolio_view_count">
+                        <div class="portfolio_content">{{port.view_count}}</div>
+                    </div>
+                    <div class="portfolio_like_user">
+                        <div class="portfolio_content">{{port.save}}</div>
+                    </div>
+                    <!-- check url -->
+                    {% if login_user.username == owner.username %}
+                    <div class="protfolio_button">
+                        <a class="edit_btn" href="{% url 'myApp:portfolio_update' user.pk %}">수정</a> 
+                        <a class="delete_btn" href="{% url 'myApp:portfolio_delete' user.pk %}">삭제</a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% for port in owner_port %}
+                    <div class="profile_owner_port">
+                        <div>
+                            <img class="portfolio_content" src="{{port.thumbnail.url}}" alt="prot_image" width="20%">
+                        </div>
+                        <div class="portfolio_like_user">
+                            <div class="portfolio_content">{{port.like_user}}</div>
+                        </div>
+                        <div class="portfolio_view_count">
+                            <div class="portfolio_content">{{port.view_count}}</div>
+                        </div>
+                        <div class="portfolio_like_user">
+                            <div class="portfolio_content">{{port.save}}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content%}

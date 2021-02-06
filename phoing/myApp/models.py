@@ -25,7 +25,8 @@ class Post(models.Model):
     desc = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    save_users = models.ManyToManyField(to=User, related_name='save_users')
+    save_users = models.ManyToManyField(
+        to=User, related_name='save_users', blank=True)
 
     def __str__(self):
         return self.title
@@ -41,8 +42,9 @@ class Contact(Post):  # also Collaborate
 
 
 class Portfolio(Post):
-    like_users = models.ManyToManyField(to=User, related_name='like_users')
-    view_count = models.PositiveIntegerField()
+    like_users = models.ManyToManyField(
+        to=User, related_name='like_users', blank=True)
+    view_count = models.PositiveIntegerField(default=0)
 
 
 class Comment(models.Model):
