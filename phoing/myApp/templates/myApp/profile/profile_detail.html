@@ -14,10 +14,6 @@
         <a class="choose_portfolio" href="{% url 'myApp:profile_portfolio' user.pk %}">Portfoilo</a>
     </div>
     <div class="profile_container">
-        <div>
-            <img class="profile_image" src="{{user.image.url}}" alt="profile_image" width="20%">
-        </div>
-        <div class="profile_container">
             <div>
                 
                 {% if user.image  %}
@@ -52,6 +48,12 @@
                             <div class="profile_info_category">{{user.category}}</div>
                         </div>
                     </li>
+                    <li>
+                        <div class="profile_desc">
+                            <div class="profile_info">설명</div>
+                            <div class="profile_info_desc">{{user.desc}}</div>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -63,11 +65,6 @@
             <a class="edit_btn" href="{% url 'myApp:profile_update' user.pk %}">프로필 수정</a> 
             <a class="delete_btn" href="{% url 'myApp:profile_delete' user.pk %}">탈퇴</a>
         </div>
-    </div>
-    <!-- check edit url -->
-    <div class="profile_button">
-        <a class="edit_btn" href="#">회원정보 수정</a>
-        <a class="delete_btn" href="{% url 'myApp:profile_delete' user.pk %}">탈퇴</a>
     </div>
 </div>
 {% endblock content%}
