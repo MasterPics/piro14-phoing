@@ -14,6 +14,7 @@ class User(AbstractUser):
     )
     category = models.CharField(max_length=20, choices=CATEGORY)
     image = models.ImageField(upload_to=uuid_name_upload_to)
+    desc = models.TextField(blank=True)
 
 
 class Post(models.Model):
@@ -24,7 +25,8 @@ class Post(models.Model):
     desc = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    save_users = models.ManyToManyField(to=User, related_name='save_users')
+    save_users = models.ManyToManyField(
+        to=User, related_name='save_users', blank=True)
 
     def __str__(self):
         return self.title
@@ -40,7 +42,8 @@ class Contact(Post):  # also Collaborate
 
 
 class Portfolio(Post):
-    like_users = models.ManyToManyField(to=User, related_name='like_users')
+    like_users = models.ManyToManyField(
+        to=User, related_name='like_users', blank=True)
     view_count = models.PositiveIntegerField(default=0)
 
 
