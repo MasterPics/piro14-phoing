@@ -52,7 +52,8 @@ def profile_update(request, pk):
             print("form.is_valid")
 
             user = form.save()
-            user.image = request.FILES['image']
+            if user.image:
+                user.image = request.FILES['image']
             return redirect('myApp:profile_detail', user.id)
     else:
         form = ProfileForm(instance=user)
@@ -63,7 +64,6 @@ def profile_update(request, pk):
 def profile_create(request):
     # if request.user.is_authenticated:
     #     return redirect('myApp:profile_detail')
-
 
     if request.method == 'POST':
         signup_form = ProfileForm(request.POST, request.FILES)
@@ -131,10 +131,11 @@ def portfolio_detail(request, pk):
 
 def portfolio_delete(request, pk):
     port = Portfolio.objects.get(pk=pk)
+    user = port.user
     if request.method == 'POST':
         port.delete()
         messages.success(request, "삭제되었습니다.")
-        return redirect('myApp:profile_portfolio')
+        return redirect('myApp:profile_portfolio', user.id)
     else:
         ctx = {'port': port}
         return render(request, 'myApp/portfolio/portfolio_delete.html', context=ctx)
@@ -159,6 +160,7 @@ def portfolio_create(request):
         form = PortfolioForm(request.POST, request.FILES,)
         if form.is_valid():
             portfolio = form.save()
+            portfolio.user = request.user
             portfolio.image = request.FILES['image']
             return redirect('myApp:portfolio_detail', portfolio.id)
 
@@ -209,7 +211,7 @@ class PortfolioSave(View):
 
 def contact_list(request):
     contacts = Contact.objects.all().order_by("?")
-    ctx = {'contacts' : contacts}
+    ctx = {'contacts': contacts}
     return render(request, 'myApp/contact/contact_list.html', context=ctx)
 
 
@@ -263,6 +265,7 @@ def contact_create(request):
         contact_form = ContactForm()
 
     return render(request, 'myApp/contact/contact_create.html', {'form': contact_form})
+
 
 '''
 # @login_required

@@ -9,10 +9,10 @@
 <div class="container">
     <div class="portfolio_delete">
         <h1>User delete</h1><br>
-        <form action="{% url 'myApp:portfolio_delete' portfolio.pk %}" method="POST">
+        <form action="{% url 'myApp:portfolio_delete' port.pk %}" method="POST">
             {% csrf_token %}
             <p>정말로 삭제하시겠습니까?</p>
-            <input class="delete_btn" type="submit" value="탈퇴"/>
+            <input class="delete_btn" type="submit" value="삭제"/>
         </form>
     </div>
 </div>
