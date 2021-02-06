@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+
+<div class='container'>
+    <div class='row'>
+        <div class='col-md-12'>
+            <h1>Create Contact</h1>
+            <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table>
+                    {{ form.as_table }}
+                </table>
+                <input type="submit" class="btn btn-primary" />
+            </form>
+        </div>
+    </div>
+</div>
