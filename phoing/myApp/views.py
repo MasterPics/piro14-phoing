@@ -62,9 +62,7 @@ def profile_update(request, pk):
 
 
 def profile_create(request):
-    # if request.user.is_authenticated:
-    #     return redirect('myApp:profile_detail')
-
+    
     if request.method == 'POST':
         signup_form = ProfileForm(request.POST, request.FILES)
         if signup_form.is_valid():
