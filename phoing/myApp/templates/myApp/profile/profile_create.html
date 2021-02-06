@@ -12,19 +12,13 @@
         font-size:1.3rem;
     }
 
-    .clear{
-        font-size:1.5rem;
-    }
-
     .form-group{
         margin:20px 60px;
         display: grid;
         grid-template-columns: 200px 1fr;
     }
 
-    .image > label{
-        font-size:1rem;
-    }
+    
 
 
    .username input,
@@ -65,7 +59,7 @@
     border-radius: 3px;
    }
 
-   input.update_btn {
+   input.btn {
     background-color: rgb(224, 224, 224);
     border: none;
     border-radius: 8px;
@@ -74,13 +68,11 @@
     margin-left:60px;
    }
 
-   input.update_btn:hover {
+   input.btn:hover {
     cursor: pointer;
   }
 
-  .image a, .image .form-id{
-      margin-left:2px;
-  }
+  
 
 
 
@@ -90,7 +82,7 @@
 <div class='container'>
     <div class='row'>
         <div class='col-md-12'>
-            <h1 style="margin-top: 80px; margin-left: 60px; margin-bottom: 40px; font-size:36px;">Update Profile</h1>
+            <h1 style="margin-top: 80px; margin-left: 60px; margin-bottom: 40px; font-size:36px;">Create Profile</h1>
             <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data">    
                 {% csrf_token %}
                 {% for field in form.visible_fields %}
@@ -109,12 +101,10 @@
                         </div>
                     </div>
                 {% endfor %}
-                <input type="submit" class="update_btn " />
+                <input type="submit" class="btn " />
             </form>
         </div>
     </div>
 </div>
 
 {% endblock content%}
-
-
