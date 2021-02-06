@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+from django.urls import reverse_lazy  # reverse url을 초기화 이후로 미뤄주는 함수!
 import os
 import sys
 import json
@@ -49,8 +50,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.naver',
+    'allauth.socialaccount.providers.kakao',
 
     'myApp',
+    'accounts',
+
 ]
 
 MIDDLEWARE = [
@@ -148,3 +159,53 @@ STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Login
+
+
+LOGIN_URL = '/accounts/login/'  # 기본값
+LOGOUT_URL = '/accounts/logout/'  # 기본값
+LOGIN_REDIRECT_URL = reverse_lazy('myApp:main_list')  # 반드시 정의할 것!
+LOGOUT_REDIRECT_URL = reverse_lazy('myApp:main_list')
+
+
+# AUTH : Socil login
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SITE_ID = 2
+LOGIN_REDIRECT_URL = '/'
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+    'naver': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+
+# ACCOUNT_SIGNUP_FORM_CLASS = 'myApp.forms.ProfileForm'
+# SOCIALACCOUNT_FORMS = {'signup': 'myapp.forms.ProfileForm'}
+# ACCOUNT_FORMS = {'signup': 'myApp.forms.ProfileForm'}
+
+# OAUTH_PATH = os.path.join(ROOT_DIR, 'secrets_Oauth.json')
+# # json파일을 파이썬 객체로 변환
+# secrets = json.loads(open(SECRETS_PATH).read())
