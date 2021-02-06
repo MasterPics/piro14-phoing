@@ -1,0 +1,39 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/portfolio/portfolio_list.css' %}">
+{% endblock stylesheet %}
+
+{% block content %}
+    <div class="ports_container">
+        <div class="ports_left">
+            <ul>
+                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' %}">All</a></li>  
+                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' %}">Photographer</a></li>  
+                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' %}">Model</a></li>  
+                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' %}">Hair&Makeup</a></li>  
+                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' %}">Stylist</a></li>  
+                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' %}">Others</a></li>  
+            </ul>
+        </div>
+        <div class="ports_right">
+            <!-- check random_ports 외의 5가지 링크 눌렀을 때 고려 -->
+            {% for ports in random_ports %}
+            <div>
+                <div class="ports_profile">
+                    <a href="{% url 'myApp:portfolio_detail' ports.pk %}">
+                        <p>{{ports.user}}</p>
+                        <img src="{{ports.thumbnail.url}}" alt="thumbnail">
+                    </a>
+                </div>
+                <div class="ports_info">
+                    <div>{{ports.like}}</div>
+                    <div>{{ports.view_count}}</div>
+                    <div>{{ports.save}}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content%}
