@@ -6,9 +6,24 @@
 {% endblock stylesheet %}
 
 {% block content %}
-<p>{{ contact.desc }}</p>
+<p>{{ contact.title }}</p>
+<p>{{ contact.user.category }}</p>
+<p>{{ contact.start_date }}</p>
+<p>{{ contact.end_date }}</p>
+<a href="{{ contact.file_attach.url }}">파일이름</a>
+<div>
+    <img src="{{ contact.thumbnail.url }}" alt="">
+</div>
+<p>{{ contact.pay }}</p>
+
+
+{{ login_user.username }}
+{{ owner_user.username }}
+{% if login_user.pk == owner_user.pk %}
+
 <div class="profile_button">
     <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>
     <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">Contact 삭제</a>
 </div>
+{% endif %}
 {% endblock content%}

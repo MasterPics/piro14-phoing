@@ -9,7 +9,9 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'user', 'title']
+    list_display_links = ['title']
+    search_fields = ['title']
 
 
 @admin.register(Portfolio)

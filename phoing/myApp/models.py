@@ -5,17 +5,22 @@ from .utils import uuid_name_upload_to
 
 
 class User(AbstractUser):
+    CATEGORY_PHOTOGRAPHER = 'photographer'
+    CATEGORY_MODEL = 'model'
+    CATEGORY_HM = 'HairMakeup'
+    CATEGORY_STYLIST = 'stylist'
+    CATEGORY_OTHER = 'other use'
+
     CATEGORY = (
-        ('photographer', 'photographer'),
-        ('model', 'model'),
-        ('H&M', 'H&M'),
-        ('stylist', 'stylist'),
-        ('other use', 'other use'),
+        ('photographer', CATEGORY_PHOTOGRAPHER),
+        ('model', CATEGORY_MODEL),
+        ('HairMakeup', CATEGORY_HM),
+        ('stylist', CATEGORY_STYLIST),
+        ('other use', CATEGORY_OTHER),
     )
     category = models.CharField(max_length=20, choices=CATEGORY)
     image = models.ImageField(
         upload_to=uuid_name_upload_to, blank=True, default='user.png')
-    desc = models.TextField(blank=True)
 
 
 class Post(models.Model):
@@ -39,7 +44,7 @@ class Contact(Post):  # also Collaborate
     pay = models.PositiveIntegerField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    is_closed = models.BooleanField()
+    is_closed = models.BooleanField(default=False)
 
 
 class Portfolio(Post):

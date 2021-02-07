@@ -32,12 +32,19 @@ class ContactForm(forms.ModelForm):
     # https://stackoverflow.com/questions/57241617/what-is-exactly-meta-in-django
     class Meta:
         model = Contact
-        fields = '__all__'
+        fields = ('title', 'desc', 'start_date', 'end_date', 'file_attach', 'thumbnail', 'pay')
+        widgets = {
+            'start_date': forms.DateInput(format=('%m/%d/%Y'), attrs={'class':'form-control', 'placeholder':'Select a date', 'type':'date'}),
+            'end_date': forms.DateInput(format=('%m/%d/%Y'), attrs={'class':'form-control', 'placeholder':'Select a date', 'type':'date'}),
+        }
+
+
     def __init__(self, *args, **kwargs):
         super(ContactForm, self).__init__(*args, **kwargs)
         for field in self.fields.keys():
             self.fields[field].widget.attrs.update({
                 'class': field + " form",
                 'id': 'form-id', })
+            #self.fields[''].widget = forms.HiddenInput()
 
 

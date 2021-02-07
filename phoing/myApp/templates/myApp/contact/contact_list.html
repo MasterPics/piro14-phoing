@@ -3,52 +3,88 @@
 
 {% block content %}
 
+
+<div>
+    <!--filter - 검색과 유사-->
+    <div>
+        <ul class="category">
+            <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('model')">Model</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair/Makeup</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('other use')">Other Use</a></li>
+        </ul>
+    </div>
+
+
+    <!--정렬-->
+    <div>
+        <select name="" id="" class="form-control sort ">
+            <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
+                최신순
+            </option>
+            <option value="save" {% if sort == 'save' %}selected{% endif %}>
+                저장순
+            </option>
+            <option value="pay" {% if sort == 'pay' %}selected{% endif %}>
+                가격순
+            </option>
+        </select>
+    </div>
+
+    <!--검색-->
+    <div class="col-4 input-group">
+        <input type="text" class="form-control search" value="{{ search|default_if_none:"" }}">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary btn_search" type="button" id="">찾기</button>
+        </div>
+    </div>
+</div>
+
 {% for contact in contacts %}
 <p>{{ contact.user }}</p>
-
+<p>{{ contact.save_users.count }} </p>
+<p>{{ contact.pay }}</p>
 <a href="{% url 'myApp:contact_detail' contact.pk %}">
     <p>{{ contact.title }}</p>
 </a>
-
-<div class="save save-{{post.id}}">
-    {% if request.user in contact.save_users %}
-    <i class="fas fa-heart" onclick="onClickSave({{ contact.pk }})"></i>
-    <span class="save__content"> 이 게시물을 저장하셨습니다. </span>
-    {% else %}
-    <i class="far fa-heart" onclick="onClickSave({{ contact.pk }})"></i>
-    <span class="save__content"> 이 게시물을 저장하지 않았습니다.</span>
-    {% endif %}
-    {{ contact.save_users.count }}
-</div>
-
 {% endfor %}
 <a class="update_btn" href="{% url 'myApp:contact_create' %}">contact 만들기</a>
-<!--
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script>
-    const onClickSave = async (id) => {
-        const url = "save/";
+<form id="searchForm" method="get" action="{% url 'myApp:contact_list' %}">
+    <input type="hidden" id="category" name="category" value="{{ category }}">
+    <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
+    <input type="hidden" id="sort" name="sort" value="{{ sort }}">
+</form>
 
-        const {
-            data
-        } = await axios.post(url, {
-            id
-        })
-
-        modify(data.id, data.save_users);
-    }
-    const modify = (id, save) => {
-        const heart = document.querySelector(`.save-${id} i`);
-        const like_con = document.querySelector(`.save-${id} .save__content`);
-
-        if (like === false) {
-            heart.className = "far fa-heart";
-            like_con.innerHTML = "게시물이 마음에 드시면 좋아요를 눌러주세요!";
-        } else {
-            heart.className = "fas fa-heart";
-            like_con.innerHTML = "이 게시물에 좋아요를 누르셨습니다!";
-        }
-    }
-</script>
--->
 {% endblock content %}
+
+{% block script %}
+<script type='text/javascript'>
+    const onClickLink = (category) => {
+        console.log(category)
+        const categoryIdInput = document.querySelector('#category')
+        categoryIdInput.value = category
+        console.log(categoryIdInput.value)
+        const searchForm = document.querySelector('#searchForm')
+        searchForm.submit()
+    }
+
+    const searchButton = document.querySelector('.btn_search')
+    searchButton.addEventListener('click', () => {
+        const searchClassInput = document.querySelector('.search')
+        const searchIdInput = document.querySelector('#search')
+        const searchForm = document.querySelector('#searchForm')
+        searchIdInput.value = searchClassInput.value
+        searchForm.submit()
+    })
+
+    const sortClassInput = document.querySelector('.sort')
+    sortClassInput.addEventListener('input', (e) => {
+        const sortIdInput = document.querySelector('#sort')
+        const searchForm = document.querySelector('#searchForm')
+        sortIdInput.value = e.target.value
+        searchForm.submit()
+    })
+</script>
+{% endblock script %}
