@@ -49,6 +49,8 @@
 <a href="{% url 'myApp:contact_detail' contact.pk %}">
     <p>{{ contact.title }}</p>
 </a>
+<button type="submit" onclick="onClickBtn({{ contact.id }}, 'save')" name="type" value="save"
+    class="btn btn-primary">saves {{ contact.save }}</button>
 {% endfor %}
 <a class="update_btn" href="{% url 'myApp:contact_create' %}">contact 만들기</a>
 <form id="searchForm" method="get" action="{% url 'myApp:contact_list' %}">

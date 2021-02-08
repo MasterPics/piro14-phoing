@@ -209,66 +209,54 @@ class PortfolioSave(View):
 
 ###################### contact section ######################
 def contact_list(request):
-    contacts = Contact.objects.all()
+    
+    if request.method == 'POST':
+        pass
+    else:
+        contacts = Contact.objects.all()
 
-    
-    category = request.GET.get('category', 'all')
-    search = request.GET.get('search', '')  # 검색어
-    sort = request.GET.get('sort', 'recent')  # 정렬기준
-    
-    #category 분류
-    if category != 'all':
-        if category == User.CATEGORY_PHOTOGRAPHER:
-            contacts = contacts.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
-            ).distinct().order_by("?")
-        elif category == User.CATEGORY_MODEL:
-            contacts = contacts.filter(Q(user__category=User.CATEGORY_MODEL)
-            ).distinct().order_by("?")
-        elif category == User.CATEGORY_HM:
-            contacts = contacts.filter(Q(user__category=User.CATEGORY_HM)
-            ).distinct().order_by("?")
-        elif category == User.CATEGORY_STYLIST:
-            contacts = contacts.filter(Q(user__category=User.CATEGORY_STYLIST)
-            ).distinct().order_by("?")
-        elif category == User.CATEGORY_OTHER:
-            contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHER)
-            ).distinct().order_by("?")
-            #카테고리가 없는 유저들이 other use는 아님. 따로 있다!
-    
-    # 정렬
-    if sort == 'save':
-        contacts = contacts.annotate(num_save=Count('save_users')).order_by('-num_save', '-created_at')
-    elif sort == 'pay':  
-        contacts = contacts.order_by('-pay', '-created_at')
-    elif sort == 'recent':
-        contacts = contacts.order_by('-created_at')
-    
-    # 검색
-    if search:
-        contacts = contacts.filter(
-            Q(title__icontains=search) |  # 제목검색
-            Q(desc__icontains=search) |  # 내용검색
-            Q(user__username__icontains=search)  # 질문 글쓴이검색
-        ).distinct()
+        
+        category = request.GET.get('category', 'all')
+        search = request.GET.get('search', '')  # 검색어
+        sort = request.GET.get('sort', 'recent')  # 정렬기준
+        
+        #category 분류
+        if category != 'all':
+            if category == User.CATEGORY_PHOTOGRAPHER:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
+                ).distinct().order_by("?")
+            elif category == User.CATEGORY_MODEL:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_MODEL)
+                ).distinct().order_by("?")
+            elif category == User.CATEGORY_HM:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_HM)
+                ).distinct().order_by("?")
+            elif category == User.CATEGORY_STYLIST:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_STYLIST)
+                ).distinct().order_by("?")
+            elif category == User.CATEGORY_OTHER:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHER)
+                ).distinct().order_by("?")
+                #카테고리가 없는 유저들이 other use는 아님. 따로 있다!
+        
+        # 정렬
+        if sort == 'save':
+            contacts = contacts.annotate(num_save=Count('save_users')).order_by('-num_save', '-created_at')
+        elif sort == 'pay':  
+            contacts = contacts.order_by('-pay', '-created_at')
+        elif sort == 'recent':
+            contacts = contacts.order_by('-created_at')
+        
+        # 검색
+        if search:
+            contacts = contacts.filter(
+                Q(title__icontains=search) |  # 제목검색
+                Q(desc__icontains=search) |  # 내용검색
+                Q(user__username__icontains=search)  # 질문 글쓴이검색
+            ).distinct()
 
-    context = {'contacts': contacts, 'sort':sort, 'category':category, 'search':search,}
-    return render(request, 'myApp/contact/contact_list.html', context = context)
-
-'''
-def contact_list(request):
-    contacts = Contact.objects.all().order_by("?")
-    ctx = {'contacts' :  contacts}
-    return render(request, 'myApp/contact/contact_list.html', context=ctx)
-
-def contact_category(request, string):
-    photographer_ports = Portfolio.objects.filter(user__category=User.CATEGORY_PHOTOGRAPHER).order_by("?")
-    
-  
-    model = Portfolio.objects.filter(user__category=User.CATEGORY_MODEL).order_by("?")
-    hm = Portfolio.objects.filter(user__category=User.CATEGORY_HM).order_by("?")
-    stylist = Portfolio.objects.filter(user__category=User.CATEGORY_STYLIST).order_by("?")
-    other_use_ports = Portfolio.objects.filter(user__category=User.CATEGORY_OTHER).order_by("?")
-'''
+        context = {'contacts': contacts, 'sort':sort, 'category':category, 'search':search,}
+        return render(request, 'myApp/contact/contact_list.html', context = context)
 
 
 def contact_detail(request, pk):
@@ -332,7 +320,7 @@ def contact_create(request):
 
     return render(request, 'myApp/contact/contact_create.html', {'form': contact_form})
 
-'''
+
 @login_required
 class ContactSave(View):
     template_name = 'contact/contact_list.html'
@@ -356,4 +344,3 @@ class ContactSave(View):
                 contact.save()
 
         return JsonResponse({'id': contact_id, 'save_users': contact.save_users})
-'''
