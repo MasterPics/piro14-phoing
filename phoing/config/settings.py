@@ -176,7 +176,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = 3
+SITE_ID = 4
 LOGIN_REDIRECT_URL = '/'
 
 
@@ -226,8 +226,10 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
-# SOCIALACCOUNT_AUTO_SIGNUP = True
+# SOCIALACCOUNT_FORMS = {'signup': 'accounts.forms.MySocialCustomSignupForm'}
+# ACOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.MySocialCustomSignupForm'
 
-SOCIALACCOUNT_FORMS = {'signup': 'accounts.forms.MySocialCustomSignupForm'}
-ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.MySocialCustomSignupForm'
+
+SESSION_COOKIE_SECURE = False
