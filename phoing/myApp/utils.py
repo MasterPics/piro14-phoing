@@ -3,6 +3,12 @@ from uuid import uuid4
 from django.utils import timezone
 import math
 
+import requests
+
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
+
+
 def uuid_name_upload_to(instance, filename):
     app_label = instance.__class__._meta.app_label  # 앱 별로
     cls_name = instance.__class__.__name__.lower()  # 모델 별로
@@ -28,7 +34,8 @@ def get_distance(latlng1, latlng2):
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
-    a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+    a = math.sin(dlat / 2)**2 + math.cos(lat1) * \
+        math.cos(lat2) * math.sin(dlon / 2)**2
 
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return c
@@ -50,3 +57,13 @@ def get_contacts_in_ten_kilo(user):
             valid_contacts.append(contact)
     return valid_contacts
 
+
+def save_image_from_url(user, url):
+    r = requests.get(url)
+
+    img_temp = NamedTemporaryFile(delete=True)
+    img_temp.write(r.content)
+    img_temp.flush()
+
+    user.image.save(uuid_name_upload_to(user, user.email),
+                    File(img_temp), save=True)

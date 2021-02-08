@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
 
 from django import forms
 
@@ -25,4 +26,24 @@ class UserLoginForm(AuthenticationForm):
     ))
 
 
+class MySocialCustomSignupForm(forms.Form):
 
+    CATEGORY_PHOTOGRAPHER = 'photographer'
+    CATEGORY_MODEL = 'model'
+    CATEGORY_HM = 'HairMakeup'
+    CATEGORY_STYLIST = 'stylist'
+    CATEGORY_OTHER = 'other use'
+
+    CATEGORY = (
+        ('photographer', CATEGORY_PHOTOGRAPHER),
+        ('model', CATEGORY_MODEL),
+        ('HairMakeup', CATEGORY_HM),
+        ('stylist', CATEGORY_STYLIST),
+        ('other use', CATEGORY_OTHER),
+    )
+
+    category = forms.ChoiceField(choices=CATEGORY)
+
+    def signup(self, request, user):
+        user.category = self.changed_data['category']
+        user.save()
