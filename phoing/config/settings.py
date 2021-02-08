@@ -194,18 +194,40 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': [
             'profile',
             'email',
+            'nickname',
+            'id',
+            'profile_image'
+
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
         }
-    }
+    },
+    # 'kakao': {
+    #     'SCOPE': [
+    #         'email',
+    #         # 'profileImageUrl',  // HTTPS만 지원
+
+
+    #     ],
+    #     'AUTH_PARAMS': {
+    #         'access_type': 'online',
+    #     }
+    # }
 }
 
 
 # ACCOUNT_SIGNUP_FORM_CLASS = 'myApp.forms.ProfileForm'
-# SOCIALACCOUNT_FORMS = {'signup': 'myapp.forms.ProfileForm'}
+# SOCIALACCOUNT_FORMS = {'signup': 'myApp.forms.ProfileForm'}
 # ACCOUNT_FORMS = {'signup': 'myApp.forms.ProfileForm'}
 
-# OAUTH_PATH = os.path.join(ROOT_DIR, 'secrets_Oauth.json')
-# # json파일을 파이썬 객체로 변환
-# secrets = json.loads(open(SECRETS_PATH).read())
+
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+
+# SOCIALACCOUNT_AUTO_SIGNUP = True
+
+SOCIALACCOUNT_FORMS = {'signup': 'accounts.forms.MySocialCustomSignupForm'}
+ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.MySocialCustomSignupForm'

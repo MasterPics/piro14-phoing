@@ -1,17 +1,21 @@
 {% load static %}
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHOING</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     {% block stylesheet %}{% endblock %}
+
     <script src="https://kit.fontawesome.com/0b02921f0e.js" crossorigin="anonymous"></script>
     <script src="{% static 'js/main.js' %}" defer></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
     <style>
         * {
@@ -23,58 +27,67 @@
 
 
 </head>
+
 <body>
+
     <head>
         <nav id="nav">
             <div class="nav__logo">
                 <a href="{% url 'myApp:main_list' %}"><i class="fas fa-camera"></i> PHOING</a>
             </div>
             <ul class="nav__menu">
-                <li><a href="#">Contact</a></li>
+                <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
                 <li><a href="{% url 'myApp:portfolio_list' category='all' %}">Portfolio</a></li>
                 <li><a href="#">Reference</a></li>
                 <li><a href="#">Place</a></li>
                 <li><a href="#">Collaboration</a></li>
+                <h1>{{ request.user.username }}</h1>
             </ul>
             <ul class="nav__profile">
-                
-                
-                
+
+
+
 
                 {% if not user.is_authenticated %}
                 <li><a href="{% url 'login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
                 <li><a href="{% url 'login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
                 {% else %}
-                    {% url 'myApp:profile_detail' user.id as profile_path %}
-                    {% if request.path ==  profile_path %}
-                        <li><a href="{% url 'logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
-                    {% else %}
-                        <li><a href="{% url 'logout' %}?next={{ request.path }}" onclick="return confirm('Are you sure?');">Log Out</a></li>
-                    {% endif %}
-                        
-                
-                <li><a href="{% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+                {% url 'myApp:profile_detail' user.id as profile_path %}
+                {% if request.path ==  profile_path %}
+
+                <li><a href="{% url 'logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
+                {% else %}
+                <li><a href="{% url 'logout' %}?next={{ request.path }}" onclick="return confirm('Are you sure?');">Log
+                        Out</a></li>
                 {% endif %}
-                
+
+
+                <li><a href="{% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i
+                            class="far fa-user-circle"></i></a></li>
+                {% endif %}
+
             </ul>
-            <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>            
+            <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>
         </nav>
     </head>
-   <section class="container">
-    {% block content %}
-    {% endblock %}
-   </section>
+    <section class="container">
+        {% block content %}
+        {% endblock %}
+    </section>
     <footer id="footer">
-            <ul class="footer__left">
-                <li class="footer__logo">PHOING</li>
-                <li>Copyright PHOING All right reserved</li>
-                <li><a href="#">개인정보처리방침</a></li>
-            </ul>
-            <ul class="footer__right">
-                <li><i class="fab fa-instagram"></i></li>
-                <li><i class="fab fa-facebook-square"></i></li>
-                <li><i class="fab fa-youtube-square"></i></li>
-            </ul>
+        <ul class="footer__left">
+            <li class="footer__logo">PHOING</li>
+            <li>Copyright PHOING All right reserved</li>
+            <li><a href="#">개인정보처리방침</a></li>
+        </ul>
+        <ul class="footer__right">
+            <li><i class="fab fa-instagram"></i></li>
+            <li><i class="fab fa-facebook-square"></i></li>
+            <li><i class="fab fa-youtube-square"></i></li>
+        </ul>
     </footer>
+    {% block script %}
+    {% endblock script%}
 </body>
+
 </html>
