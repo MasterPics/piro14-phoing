@@ -93,18 +93,26 @@ def profile_portfolio(request, pk):
 ###################### portfolio section ######################
 
 
-def portfolio_list(request):
+def portfolio_list(request, filtering_type):
     random_ports = Portfolio.objects.order_by("?")
 
-    photographer = User.objects.filter(category='photographer')
-    model = User.objects.filter(category='model')
-    h_m = User.objects.filter(category='H&M')
-    stylist = User.objects.filter(category='stylist')
-    other_use = User.objects.filter(category='other use')
+    photographer = User.objects.filter(category=User.CATEGORY_PHOTOGRAPHER)
+    model = User.objects.filter(category=User.CATEGORY_MODEL)
+    h_m = User.objects.filter(category=User.CATEGORY_HM)
+    stylist = User.objects.filter(category=User.CATEGORY_STYLIST)
+    other_use = User.objects.filter(category=User.CATEGORY_OTHER)
 
     # order by: random 으로 선택
+    photographer = User.objects.filter(category=User.CATEGORY_PHOTOGRAPHER)
     photographer_ports = Portfolio.objects.filter(
-        user=photographer).order_by("?")
+        user=photographer).order_by("?")  # 단일 유저를 인자로 집어넣어야 함
+
+    # 동일 기능
+    Portfolio.objects.filter(
+        user__type='Model'
+    ).order_by("?")
+
+
     model_ports = Portfolio.objects.filter(user=model).order_by("?")
     h_m_ports = Portfolio.objects.filter(user=h_m).order_by("?")
     stylist_ports = Portfolio.objects.filter(user=stylist).order_by("?")
@@ -119,12 +127,12 @@ def portfolio_detail(request, pk):
     tags = port.tags
     images = port.images
     owner = port.user
-    owner_port = Portfolio.objects.filter(user=owner)
+    owner_ports = Portfolio.objects.filter(user=owner)
     login_user = request.user
     ctx = {'port': port,
            'tags': tags, 'images': images,
            'owner': owner,
-           'owner_port': owner_port,
+           'owner_ports': owner_ports,
            'login_user': login_user, }
     return render(request, 'myApp/portfolio/portfolio_detail.html', context=ctx)
 
@@ -162,6 +170,7 @@ def portfolio_create(request):
             portfolio = form.save()
             portfolio.user = request.user
             portfolio.image = request.FILES['image']
+            # TODO : save 다시
             return redirect('myApp:portfolio_detail', portfolio.id)
 
     else:

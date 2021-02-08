@@ -1,6 +1,7 @@
 import os
 from uuid import uuid4
 from django.utils import timezone
+import math
 
 def uuid_name_upload_to(instance, filename):
     app_label = instance.__class__._meta.app_label  # 앱 별로
@@ -15,3 +16,37 @@ def uuid_name_upload_to(instance, filename):
         uuid_name[:2],
         uuid_name + extension,
     ])
+
+
+def get_distance(latlng1, latlng2):
+    R = 6373.0
+    lat1 = math.radians(latlng1[0])
+    lon1 = math.radians(latlng1[1])
+    lat2 = math.radians(latlng2[0])
+    lon2 = math.radians(latlng2[1])
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return c
+
+
+def get_contacts_in_ten_kilo(user):
+    user_lat = user.lat
+    user_lng = user.lng
+
+    valid_contacts = list()
+
+    contacts = Contact.objects.all()
+    for contanct in contancts:
+        distance = get_distance(
+            [user.lat, user.lng],
+            [contact.lat, contact.lng]
+        )
+        if distance < 10:
+            valid_contacts.append(contact)
+    return valid_contacts
+

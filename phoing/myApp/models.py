@@ -5,12 +5,18 @@ from .utils import uuid_name_upload_to
 
 
 class User(AbstractUser):
+    CATEGORY_PHOTOGRAPHER = 'photographer'
+    CATEGORY_MODEL = 'model'
+    CATEGORY_HM = 'HairMakeup'
+    CATEGORY_STYLIST = 'stylist'
+    CATEGORY_OTHER = 'other use'
+
     CATEGORY = (
-        ('photographer', 'photographer'),
-        ('model', 'model'),
-        ('H&M', 'H&M'),
-        ('stylist', 'stylist'),
-        ('other use', 'other use'),
+        ('photographer', CATEGORY_PHOTOGRAPHER),
+        ('model', CATEGORY_MODEL),
+        ('HairMakeup', CATEGORY_HM),
+        ('stylist', CATEGORY_STYLIST),
+        ('other use', CATEGORY_OTHER),
     )
     category = models.CharField(max_length=20, choices=CATEGORY)
     image = models.ImageField(
