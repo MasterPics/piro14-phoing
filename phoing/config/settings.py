@@ -185,7 +185,6 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': [
             'profile',
             'email',
-            'picture',
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
@@ -204,18 +203,17 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         }
     },
-    'kakao': {
-        'SCOPE': [
-            'profile',
-            'email',
-            # 'profileImageUrl',  // HTTPS만 지원
+    # 'kakao': {
+    #     'SCOPE': [
+    #         'email',
+    #         # 'profileImageUrl',  // HTTPS만 지원
 
 
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
+    #     ],
+    #     'AUTH_PARAMS': {
+    #         'access_type': 'online',
+    #     }
+    # }
 }
 
 
@@ -233,4 +231,8 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 
+
 # SOCIALACCOUNT_AUTO_SIGNUP = True
+
+ACCOUNT_ADAPTER = "accounts.adapter.MyAccountAdapter"
+SOCIAL_ACCOUNT_ADAPTER = "accounts.adapter.MySocialAccountAdapter"

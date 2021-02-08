@@ -1,7 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from .utils import uuid_name_upload_to
+from .utils import uuid_name_upload_to, save_image_from_url
 from django.utils.translation import ugettext_lazy as _
+
+from django.dispatch import receiver
+from allauth.account.signals import user_signed_up
+import urllib
+
 # Create your models here.
 
 
@@ -58,7 +63,8 @@ class User(AbstractUser):
 
     username = models.CharField(max_length=20, blank=True)
     email = models.EmailField(_('email address'), unique=True)
-    category = models.CharField(max_length=20, choices=CATEGORY)
+    category = models.CharField(
+        max_length=20, choices=CATEGORY, default=CATEGORY_OTHER)
     image = models.ImageField(
         upload_to=uuid_name_upload_to, blank=True, default='user.png')
     desc = models.TextField(blank=True)
@@ -118,3 +124,32 @@ class Image(models.Model):
     image = models.ImageField(upload_to=uuid_name_upload_to)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+@receiver(user_signed_up)
+def populate_profile(sociallogin, user, **kwargs):
+
+    print("Here")
+
+    if sociallogin.account.provider == 'naver':
+        user_data = user.socialaccount_set.filter(provider='naver')[
+            0].extra_data
+        picture_url = user_data["profile_image"]
+        username = user_data["nickname"]
+        # first_name = user_data['first_name']
+
+    if sociallogin.account.provider == 'kakao':
+        user_data = user.socialaccount_set.filter(provider='kakao')[
+            0].extra_data
+        picture_url = user_data["properties"]["profile_image"]
+        username = user_data["properties"]["nickname"]
+
+    if sociallogin.account.provider == 'google':
+        user_data = user.socialaccount_set.filter(
+            provider='google')[0].extra_data
+        picture_url = user_data["picture"]
+        username = user_data["name"]
+
+    user.username = username
+    save_image_from_url(user, picture_url)
+    user.save()
