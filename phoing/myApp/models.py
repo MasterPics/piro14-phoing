@@ -13,6 +13,12 @@ from django.shortcuts import redirect
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
 
+<<<<<<< HEAD
+=======
+class UserManager(BaseUserManager):
+    """Define a model manager for User model with no username field."""
+
+>>>>>>> develop
     use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
@@ -69,6 +75,7 @@ class User(AbstractUser):
         upload_to=uuid_name_upload_to, blank=True, default='user.png')
     desc = models.TextField(blank=True)
 
+<<<<<<< HEAD
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -79,6 +86,10 @@ class User(AbstractUser):
             raise ValueError('Superuser must have is_superuser=True.')
         return self._create_user(email, password, **extra_fields)
     objects = UserManager()
+=======
+    objects = UserManager()
+
+>>>>>>> develop
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
