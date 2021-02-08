@@ -16,13 +16,14 @@ urlpatterns = [
 
     #####################contact#######################
     path('contact/', view=views.contact_list, name='contact_list'),
+    #path('contact/<string:category>', view=views.contact_category, name='contact_category'),
     path('contact/<int:pk>/', view=views.contact_detail, name='contact_detail'),
-    path('contact/<int:pk>/delete',
+    path('contact/<int:pk>/delete/',
          view=views.contact_delete, name='contact_delete'),
     path('contact/<int:pk>/update/',
          view=views.contact_update, name='contact_update'),
     path('contact/create/', view=views.contact_create, name='contact_create'),
-    # path('contact/save/', views.ContactSave.as_view(), name='contact_save'),
+    #path('contact/save/', views.ContactSave.as_view(), name='contact_save'),
 
 
     path('portfolio/', view=views.portfolio_list, name='portfolio_list'),
