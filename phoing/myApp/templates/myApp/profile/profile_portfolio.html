@@ -17,7 +17,7 @@
         {% else %}
             {% for portfolio in portfolios %}
             <div>
-                <img class="portfolio_image" src="{{portfolio.thumbnail.url}}" alt="portfolio_image" width="100%">
+                <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}"><img class="portfolio_image" src="{{portfolio.thumbnail.url}}" alt="portfolio_image" width="100%"></a>
             </div>
             {% endfor %}
         {% endif %}

@@ -53,14 +53,14 @@ class User(AbstractUser):
     CATEGORY_MODEL = 'model'
     CATEGORY_HM = 'HairMakeup'
     CATEGORY_STYLIST = 'stylist'
-    CATEGORY_OTHER = 'other use'
+    CATEGORY_OTHERS = 'otheruse'
 
     CATEGORY = (
         ('photographer', CATEGORY_PHOTOGRAPHER),
         ('model', CATEGORY_MODEL),
         ('HairMakeup', CATEGORY_HM),
         ('stylist', CATEGORY_STYLIST),
-        ('other use', CATEGORY_OTHER),
+        ('otheruse', CATEGORY_OTHERS),
     )
 
     username = models.CharField(max_length=20, blank=True)
@@ -68,9 +68,10 @@ class User(AbstractUser):
     category = models.CharField(
         max_length=20, choices=CATEGORY)
     image = models.ImageField(
-        upload_to=uuid_name_upload_to, blank=True, default='user.png')
+        upload_to=uuid_name_upload_to, blank=True, )
     desc = models.TextField(blank=True)
 
+    objects = UserManager()
 
     objects = UserManager()
 
