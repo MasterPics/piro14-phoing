@@ -19,13 +19,6 @@ class ProfileForm(UserCreationForm):
                 'class': field + " form",
                 'id': 'form-id', })
 
-    # def __init__(self, *args, **kwargs):
-    #     super(ProfileForm, self).__init__(*args, **kwargs)
-
-    @transaction.atomic
-    def save(self, request, user):
-        user.save()  # save the user object first so you can use it for relationships
-
 
 class PortfolioForm(forms.ModelForm):
     class Meta:
