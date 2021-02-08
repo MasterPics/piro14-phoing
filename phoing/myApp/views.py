@@ -13,6 +13,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import login as auth_login
 
 
+from django.db.models import Count, Q
+
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
@@ -52,7 +54,8 @@ def profile_update(request, pk):
             print("form.is_valid")
 
             user = form.save()
-            user.image = request.FILES['image']
+            if user.image:
+                user.image = request.FILES['image']
             return redirect('myApp:profile_detail', user.id)
     else:
         form = ProfileForm(instance=user)
@@ -63,7 +66,6 @@ def profile_update(request, pk):
 def profile_create(request):
     # if request.user.is_authenticated:
     #     return redirect('myApp:profile_detail')
-
 
     if request.method == 'POST':
         signup_form = ProfileForm(request.POST, request.FILES)
@@ -93,18 +95,26 @@ def profile_portfolio(request, pk):
 ###################### portfolio section ######################
 
 
-def portfolio_list(request):
+def portfolio_list(request, filtering_type):
     random_ports = Portfolio.objects.order_by("?")
 
-    photographer = User.objects.filter(category='photographer')
-    model = User.objects.filter(category='model')
-    h_m = User.objects.filter(category='H&M')
-    stylist = User.objects.filter(category='stylist')
-    other_use = User.objects.filter(category='other use')
+    photographer = User.objects.filter(category=User.CATEGORY_PHOTOGRAPHER)
+    model = User.objects.filter(category=User.CATEGORY_MODEL)
+    h_m = User.objects.filter(category=User.CATEGORY_HM)
+    stylist = User.objects.filter(category=User.CATEGORY_STYLIST)
+    other_use = User.objects.filter(category=User.CATEGORY_OTHER)
 
     # order by: random 으로 선택
+    photographer = User.objects.filter(category=User.CATEGORY_PHOTOGRAPHER)
     photographer_ports = Portfolio.objects.filter(
-        user=photographer).order_by("?")
+        user=photographer).order_by("?")  # 단일 유저를 인자로 집어넣어야 함
+
+    # 동일 기능
+    Portfolio.objects.filter(
+        user__type='Model'
+    ).order_by("?")
+
+
     model_ports = Portfolio.objects.filter(user=model).order_by("?")
     h_m_ports = Portfolio.objects.filter(user=h_m).order_by("?")
     stylist_ports = Portfolio.objects.filter(user=stylist).order_by("?")
@@ -119,22 +129,23 @@ def portfolio_detail(request, pk):
     tags = port.tags
     images = port.images
     owner = port.user
-    owner_port = Portfolio.objects.filter(user=owner)
+    owner_ports = Portfolio.objects.filter(user=owner)
     login_user = request.user
     ctx = {'port': port,
            'tags': tags, 'images': images,
            'owner': owner,
-           'owner_port': owner_port,
+           'owner_ports': owner_ports,
            'login_user': login_user, }
     return render(request, 'myApp/portfolio/portfolio_detail.html', context=ctx)
 
 
 def portfolio_delete(request, pk):
     port = Portfolio.objects.get(pk=pk)
+    user = port.user
     if request.method == 'POST':
         port.delete()
         messages.success(request, "삭제되었습니다.")
-        return redirect('myApp:profile_portfolio')
+        return redirect('myApp:profile_portfolio', user.id)
     else:
         ctx = {'port': port}
         return render(request, 'myApp/portfolio/portfolio_delete.html', context=ctx)
@@ -159,7 +170,9 @@ def portfolio_create(request):
         form = PortfolioForm(request.POST, request.FILES,)
         if form.is_valid():
             portfolio = form.save()
+            portfolio.user = request.user
             portfolio.image = request.FILES['image']
+            # TODO : save 다시
             return redirect('myApp:portfolio_detail', portfolio.id)
 
     else:
@@ -206,22 +219,72 @@ class PortfolioSave(View):
 
 
 ###################### contact section ######################
-
 def contact_list(request):
-    contacts = Contact.objects.all().order_by("?")
-    ctx = {'contacts' : contacts}
-    return render(request, 'myApp/contact/contact_list.html', context=ctx)
+    
+    if request.method == 'POST':
+        pass
+    else:
+        contacts = Contact.objects.all()
+
+        
+        category = request.GET.get('category', 'all')
+        search = request.GET.get('search', '')  # 검색어
+        sort = request.GET.get('sort', 'recent')  # 정렬기준
+        
+        #category 분류
+        if category != 'all':
+            if category == User.CATEGORY_PHOTOGRAPHER:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
+                ).distinct().order_by("?")
+            elif category == User.CATEGORY_MODEL:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_MODEL)
+                ).distinct().order_by("?")
+            elif category == User.CATEGORY_HM:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_HM)
+                ).distinct().order_by("?")
+            elif category == User.CATEGORY_STYLIST:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_STYLIST)
+                ).distinct().order_by("?")
+            elif category == User.CATEGORY_OTHER:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHER)
+                ).distinct().order_by("?")
+                #카테고리가 없는 유저들이 other use는 아님. 따로 있다!
+        
+        # 정렬
+        if sort == 'save':
+            contacts = contacts.annotate(num_save=Count('save_users')).order_by('-num_save', '-created_at')
+        elif sort == 'pay':  
+            contacts = contacts.order_by('-pay', '-created_at')
+        elif sort == 'recent':
+            contacts = contacts.order_by('-created_at')
+        
+        # 검색
+        if search:
+            contacts = contacts.filter(
+                Q(title__icontains=search) |  # 제목검색
+                Q(desc__icontains=search) |  # 내용검색
+                Q(user__username__icontains=search)  # 질문 글쓴이검색
+            ).distinct()
+
+        context = {'contacts': contacts, 'sort':sort, 'category':category, 'search':search,}
+        return render(request, 'myApp/contact/contact_list.html', context = context)
 
 
 def contact_detail(request, pk):
-    contact = Contact.objects.get_object_or_404(pk=pk)
-    ctx = {'contact': contact}
+    contact = get_object_or_404(Contact, pk=pk)
+    login_user = request.user
+    owner_user = contact.user
+    ctx = {
+        'contact': contact,
+        'login_user': login_user,
+        'owner_user': owner_user,
+    }
     return render(request, 'myApp/contact/contact_detail.html', context=ctx)
 
 
-# @login_required
+@login_required
 def contact_delete(request, pk):
-    contact = Contact.objects.get_object_or_404(pk=pk)
+    contact = get_object_or_404(Contact, pk=pk)
     if request.method == 'POST':
         contact.delete()
         messages.success(request, "탈퇴되었습니다.")
@@ -231,15 +294,15 @@ def contact_delete(request, pk):
         return render(request, 'myApp/contact/contact_delete.html', context=ctx)
 
 
-# @login_required
+@login_required
 def contact_update(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
     if request.method == 'POST':
         form = ContactForm(request.POST, request.FILES, instance=contact)
         if form.is_valid():
             print("form.is_valid")
+            contact.image = request.FILES.get('image')
             contact = form.save()
-            contact.image = request.FILES['image']
             return redirect('myApp:contact_detail', contact.id)
     else:
         form = ContactForm(instance=contact)
@@ -247,7 +310,7 @@ def contact_update(request, pk):
         return render(request, 'myApp/contact/contact_update.html', ctx)
 
 
-# @login_required
+@login_required
 def contact_create(request):
     # if request.user.is_authenticated:
     #     return redirect('myApp:profile_detail')
@@ -255,14 +318,19 @@ def contact_create(request):
     if request.method == 'POST':
         contact_form = ContactForm(request.POST, request.FILES)
         if contact_form.is_valid():
-            contact = contact_form.save()
-            contact.image = request.FILES['image']
-            return redirect('myApp:contact_detail', user.id)
+            print('here')
+            contact = contact_form.save(commit=False)
+            contact.user = request.user
+            contact.is_closed = False
+            contact.save()
+            contact.image = request.FILES.get('image')
+            return redirect('myApp:contact_detail', contact.id)
 
     else:
         contact_form = ContactForm()
 
     return render(request, 'myApp/contact/contact_create.html', {'form': contact_form})
+
 
 '''
 # @login_required
