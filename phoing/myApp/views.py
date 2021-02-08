@@ -13,10 +13,6 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import login as auth_login
 
 
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-
-
 def main_list(request):
     ctx = {}
     return render(request, 'myApp/main/main_list.html', context=ctx)
@@ -90,36 +86,37 @@ def profile_portfolio(request, pk):
     ctx = {'user': user, 'portfolios': portfolios}
     return render(request, 'myApp/profile/profile_portfolio.html', context=ctx)
 
+
+def profile_detail_other(request, pk):
+    user = User.objects.get(pk=pk)
+    portfolios = Portfolio.objects.filter(user=user)
+    ctx = {'user': user, 'portfolios': portfolios}
+    return render(request, 'myApp/profile/profile_detail_other.html', context=ctx)
+
 ###################### portfolio section ######################
 
 
-def portfolio_list(request, filtering_type):
-    random_ports = Portfolio.objects.order_by("?")
+def portfolio_list(request, category):
+    ports = Portfolio.objects.all()
 
-    photographer = User.objects.filter(category=User.CATEGORY_PHOTOGRAPHER)
-    model = User.objects.filter(category=User.CATEGORY_MODEL)
-    h_m = User.objects.filter(category=User.CATEGORY_HM)
-    stylist = User.objects.filter(category=User.CATEGORY_STYLIST)
-    other_use = User.objects.filter(category=User.CATEGORY_OTHER)
+    # category 분류 # order by: random 으로 선택
+    if category == 'all':
+        ports = ports.order_by("?")
+    else:
+        if category == User.CATEGORY_PHOTOGRAPHER:
+            ports = ports.objects.values('user').filter(
+                category=CATEGORY_PHOTOGRAPHER).order_by("?")
+        elif category == User.CATEGORY_MODEL:
+            ports = ports.order_by("?")
+        elif category == User.CATEGORY_HM:
+            ports = ports.order_by("?")
+        elif category == User.CATEGORY_STYLIST:
+            ports = ports.order_by("?")
+        elif category == User.CATEGORY_OTHER:
+            ports = ports.order_by("?")
 
-    # order by: random 으로 선택
-    photographer = User.objects.filter(category=User.CATEGORY_PHOTOGRAPHER)
-    photographer_ports = Portfolio.objects.filter(
-        user=photographer).order_by("?")  # 단일 유저를 인자로 집어넣어야 함
-
-    # 동일 기능
-    Portfolio.objects.filter(
-        user__type='Model'
-    ).order_by("?")
-
-
-    model_ports = Portfolio.objects.filter(user=model).order_by("?")
-    h_m_ports = Portfolio.objects.filter(user=h_m).order_by("?")
-    stylist_ports = Portfolio.objects.filter(user=stylist).order_by("?")
-    other_use_ports = Portfolio.objects.filter(user=other_use).order_by("?")
-    ctx = {'random_ports': random_ports,
-           'photographer_ports': photographer_ports, 'model_ports': model, 'h_m_ports': h_m_ports, 'stylist_ports': stylist_ports, 'other_use_ports': other_use_ports}
-    return render(request, 'myApp/portfolio/portfolio_list.html', context=ctx)
+    context = {'ports': ports, }
+    return render(request, 'myApp/portfolio/portfolio_list.html', context=context)
 
 
 def portfolio_detail(request, pk):

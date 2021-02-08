@@ -2,9 +2,7 @@
 
 {% load static %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'css/profile_detail2.css' %}">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/profile_detail.css' %}">
 {% endblock stylesheet %}
 
 {% block content %}
@@ -16,10 +14,10 @@
     <div class="profile_container">
             <div>
                 
-                {% if user.image  %}
-                <img class="profile_image" src="{{user.image.url}}" alt="profile_image" width="20%">    
+                {% if not user.image  %}
+                    <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
                 {% else %}
-                <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
+                    <img class="profile_image" src="{{user.image.url}}" alt="profile_image" width="20%">
                 {% endif %}
                     
                 
@@ -60,7 +58,6 @@
         <div class="profile_saved">
             저장목록
         </div>
-        <!-- check edit url -->
         <div class="profile_button">
             <a class="edit_btn" href="{% url 'myApp:profile_update' user.pk %}">프로필 수정</a> 
             <a class="delete_btn" href="{% url 'myApp:profile_delete' user.pk %}">탈퇴</a>
