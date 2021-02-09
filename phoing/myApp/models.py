@@ -9,6 +9,7 @@ import urllib
 
 from django.shortcuts import redirect
 
+<<<<<<< HEAD
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -92,6 +93,74 @@ class User(AbstractUser):
 >>>>>>> develop
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+=======
+from user.models import User
+
+
+# class UserManager(BaseUserManager):
+#     """Define a model manager for User model with no username field."""
+
+#     use_in_migrations = True
+
+#     def _create_user(self, email, password, **extra_fields):
+#         """Create and save a User with the given email and password."""
+#         if not email:
+#             raise ValueError('The given email must be set')
+#         email = self.normalize_email(email)
+#         user = self.model(email=email, **extra_fields)
+#         if not user.username:
+#             user.username = email.split('@')[0]
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
+
+#     def create_user(self, email, password=None, **extra_fields):
+#         """Create and save a regular User with the given email and password."""
+#         extra_fields.setdefault('is_staff', False)
+#         extra_fields.setdefault('is_superuser', False)
+#         return self._create_user(email, password, **extra_fields)
+
+#     def create_superuser(self, email, password, **extra_fields):
+#         """Create and save a SuperUser with the given email and password."""
+#         extra_fields.setdefault('is_staff', True)
+#         extra_fields.setdefault('is_superuser', True)
+
+#         if extra_fields.get('is_staff') is not True:
+#             raise ValueError('Superuser must have is_staff=True.')
+#         if extra_fields.get('is_superuser') is not True:
+#             raise ValueError('Superuser must have is_superuser=True.')
+
+#         return self._create_user(email, password, **extra_fields)
+
+
+# class User(AbstractUser):
+#     CATEGORY_PHOTOGRAPHER = 'photographer'
+#     CATEGORY_MODEL = 'model'
+#     CATEGORY_HM = 'HairMakeup'
+#     CATEGORY_STYLIST = 'stylist'
+#     CATEGORY_OTHERS = 'otheruse'
+
+#     CATEGORY = (
+#         ('photographer', CATEGORY_PHOTOGRAPHER),
+#         ('model', CATEGORY_MODEL),
+#         ('HairMakeup', CATEGORY_HM),
+#         ('stylist', CATEGORY_STYLIST),
+#         ('otheruse', CATEGORY_OTHERS),
+#     )
+
+#     username = models.CharField(max_length=20, blank=True)
+#     email = models.EmailField(_('email address'), unique=True)
+#     category = models.CharField(
+#         max_length=20, choices=CATEGORY)
+#     image = models.ImageField(
+#         upload_to=uuid_name_upload_to, blank=True, )
+#     desc = models.TextField(blank=True)
+
+#     objects = UserManager()
+
+#     USERNAME_FIELD = 'email'
+#     REQUIRED_FIELDS = []
+>>>>>>> develop
 
 
 class Post(models.Model):
@@ -145,29 +214,28 @@ class Image(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-@receiver(user_signed_up)
-def populate_profile(sociallogin, user, **kwargs):
+# @receiver(user_signed_up)
+# def populate_profile(user, sociallogin=None, **kwargs):
 
-    if sociallogin.account.provider == 'naver':
-        user_data = user.socialaccount_set.filter(provider='naver')[
-            0].extra_data
-        picture_url = user_data["profile_image"]
-        username = user_data["nickname"]
-        # first_name = user_data['first_name']
+#     if sociallogin.account.provider == 'naver':
+#         user_data = user.socialaccount_set.filter(provider='naver')[
+#             0].extra_data
+#         picture_url = user_data["profile_image"]
+#         username = user_data["nickname"]
+#         # first_name = user_data['first_name']
 
-    if sociallogin.account.provider == 'kakao':
-        user_data = user.socialaccount_set.filter(provider='kakao')[
-            0].extra_data
-        picture_url = user_data["properties"]["profile_image"]
-        username = user_data["properties"]["nickname"]
+#     if sociallogin.account.provider == 'kakao':
+#         user_data = user.socialaccount_set.filter(provider='kakao')[
+#             0].extra_data
+#         picture_url = user_data["properties"]["profile_image"]
+#         username = user_data["properties"]["nickname"]
 
-    if sociallogin.account.provider == 'google':
-        user_data = user.socialaccount_set.filter(
-            provider='google')[0].extra_data
-        picture_url = user_data["picture"]
-        username = user_data["name"]
+#     if sociallogin.account.provider == 'google':
+#         user_data = user.socialaccount_set.filter(
+#             provider='google')[0].extra_data
+#         picture_url = user_data["picture"]
+#         username = user_data["name"]
 
-    user.username = username
-    save_image_from_url(user, picture_url)
-    user.save()
-
+#     user.username = username
+#     save_image_from_url(user, picture_url)
+#     user.save()

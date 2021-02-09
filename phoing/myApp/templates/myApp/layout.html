@@ -37,7 +37,7 @@
             </div>
             <ul class="nav__menu">
                 <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
-                <li><a href="{% url 'myApp:portfolio_list' %}">Portfolio</a></li>
+                <li><a href="{% url 'myApp:portfolio_list' category='all' %}">Portfolio</a></li>
                 <li><a href="#">Reference</a></li>
                 <li><a href="#">Place</a></li>
                 <li><a href="#">Collaboration</a></li>
@@ -49,15 +49,15 @@
 
 
                 {% if not user.is_authenticated %}
-                <li><a href="{% url 'login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
-                <li><a href="{% url 'login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+                <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
+                <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
                 {% else %}
                 {% url 'myApp:profile_detail' user.id as profile_path %}
                 {% if request.path ==  profile_path %}
 
-                <li><a href="{% url 'logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
+                <li><a href="{% url 'account_logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
                 {% else %}
-                <li><a href="{% url 'logout' %}?next={{ request.path }}" onclick="return confirm('Are you sure?');">Log
+                <li><a href="{% url 'account_logout' %}?next={{ request.path }}" onclick="return confirm('Are you sure?');">Log
                         Out</a></li>
                 {% endif %}
 

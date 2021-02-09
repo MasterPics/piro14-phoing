@@ -4,11 +4,14 @@ from . import views
 app_name = 'myApp'
 
 urlpatterns = [
+    #####################profile#######################
     path('', view=views.main_list, name='main_list'),
     path('profile/<int:pk>/', view=views.profile_detail, name='profile_detail'),
-    path('profile/<int:pk>/delete',
+    path('profile/<int:pk>/other', view=views.profile_detail_other,
+         name='profile_detail_other'),
+    path('profile/<int:pk>/delete/',
          view=views.profile_delete, name='profile_delete'),
-    path('profile/<int:pk>/portfolio',
+    path('profile/<int:pk>/portfolio/',
          view=views.profile_portfolio, name='profile_portfolio'),
     path('profile/<int:pk>/update/',
          view=views.profile_update, name='profile_update'),
@@ -25,16 +28,15 @@ urlpatterns = [
     path('contact/create/', view=views.contact_create, name='contact_create'),
     #path('contact/save/', views.ContactSave.as_view(), name='contact_save'),
 
-
-    path('portfolio/', view=views.portfolio_list, name='portfolio_list'),
+    #####################portfolio#######################
+    path('portfolio/<slug:category>',
+         view=views.portfolio_list, name='portfolio_list'),
     path('portfolio/<int:pk>/', view=views.portfolio_detail,
          name='portfolio_detail'),
-    path('portfolio/<int:pk>/delete',
+    path('portfolio/<int:pk>/delete/',
          view=views.portfolio_delete, name='portfolio_delete'),
     path('portfolio/<int:pk>/update/',
          view=views.portfolio_update, name='portfolio_update'),
     path('portfolio/create/', view=views.portfolio_create, name='portfolio_create'),
 
 ]
-
-

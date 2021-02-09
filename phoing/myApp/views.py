@@ -15,9 +15,6 @@ from django.contrib.auth import login as auth_login
 
 from django.db.models import Count, Q
 
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-
 
 def main_list(request):
     ctx = {}
@@ -92,36 +89,37 @@ def profile_portfolio(request, pk):
     ctx = {'user': user, 'portfolios': portfolios}
     return render(request, 'myApp/profile/profile_portfolio.html', context=ctx)
 
+
+def profile_detail_other(request, pk):
+    user = User.objects.get(pk=pk)
+    portfolios = Portfolio.objects.filter(user=user)
+    ctx = {'user': user, 'portfolios': portfolios}
+    return render(request, 'myApp/profile/profile_detail_other.html', context=ctx)
+
 ###################### portfolio section ######################
 
 
-def portfolio_list(request, filtering_type):
-    random_ports = Portfolio.objects.order_by("?")
+def portfolio_list(request, category):
+    ports = Portfolio.objects.all()
 
-    photographer = User.objects.filter(category=User.CATEGORY_PHOTOGRAPHER)
-    model = User.objects.filter(category=User.CATEGORY_MODEL)
-    h_m = User.objects.filter(category=User.CATEGORY_HM)
-    stylist = User.objects.filter(category=User.CATEGORY_STYLIST)
-    other_use = User.objects.filter(category=User.CATEGORY_OTHER)
+    # category 분류 # order by: random 으로 선택
+    if category == 'all':
+        ports = ports.order_by("?")
+    else:
+        if category == User.CATEGORY_PHOTOGRAPHER:
+            ports = ports.objects.values('user').filter(
+                category=CATEGORY_PHOTOGRAPHER).order_by("?")
+        elif category == User.CATEGORY_MODEL:
+            ports = ports.order_by("?")
+        elif category == User.CATEGORY_HM:
+            ports = ports.order_by("?")
+        elif category == User.CATEGORY_STYLIST:
+            ports = ports.order_by("?")
+        elif category == User.CATEGORY_OTHER:
+            ports = ports.order_by("?")
 
-    # order by: random 으로 선택
-    photographer = User.objects.filter(category=User.CATEGORY_PHOTOGRAPHER)
-    photographer_ports = Portfolio.objects.filter(
-        user=photographer).order_by("?")  # 단일 유저를 인자로 집어넣어야 함
-
-    # 동일 기능
-    Portfolio.objects.filter(
-        user__type='Model'
-    ).order_by("?")
-
-
-    model_ports = Portfolio.objects.filter(user=model).order_by("?")
-    h_m_ports = Portfolio.objects.filter(user=h_m).order_by("?")
-    stylist_ports = Portfolio.objects.filter(user=stylist).order_by("?")
-    other_use_ports = Portfolio.objects.filter(user=other_use).order_by("?")
-    ctx = {'random_ports': random_ports,
-           'photographer_ports': photographer_ports, 'model_ports': model, 'h_m_ports': h_m_ports, 'stylist_ports': stylist_ports, 'other_use_ports': other_use_ports}
-    return render(request, 'myApp/portfolio/portfolio_list.html', context=ctx)
+    context = {'ports': ports, }
+    return render(request, 'myApp/portfolio/portfolio_list.html', context=context)
 
 
 def portfolio_detail(request, pk):
@@ -220,44 +218,44 @@ class PortfolioSave(View):
 
 ###################### contact section ######################
 def contact_list(request):
-    
+
     if request.method == 'POST':
         pass
     else:
         contacts = Contact.objects.all()
 
-        
         category = request.GET.get('category', 'all')
         search = request.GET.get('search', '')  # 검색어
         sort = request.GET.get('sort', 'recent')  # 정렬기준
-        
-        #category 분류
+
+        # category 분류
         if category != 'all':
             if category == User.CATEGORY_PHOTOGRAPHER:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
-                ).distinct().order_by("?")
+                                           ).distinct().order_by("?")
             elif category == User.CATEGORY_MODEL:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_MODEL)
-                ).distinct().order_by("?")
+                                           ).distinct().order_by("?")
             elif category == User.CATEGORY_HM:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_HM)
-                ).distinct().order_by("?")
+                                           ).distinct().order_by("?")
             elif category == User.CATEGORY_STYLIST:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_STYLIST)
-                ).distinct().order_by("?")
+                                           ).distinct().order_by("?")
             elif category == User.CATEGORY_OTHER:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHER)
-                ).distinct().order_by("?")
-                #카테고리가 없는 유저들이 other use는 아님. 따로 있다!
-        
+                                           ).distinct().order_by("?")
+                # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
+
         # 정렬
         if sort == 'save':
-            contacts = contacts.annotate(num_save=Count('save_users')).order_by('-num_save', '-created_at')
-        elif sort == 'pay':  
+            contacts = contacts.annotate(num_save=Count(
+                'save_users')).order_by('-num_save', '-created_at')
+        elif sort == 'pay':
             contacts = contacts.order_by('-pay', '-created_at')
         elif sort == 'recent':
             contacts = contacts.order_by('-created_at')
-        
+
         # 검색
         if search:
             contacts = contacts.filter(
@@ -266,8 +264,9 @@ def contact_list(request):
                 Q(user__username__icontains=search)  # 질문 글쓴이검색
             ).distinct()
 
-        context = {'contacts': contacts, 'sort':sort, 'category':category, 'search':search,}
-        return render(request, 'myApp/contact/contact_list.html', context = context)
+        context = {'contacts': contacts, 'sort': sort,
+                   'category': category, 'search': search, }
+        return render(request, 'myApp/contact/contact_list.html', context=context)
 
 
 def contact_detail(request, pk):
