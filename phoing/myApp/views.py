@@ -49,12 +49,16 @@ def profile_update(request, pk):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            print("form.is_valid")
+            # print("form.is_valid")
 
+            # user = form.save()
+            # if user.image:
+            #     user.image = request.FILES.get('image')
+            # return redirect('myApp:profile_detail', user.id)
+            user.image = request.FILES.get('image')
             user = form.save()
-            if user.image:
-                user.image = request.FILES['image']
             return redirect('myApp:profile_detail', user.id)
+
     else:
         form = ProfileForm(instance=user)
         ctx = {'form': form}
