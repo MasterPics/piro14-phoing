@@ -46,28 +46,36 @@
 <!--contact_list-->
 {% for contact in contacts %}
 <p>User : {{ contact.user }}</p>
-<button type="submit" onclick="onClickBtn({{ contact.id }}, {{request.user}}, 'save')" name="type" value="like"
-    class="btn btn-primary">
-    Saves : {{ contact.save_users.count }}
-</button>
-<p>Pay : {{ contact.pay }}</p>
+
+
+<p>Pay : {{ contact.pay }}원</p>
 
 
 <a href="{% url 'myApp:contact_detail' contact.pk %}">
     <p>{{ contact.title }}</p>
 </a>
 
-<!--save-->
-<button type="submit" onclick="onClickBtn({{ contact.id }}, 'save')" name="type" value="save"
-    class="btn btn-primary">saves {{ contact.save }}</button>
 
 
+
+<!--Save-->
+<div class="save save-{{contact.id}}">
+    {% if request_user in contact.save_users.all %}
+    <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
+    {% else %}
+    <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
+    {% endif %}
+    <span class="save__content">{{ contact.save_users.count }}</span>
+</div>
 {% endfor %}
-
 <!--contact_create-->
+<div>
+    <i class="far fa-comment-dots"></i>
+    <span class="comment__content">{{ contact.contact_comments.count }}</span>
+</div>
 
-{% if request_user.authenticated %}
-<a class="update_btn" href="{% url 'myApp:contact_create' %}">contact 만들기</a>
+{% if request_user.is_authenticated %}
+<p><a class="update_btn" href="{% url 'myApp:contact_create' %}">contact 만들기</a></p>
 {% endif %}
 
 
@@ -85,7 +93,57 @@
 
 <!--js-->
 {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type='text/javascript'>
+    //Save
+    //contact id : integer, request_user_id: integer, save : "save"(string)
+    const onClickSave = async (contact_id) => {
+        try {
+            // const url = '/contact/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     contact_id,
+            // })
+            // modify(data.contact_id, data.is_saved)
+
+            const options = {
+                url: '/contact/',
+                method: 'POST',
+                data: {
+                    contact_id: contact_id,
+                }
+            }
+            const response = await axios(options)
+            if (response && response.status === 200 && response.statusText === 'OK') {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modify(data.contact_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modify = (contact_id, is_saved) => {
+        const save = document.querySelector(`.save-${contact_id} i`);
+        const save_content = document.querySelector(`.save-${contact_id} .save__content`)
+        const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
     //category
     const onClickLink = (category) => {
         const categoryIdInput = document.querySelector('#category')

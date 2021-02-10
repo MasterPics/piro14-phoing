@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http.response import HttpResponse
 from .forms import *
+from user.models import *
 from .models import *
 import random
 from django.http import JsonResponse
@@ -117,7 +118,7 @@ def portfolio_list(request, category):
             ports = ports.order_by("?")
         elif category == User.CATEGORY_STYLIST:
             ports = ports.order_by("?")
-        elif category == User.CATEGORY_OTHER:
+        elif category == User.CATEGORY_OTHERS:
             ports = ports.order_by("?")
 
     context = {'ports': ports, }
@@ -219,20 +220,24 @@ class PortfolioSave(View):
 
 
 ###################### contact section ######################
-#@csrf_exempt
+@csrf_exempt
 def contact_list(request):
     request_user = request.user
-    contact_user = contact.user
     if request.method == 'POST':
         data = json.loads(request.body)
-        contact_id = data["id"]
-        contact = Contact.objects.get(id=contact_id)
-        #if button_type == 'save':
-        return render(request, 'myApp/contact/contact_list.html', context=context)
+        contact_id = data["contact_id"]
+        contact = get_object_or_404(Contact, pk=contact_id)
+        is_saved = request_user in contact.save_users.all()
+        if(is_saved):
+            contact.save_users.remove(get_object_or_404(User, pk=request_user.pk))
+        else:
+            contact.save_users.add(get_object_or_404(User, pk=request_user.pk))
+        is_saved = not is_saved
+        contact.save()
+        return JsonResponse({'contact_id': contact_id, 'is_saved':is_saved})
     else:
+        
         contacts = Contact.objects.all()
-
-
 
         category = request.GET.get('category', 'all')
         search = request.GET.get('search', '')  # 검색어
@@ -252,8 +257,8 @@ def contact_list(request):
             elif category == User.CATEGORY_STYLIST:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_STYLIST)
                                            ).distinct().order_by("?")
-            elif category == User.CATEGORY_OTHER:
-                contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHER)
+            elif category == User.CATEGORY_OTHERS:
+                contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHERS)
                                            ).distinct().order_by("?")
                 # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
 
@@ -280,7 +285,6 @@ def contact_list(request):
             'category': category,
             'search': search,
             'request_user': request_user,
-            'contact_user': contact_user, 
             }
         return render(request, 'myApp/contact/contact_list.html', context=context)
 
@@ -288,12 +292,9 @@ def contact_list(request):
 def contact_detail(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
     request_user = request.user
-    contact_user = contact.user
     ctx = {
         'contact': contact,
         'request_user': request_user,
-        'contact_user': contact_user,
-        
     }
     return render(request, 'myApp/contact/contact_detail.html', context=ctx)
 
@@ -319,7 +320,7 @@ def contact_update(request, pk):
             print("form.is_valid")
             contact.image = request.FILES.get('image')
             contact = form.save()
-            return redirect('myApp:contact_detail', contact.id)
+            return redirect('myApp:contact_detail', contact.pk)
     else:
         form = ContactForm(instance=contact)
         ctx = {'form': form}
@@ -340,7 +341,7 @@ def contact_create(request):
             contact.is_closed = False
             contact.save()
             contact.image = request.FILES.get('image')
-            return redirect('myApp:contact_detail', contact.id)
+            return redirect('myApp:contact_detail', contact.pk)
 
     else:
         contact_form = ContactForm()
@@ -349,27 +350,27 @@ def contact_create(request):
 
 
 
-# @login_required
-class ContactSave(View):
-    template_name = 'contact/contact_list.html'
+# # @login_required
+# class ContactSave(View):
+#     template_name = 'contact/contact_list.html'
 
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(ContactSave, self).dispatch(request, *args, **kwargs)
+#     @method_decorator(csrf_exempt)
+#     def dispatch(self, request, *args, **kwargs):
+#         return super(ContactSave, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request):
-        contacts = Contact.objects.all()
-        ctx = {"contacts": contacts}
-        return render(request, self.template_name, ctx)
+#     def get(self, request):
+#         contacts = Contact.objects.all()
+#         ctx = {"contacts": contacts}
+#         return render(request, self.template_name, ctx)
 
-    def post(self, request):
-        data = json.loads(request.body)
-        contact_id = data["id"]
-        contact = Contact.objects.get(id=contact_id)
-        save_users = contact.save_users.all()         
-        if user.is_authenticated():
-            if request.user in save_user:
-                contact.save()
+#     def post(self, request):
+#         data = json.loads(request.body)
+#         contact_id = data["id"]
+#         contact = Contact.objects.get(id=contact_id)
+#         save_users = contact.save_users.all()         
+#         if user.is_authenticated():
+#             if request.user in save_user:
+#                 contact.save()
 
-        return JsonResponse({'id': contact_id, 'save_users': contact.save_users})
+#         return JsonResponse({'id': contact_id, 'save_users': contact.save_users})
 

@@ -17,10 +17,10 @@
 <p>{{ contact.pay }}</p>
 
 
-{{ request_user.username }}
-{{ contact_user.username }}
-{% if request_user.pk == contact_user.pk %}
+<p>request_user: {{ request_user.username }}</p>
+<p>contact.user: {{ contact.user.username }}</p>
 
+{% if request_user.pk == contact.user.pk %}
 <div class="profile_button">
     <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>
     <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">Contact 삭제</a>
