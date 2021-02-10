@@ -5,7 +5,7 @@
 
 
 <div>
-    <!--filter - 검색과 유사-->
+    <!--category-->
     <div>
         <ul class="category">
             <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>
@@ -13,12 +13,12 @@
             <li><a href="javascript:void(0)" onclick="onClickLink('model')">Model</a></li>
             <li><a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair/Makeup</a></li>
             <li><a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('other use')">Other Use</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('otheruse')">Other Use</a></li>
         </ul>
     </div>
 
 
-    <!--정렬-->
+    <!--sort-->
     <div>
         <select name="" id="" class="form-control sort ">
             <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
@@ -33,7 +33,7 @@
         </select>
     </div>
 
-    <!--검색-->
+    <!--search-->
     <div class="col-4 input-group">
         <input type="text" class="form-control search" value="{{ search|default_if_none:"" }}">
         <div class="input-group-append">
@@ -42,36 +42,59 @@
     </div>
 </div>
 
+
+<!--contact_list-->
 {% for contact in contacts %}
-<p>{{ contact.user }}</p>
-<p>{{ contact.save_users.count }} </p>
-<p>{{ contact.pay }}</p>
+<p>User : {{ contact.user }}</p>
+<button type="submit" onclick="onClickBtn({{ contact.id }}, {{request.user}}, 'save')" name="type" value="like"
+    class="btn btn-primary">
+    Saves : {{ contact.save_users.count }}
+</button>
+<p>Pay : {{ contact.pay }}</p>
+
+
 <a href="{% url 'myApp:contact_detail' contact.pk %}">
     <p>{{ contact.title }}</p>
 </a>
+
+<!--save-->
 <button type="submit" onclick="onClickBtn({{ contact.id }}, 'save')" name="type" value="save"
     class="btn btn-primary">saves {{ contact.save }}</button>
+
+
 {% endfor %}
+
+<!--contact_create-->
+
+{% if request_user.authenticated %}
 <a class="update_btn" href="{% url 'myApp:contact_create' %}">contact 만들기</a>
+{% endif %}
+
+
+<!--filter form-->
 <form id="searchForm" method="get" action="{% url 'myApp:contact_list' %}">
+    <!--category-->
     <input type="hidden" id="category" name="category" value="{{ category }}">
+    <!--sort-->
     <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
+    <!--search-->
     <input type="hidden" id="sort" name="sort" value="{{ sort }}">
 </form>
-
 {% endblock content %}
 
+
+<!--js-->
 {% block script %}
 <script type='text/javascript'>
+    //category
     const onClickLink = (category) => {
-        console.log(category)
         const categoryIdInput = document.querySelector('#category')
         categoryIdInput.value = category
-        console.log(categoryIdInput.value)
         const searchForm = document.querySelector('#searchForm')
         searchForm.submit()
     }
 
+    //search
     const searchButton = document.querySelector('.btn_search')
     searchButton.addEventListener('click', () => {
         const searchClassInput = document.querySelector('.search')
@@ -81,6 +104,8 @@
         searchForm.submit()
     })
 
+
+    //sort
     const sortClassInput = document.querySelector('.sort')
     sortClassInput.addEventListener('input', (e) => {
         const sortIdInput = document.querySelector('#sort')

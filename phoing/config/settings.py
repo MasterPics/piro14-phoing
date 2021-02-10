@@ -242,12 +242,8 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-<<<<<<< HEAD
-SITE_ID = 2
+SITE_ID = 3
 LOGIN_REDIRECT_URL = '/'
-=======
-SITE_ID = 4
->>>>>>> develop
 
 # LOGIN_REDIRECT_URL = 'home'
 

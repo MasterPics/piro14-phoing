@@ -17,9 +17,9 @@
 <p>{{ contact.pay }}</p>
 
 
-{{ login_user.username }}
-{{ owner_user.username }}
-{% if login_user.pk == owner_user.pk %}
+{{ request_user.username }}
+{{ contact_user.username }}
+{% if request_user.pk == contact_user.pk %}
 
 <div class="profile_button">
     <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>

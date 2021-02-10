@@ -6,6 +6,8 @@ from .forms import *
 from .models import *
 import random
 from django.http import JsonResponse
+
+#for SAVE, LIKE
 import json
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -217,12 +219,20 @@ class PortfolioSave(View):
 
 
 ###################### contact section ######################
+#@csrf_exempt
 def contact_list(request):
-
+    request_user = request.user
+    contact_user = contact.user
     if request.method == 'POST':
-        pass
+        data = json.loads(request.body)
+        contact_id = data["id"]
+        contact = Contact.objects.get(id=contact_id)
+        #if button_type == 'save':
+        return render(request, 'myApp/contact/contact_list.html', context=context)
     else:
         contacts = Contact.objects.all()
+
+
 
         category = request.GET.get('category', 'all')
         search = request.GET.get('search', '')  # 검색어
@@ -264,19 +274,26 @@ def contact_list(request):
                 Q(user__username__icontains=search)  # 질문 글쓴이검색
             ).distinct()
 
-        context = {'contacts': contacts, 'sort': sort,
-                   'category': category, 'search': search, }
+        context = {
+            'contacts': contacts,
+            'sort': sort,
+            'category': category,
+            'search': search,
+            'request_user': request_user,
+            'contact_user': contact_user, 
+            }
         return render(request, 'myApp/contact/contact_list.html', context=context)
 
 
 def contact_detail(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
-    login_user = request.user
-    owner_user = contact.user
+    request_user = request.user
+    contact_user = contact.user
     ctx = {
         'contact': contact,
-        'login_user': login_user,
-        'owner_user': owner_user,
+        'request_user': request_user,
+        'contact_user': contact_user,
+        
     }
     return render(request, 'myApp/contact/contact_detail.html', context=ctx)
 
@@ -331,7 +348,7 @@ def contact_create(request):
     return render(request, 'myApp/contact/contact_create.html', {'form': contact_form})
 
 
-'''
+
 # @login_required
 class ContactSave(View):
     template_name = 'contact/contact_list.html'
@@ -355,4 +372,4 @@ class ContactSave(View):
                 contact.save()
 
         return JsonResponse({'id': contact_id, 'save_users': contact.save_users})
-'''
+
