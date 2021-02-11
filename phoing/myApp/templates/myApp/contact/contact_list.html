@@ -67,12 +67,15 @@
     {% endif %}
     <span class="save__content">{{ contact.save_users.count }}</span>
 </div>
-{% endfor %}
+
 <!--contact_create-->
 <div>
     <i class="far fa-comment-dots"></i>
     <span class="comment__content">{{ contact.contact_comments.count }}</span>
 </div>
+
+{% endfor %}
+
 
 {% if request_user.is_authenticated %}
 <p><a class="update_btn" href="{% url 'myApp:contact_create' %}">contact 만들기</a></p>
@@ -108,14 +111,15 @@
             // modify(data.contact_id, data.is_saved)
 
             const options = {
-                url: '/contact/',
+                url: '/contact/save/',
                 method: 'POST',
                 data: {
                     contact_id: contact_id,
                 }
             }
             const response = await axios(options)
-            if (response && response.status === 200 && response.statusText === 'OK') {
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
                 const data = response.data
                 //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
                 modify(data.contact_id, data.is_saved)
