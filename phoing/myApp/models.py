@@ -53,9 +53,9 @@ class Portfolio(models.Model):
 
 class Comment(models.Model):
     contact = models.ForeignKey(
-        to=Contact, related_name='contact_comments', on_delete=models.CASCADE)
+        to=Contact, null=True, blank=True, related_name='contact_comments', on_delete=models.CASCADE)
     portfolio = models.ForeignKey(
-        to=Portfolio, related_name='portfolio_comments', on_delete=models.CASCADE)
+        to=Portfolio, null=True, blank=True, related_name='portfolio_comments', on_delete=models.CASCADE)
 
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -64,18 +64,18 @@ class Comment(models.Model):
 
 class Tag(models.Model):
     contact = models.ForeignKey(
-        to=Contact, related_name='contact_tags', on_delete=models.CASCADE)
+        to=Contact, null=True, blank=True, related_name='contact_tags', on_delete=models.CASCADE)
     portfolio = models.ForeignKey(
-        to=Portfolio, related_name='portfolio_tags', on_delete=models.CASCADE)
+        to=Portfolio, null=True, blank=True, related_name='portfolio_tags', on_delete=models.CASCADE)
 
     tag = models.CharField(max_length=30)
 
 
 class Image(models.Model):
     contact = models.ForeignKey(
-        to=Contact, related_name='contact_images', on_delete=models.CASCADE)
+        to=Contact, null=True, blank=True, related_name='contact_images', on_delete=models.CASCADE)
     portfolio = models.ForeignKey(
-        to=Portfolio, related_name='portfolio_images', on_delete=models.CASCADE)
+        to=Portfolio, null=True, blank=True, related_name='portfolio_images', on_delete=models.CASCADE)
 
     image = models.ImageField(upload_to=uuid_name_upload_to)
     created_at = models.DateTimeField(auto_now_add=True)
