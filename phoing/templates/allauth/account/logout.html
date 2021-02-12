@@ -7,7 +7,8 @@
 {% block content %}
 <h1>{% trans "Sign Out" %}</h1>
 
-<p>{% trans 'Are you sure you want to sign out?' %}</p>
+<p style="color: blue; background-color: blueviolet;">{% trans 'Are you sure you want to sign out?' %}</p>
+HelloHello
 
 <form method="post" action="{% url 'account_logout' %}">
   {% csrf_token %}
