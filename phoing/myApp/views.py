@@ -16,7 +16,12 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import login as auth_login
 
 
+#category filtering
 from django.db.models import Count, Q
+
+#infinite loading
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 
 def main_list(request):
@@ -262,10 +267,12 @@ def contact_save(request):
 def contact_list(request):
     request_user = request.user
     contacts = Contact.objects.all()
-    category = request.GET.get('category', 'all')
-    search = request.GET.get('search', '')  # 검색어
-    sort = request.GET.get('sort', 'recent')  # 정렬기준
-    # category 분류
+        
+    category = request.GET.get('category', 'all') #CATEGORY
+    sort = request.GET.get('sort', 'recent')  # SORT
+    search = request.GET.get('search', '')  # SEARCH
+
+    # CATEGORY
     if category != 'all':
         if category == User.CATEGORY_PHOTOGRAPHER:
             contacts = contacts.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
@@ -283,7 +290,7 @@ def contact_list(request):
             contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHERS)
                                        ).distinct().order_by("?")
             # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
-    # 정렬
+    # SORT
     if sort == 'save':
         contacts = contacts.annotate(num_save=Count(
             'save_users')).order_by('-num_save', '-created_at')
@@ -291,13 +298,27 @@ def contact_list(request):
         contacts = contacts.order_by('-pay', '-created_at')
     elif sort == 'recent':
         contacts = contacts.order_by('-created_at')
-    # 검색
+    # SEARCH
     if search:
         contacts = contacts.filter(
             Q(title__icontains=search) |  # 제목검색
             Q(desc__icontains=search) |  # 내용검색
             Q(user__username__icontains=search)  # 질문 글쓴이검색
         ).distinct()
+
+
+    #infinite scroll
+    contacts_per_page = 3
+    page = request.GET.get('page', 1)
+    paginator = Paginator(contacts, contacts_per_page)
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        contacts = paginator.page(1)
+    except EmptyPage:
+        contacts = paginator.page(paginator.num_pages)
+
+
     context = {
         'contacts': contacts,
         'sort': sort,
@@ -306,74 +327,6 @@ def contact_list(request):
         'request_user': request_user,
         }
     return render(request, 'myApp/contact/contact_list.html', context=context)
-
-'''
-def contact_list(request):
-    request_user = request.user
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        contact_id = data["contact_id"]
-        contact = get_object_or_404(Contact, pk=contact_id)
-        is_saved = request_user in contact.save_users.all()
-        if(is_saved):
-            contact.save_users.remove(get_object_or_404(User, pk=request_user.pk))
-        else:
-            contact.save_users.add(get_object_or_404(User, pk=request_user.pk))
-        is_saved = not is_saved
-        contact.save()
-        return JsonResponse({'contact_id': contact_id, 'is_saved':is_saved})
-    else:
-        contacts = Contact.objects.all()
-
-        category = request.GET.get('category', 'all')
-        search = request.GET.get('search', '')  # 검색어
-        sort = request.GET.get('sort', 'recent')  # 정렬기준
-
-        # category 분류
-        if category != 'all':
-            if category == User.CATEGORY_PHOTOGRAPHER:
-                contacts = contacts.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
-                                           ).distinct().order_by("?")
-            elif category == User.CATEGORY_MODEL:
-                contacts = contacts.filter(Q(user__category=User.CATEGORY_MODEL)
-                                           ).distinct().order_by("?")
-            elif category == User.CATEGORY_HM:
-                contacts = contacts.filter(Q(user__category=User.CATEGORY_HM)
-                                           ).distinct().order_by("?")
-            elif category == User.CATEGORY_STYLIST:
-                contacts = contacts.filter(Q(user__category=User.CATEGORY_STYLIST)
-                                           ).distinct().order_by("?")
-            elif category == User.CATEGORY_OTHERS:
-                contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHERS)
-                                           ).distinct().order_by("?")
-                # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
-
-        # 정렬
-        if sort == 'save':
-            contacts = contacts.annotate(num_save=Count(
-                'save_users')).order_by('-num_save', '-created_at')
-        elif sort == 'pay':
-            contacts = contacts.order_by('-pay', '-created_at')
-        elif sort == 'recent':
-            contacts = contacts.order_by('-created_at')
-
-        # 검색
-        if search:
-            contacts = contacts.filter(
-                Q(title__icontains=search) |  # 제목검색
-                Q(desc__icontains=search) |  # 내용검색
-                Q(user__username__icontains=search)  # 질문 글쓴이검색
-            ).distinct()
-
-        context = {
-            'contacts': contacts,
-            'sort': sort,
-            'category': category,
-            'search': search,
-            'request_user': request_user,
-            }
-        return render(request, 'myApp/contact/contact_list.html', context=context)
-'''
 
 def contact_detail(request, pk):
     contact = get_object_or_404(Contact, pk=pk)

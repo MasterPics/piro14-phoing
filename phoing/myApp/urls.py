@@ -20,7 +20,7 @@ urlpatterns = [
     #####################contact#######################
     path('contact/', view=views.contact_list, name='contact_list'),
     #path('contact/<string:category>', view=views.contact_category, name='contact_category'),
-    path('contact/<int:pk>/', view=views.contact_detail, name='contact_detail'),
+    path('contact/detail/<int:pk>/', view=views.contact_detail, name='contact_detail'),
     path('contact/<int:pk>/comment_create/', view=views.contact_comment_create, name='contact_comment_create'),
     path('contact/<int:pk>/comment_delete/', view=views.contact_comment_delete, name='contact_comment_delete'),
     path('contact/<int:pk>/delete/',

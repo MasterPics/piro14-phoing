@@ -16,13 +16,14 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet">
+
+
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
     <style>
         * {
             font-family: 'NanumSquare', sans-serif;
         }
     </style> -->
-
 
 
 
@@ -44,10 +45,6 @@
                 <h1>{{ request.user.username }}</h1>
             </ul>
             <ul class="nav__profile">
-
-
-
-
                 {% if not user.is_authenticated %}
                 <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
                 <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
@@ -57,7 +54,8 @@
 
                 <li><a href="{% url 'account_logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
                 {% else %}
-                <li><a href="{% url 'account_logout' %}?next={{ request.path }}" onclick="return confirm('Are you sure?');">Log
+                <li><a href="{% url 'account_logout' %}?next={{ request.path }}"
+                        onclick="return confirm('Are you sure?');">Log
                         Out</a></li>
                 {% endif %}
 

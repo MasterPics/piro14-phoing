@@ -7,41 +7,41 @@
 
 {% block content %}
 <div>
-    <p>{{ contact.title }}</p>
-    <p>{{ contact.user.category }}</p>
-    <p>{{ contact.start_date }}</p>
-    <p>{{ contact.end_date }}</p>
-    <a href="{{ contact.file_attach.url }}">파일이름</a>
-    <div>
-        <img src="{{ contact.thumbnail.url }}" alt="">
-    </div>
-    <p>{{ contact.pay }}</p>
-
-    <!--Comment-->
-    <div class="comments-{{ contact.id }} comments">
-        {% for comment in contact.contact_comments.all %}
-        <div class="comment comment-{{ comment.id }}">
-            <span>{{ contact.id }}</span>
-            <span>{{ comment.id }}</span>
-            <span>{{ comment.content }}</span>
-            <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
+    <p>{{ contact.title }}</pls>
+        <p>{{ contact.user.category }}</p>
+        <p>{{ contact.start_date }}</p>
+        <p>{{ contact.end_date }}</p>
+        <a href="{{ contact.file_attach.url }}">파일이름</a>
+        <div>
+            <img src="{{ contact.thumbnail.url }}" alt="">
         </div>
-        {% endfor %}
-    </div>
-    <div class="createComment createComment-{{contact.id}}">
-        <input class="comment__value" type="text" placeholder="댓글 달기...">
-        <input class="comment__btn" onclick="onClickNewComment({{ contact.id }})" type="submit" value="게시">
-    </div>
+        <p>{{ contact.pay }}</p>
+
+        <!--Comment-->
+        <div class="comments-{{ contact.id }} comments">
+            {% for comment in contact.contact_comments.all %}
+            <div class="comment comment-{{ comment.id }}">
+                <span>{{ contact.id }}</span>
+                <span>{{ comment.id }}</span>
+                <span>{{ comment.content }}</span>
+                <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
+            </div>
+            {% endfor %}
+        </div>
+        <div class="createComment createComment-{{contact.id}}">
+            <input class="comment__value" type="text" placeholder="댓글 달기...">
+            <input class="comment__btn" onclick="onClickNewComment({{ contact.id }})" type="submit" value="게시">
+        </div>
 
 
-    <p>request_user: {{ request_user.username }}</p>
-    <p>contact.user: {{ contact.user.username }}</p>
-    {% if request_user.pk == contact.user.pk %}
-    <div class="profile_button">
-        <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>
-        <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">Contact 삭제</a>
-    </div>
-    {% endif %}
+        <p>request_user: {{ request_user.username }}</p>
+        <p>contact.user: {{ contact.user.username }}</p>
+        {% if request_user.pk == contact.user.pk %}
+        <div class="profile_button">
+            <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>
+            <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">Contact 삭제</a>
+        </div>
+        {% endif %}
 </div>
 {% endblock content%}
 {% block script %}
