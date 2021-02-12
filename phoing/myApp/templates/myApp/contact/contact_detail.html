@@ -6,24 +6,96 @@
 {% endblock stylesheet %}
 
 {% block content %}
-<p>{{ contact.title }}</p>
-<p>{{ contact.user.category }}</p>
-<p>{{ contact.start_date }}</p>
-<p>{{ contact.end_date }}</p>
-<a href="{{ contact.file_attach.url }}">파일이름</a>
 <div>
-    <img src="{{ contact.thumbnail.url }}" alt="">
+    <p>{{ contact.title }}</pls>
+        <p>{{ contact.user.category }}</p>
+        <p>{{ contact.start_date }}</p>
+        <p>{{ contact.end_date }}</p>
+        <a href="{{ contact.file_attach.url }}">파일이름</a>
+        <div>
+            <img src="{{ contact.thumbnail.url }}" alt="">
+        </div>
+        <p>{{ contact.pay }}</p>
+
+        <!--Comment-->
+        <div class="comments-{{ contact.id }} comments">
+            {% for comment in contact.contact_comments.all %}
+            <div class="comment comment-{{ comment.id }}">
+                <span>{{ contact.id }}</span>
+                <span>{{ comment.id }}</span>
+                <span>{{ comment.content }}</span>
+                <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
+            </div>
+            {% endfor %}
+        </div>
+        <div class="createComment createComment-{{contact.id}}">
+            <input class="comment__value" type="text" placeholder="댓글 달기...">
+            <input class="comment__btn" onclick="onClickNewComment({{ contact.id }})" type="submit" value="게시">
+        </div>
+
+
+        <p>request_user: {{ request_user.username }}</p>
+        <p>contact.user: {{ contact.user.username }}</p>
+        {% if request_user.pk == contact.user.pk %}
+        <div class="profile_button">
+            <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>
+            <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">Contact 삭제</a>
+        </div>
+        {% endif %}
 </div>
-<p>{{ contact.pay }}</p>
-
-
-{{ login_user.username }}
-{{ owner_user.username }}
-{% if login_user.pk == owner_user.pk %}
-
-<div class="profile_button">
-    <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>
-    <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">Contact 삭제</a>
-</div>
-{% endif %}
 {% endblock content%}
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type='text/javascript'>
+    const modifyNewComment = (contact_id, comment_id, value) => {
+        const CommentContainer = document.querySelector(`.comments-${contact_id}`);
+        console.log(CommentContainer)
+
+        const tempContainer = document.createElement("div");
+        tempContainer.className = `comment comment-${comment_id}`;
+
+
+        tempContainer.textContent = value;
+
+        const deleteBtn = document.createElement("input");
+        deleteBtn.className = "comment-btn";
+        deleteBtn.setAttribute("type", "submit");
+        deleteBtn.setAttribute("value", "삭제");
+        deleteBtn.setAttribute("onclick", `onClickDeleteComment(${comment_id})`)
+
+        tempContainer.appendChild(deleteBtn);
+        CommentContainer.appendChild(tempContainer);
+    }
+
+    const onClickNewComment = async (id) => {
+        const url = `/contact/${id}/comment_create/`;
+        const value = document.querySelector(`.createComment-${id} .comment__value`);
+        const value_text = value.value
+        const {
+            data
+        } = await axios.post(url, {
+            id,
+            value: value_text
+        })
+
+        modifyNewComment(id, data.comment_id, data.value);
+    }
+
+    const modifyDeleteComment = (comment_id) => {
+
+        const targetCommentContainer = document.querySelector(`.comment-${comment_id}`);
+        targetCommentContainer.remove();
+    }
+
+    const onClickDeleteComment = async (comment_id) => {
+        const url = `/contact/${comment_id}/comment_delete/`;
+
+        const {
+            data
+        } = await axios.post(url, {
+            comment_id
+        })
+        modifyDeleteComment(data.comment_id);
+    }
+</script>
+{% endblock script %}
