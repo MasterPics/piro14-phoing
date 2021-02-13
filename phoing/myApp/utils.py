@@ -8,7 +8,11 @@ import re
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 
-from .models import Tag
+
+#models.py에도 utils가 import 돼 있어 순환참조
+#Tag 따로 안쓰길래 주석처리함
+#from .models import Tag
+
 
 
 def uuid_name_upload_to(instance, filename):
