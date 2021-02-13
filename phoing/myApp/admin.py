@@ -11,27 +11,27 @@ from .models import *
 #     pass
 
 
-@admin.register(User)
-class UserAdmin(DjangoUserAdmin):
-    """Define admin model for custom User model with no email field."""
+# @admin.register(User)
+# class UserAdmin(DjangoUserAdmin):
+#     """Define admin model for custom User model with no email field."""
 
-    fieldsets = (
-        (None, {'fields': ('username', 'email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
-                                       'groups', 'user_permissions', 'category')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-    )
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2'),
-        }),
-    )
-    list_display = ('id', 'username', 'first_name',
-                    'last_name', 'email', 'category')
-    search_fields = ('email', 'first_name', 'last_name')
-    ordering = ('id',)
+#     fieldsets = (
+#         (None, {'fields': ('username', 'email', 'password', 'category')}),
+#         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
+#         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+#                                        'groups', 'user_permissions')}),
+#         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+#     )
+#     add_fieldsets = (
+#         (None, {
+#             'classes': ('wide',),
+#             'fields': ('email', 'password1', 'password2', 'category'),
+#         }),
+#     )
+#     list_display = ('id', 'username', 'first_name',
+#                     'last_name', 'email', 'category')
+#     search_fields = ('email', 'first_name', 'last_name')
+#     ordering = ('id',)
 
 
 @admin.register(Contact)

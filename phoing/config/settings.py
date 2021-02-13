@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
 
     'myApp',
-    'accounts',
+    'user',
 
 ]
 
@@ -75,18 +75,36 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
-
+# '''
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [
+#             os.path.join(BASE_DIR, 'config'),
+#         ],
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#         },
+#     },
+# ]
+# '''
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'config'),
-        ],
+        'DIRS': [os.path.join(BASE_DIR, 'config', 'templates'), os.path.join(BASE_DIR, 'user', 'templates', 'allauth')],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': False,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -110,8 +128,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
-
-AUTH_USER_MODEL = 'myApp.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -170,16 +186,114 @@ LOGIN_REDIRECT_URL = reverse_lazy('myApp:main_list')  # 반드시 정의할 것!
 LOGOUT_REDIRECT_URL = reverse_lazy('myApp:main_list')
 
 
-# AUTH : Socil login
+# # AUTH : Socil login
+# AUTHENTICATION_BACKENDS = (
+#     'django.contrib.auth.backends.ModelBackend',
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# )
+
+# SITE_ID = 4
+# LOGIN_REDIRECT_URL = '/'
+
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         }
+#     },
+#     'naver': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#             'nickname',
+#             'id',
+#             'profile_image'
+
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         }
+#     },
+#     # 'kakao': {
+#     #     'SCOPE': [
+#     #         'email',
+#     #         # 'profileImageUrl',  // HTTPS만 지원
+
+
+#     #     ],
+#     #     'AUTH_PARAMS': {
+#     #         'access_type': 'online',
+#     #     }
+#     # }
+# }
+
+
+# # ACCOUNT_SIGNUP_FORM_CLASS = 'myApp.forms.ProfileForm'
+# # SOCIALACCOUNT_FORMS = {'signup': 'myApp.forms.ProfileForm'}
+# # ACCOUNT_FORMS = {'signup': 'myApp.forms.ProfileForm'}
+
+
+# ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_AUTHENTICATION_METHOD = "email"
+# SOCIALACCOUNT_AUTO_SIGNUP = True
+
+# # SOCIALACCOUNT_FORMS = {'signup': 'accounts.forms.MySocialCustomSignupForm'}
+# # ACOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.MySocialCustomSignupForm'
+
+
+SESSION_COOKIE_SECURE = False
+
+
+########### CUSTOM USER #############
+AUTH_USER_MODEL = 'user.User'
+
+########### all-auth #############
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-SITE_ID = 2
+SITE_ID = 3
 LOGIN_REDIRECT_URL = '/'
 
+# LOGIN_REDIRECT_URL = 'home'
 
+# user email instead of username for authentification
+
+# email
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_REQUIRED = True  # email mandatory
+
+
+# username
+# ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_UNIQUE_USERNAME = False
+ACCOUNT_USERNAME_VALIDATORS = None
+
+SOCIALACCOUNT_AUTO_SIGNUP = True  # get additional information for signup
+
+
+# TODO: 회원가입 폼 클래스를 지정하고 해당 클래스는 def signup(self, request, user) 메소드를 반드시 구현해야 한다.
+# ACCOUNT_SIGNUP_FORM_CLASS = accounts.forms.SignupForm
+
+ACCOUNT_FORMS = {'signup': 'user.forms.MyCustomSignupForm', }
+
+# SOCIALACCOUNT_FORMS = {'signup': 'user.forms.MyCustomSocialSignupForm', }
+
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+# ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
+
+
+######### PROVIDER ########
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -217,19 +331,4 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-# ACCOUNT_SIGNUP_FORM_CLASS = 'myApp.forms.ProfileForm'
-# SOCIALACCOUNT_FORMS = {'signup': 'myApp.forms.ProfileForm'}
-# ACCOUNT_FORMS = {'signup': 'myApp.forms.ProfileForm'}
-
-
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-SOCIALACCOUNT_AUTO_SIGNUP = True
-
-# SOCIALACCOUNT_FORMS = {'signup': 'accounts.forms.MySocialCustomSignupForm'}
-# ACOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.MySocialCustomSignupForm'
-
-
-SESSION_COOKIE_SECURE = False
+# SOCIALACCOUNT_ADAPTER = "user.adapter.MyCustomSocialAccountAdapter"
