@@ -3,6 +3,7 @@
 {% load static %}
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/portfolio_detail.css' %}">
+<script src="https://kit.fontawesome.com/9ada8679dc.js" crossorigin="anonymous"></script>
 {% endblock stylesheet %}
 
 {% block content %}
@@ -10,13 +11,17 @@
         <div class="portfolio_container">  
             <div class="portfolio_info_container">
                 <div class="portfolio_owner">
-                    <div class="portfolio_content">{{owner.username}}</div>
+                    <a href="{% url 'myApp:profile_detail_other' owner.pk %}">
+                        <div class="portfolio_owner">{{owner.username}}</div>
+                        <button type="button">Show Profile</button>
+                    </a>
+                    <div class="portfolio_owner">{{owner.category}}</div>
                 </div>
                 <div class="portfolio_detail">
+                    <div class="portfolio_content">{{port.title}}</div>
                     <div>
                         <img class="portfolio_content" src="{{port.thumbnail.url}}" alt="prot_image" width="20%">
                     </div>    
-                    <div class="portfolio_content">{{port.title}}</div>
                     <div class="portfolio_content">{{port.desc}}</div>
                     <div class="portfolio_content">{{port.created_at}}</div>
                     <div class="portfolio_content">{{port.updated_at}}</div>
@@ -36,9 +41,9 @@
                     </div>
                     {% endif %}
                 </div>
-                {% for port in owner_port %}
+                {% for port in owner_ports %}
                     <div class="profile_owner_port">
-                        <a href="{% url 'myApp:portfolio_detail' port.pk %}">
+                        <!-- 사진 누르면 detail 넘어가도록 : <a href="{% url 'myApp:portfolio_detail' port.pk %}"> -->
                             <div>
                                 <img class="portfolio_content" src="{{port.thumbnail.url}}" alt="prot_image" width="20%">
                             </div>

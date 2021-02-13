@@ -16,7 +16,6 @@ from django.contrib.auth import login as auth_login
 from django.db.models import Count, Q
 
 
-
 def main_list(request):
     ctx = {}
     return render(request, 'myApp/main/main_list.html', context=ctx)
@@ -102,6 +101,7 @@ def profile_detail_other(request, pk):
 
 def portfolio_list(request, category):
     ports = Portfolio.objects.all()
+    login_user = request.user
 
     # category 분류 # order by: random 으로 선택
     if category == 'all':
@@ -119,19 +119,19 @@ def portfolio_list(request, category):
         elif category == User.CATEGORY_OTHER:
             ports = ports.order_by("?")
 
-    context = {'ports': ports, }
+    context = {'ports': ports, 'login_user': login_user}
     return render(request, 'myApp/portfolio/portfolio_list.html', context=context)
 
 
 def portfolio_detail(request, pk):
     port = Portfolio.objects.get(pk=pk)
-    tags = port.tags
-    images = port.images
+    # TODO 태그, 추가 이미지 보이도록
+    # tags = port.tags
+    # images = port.images
     owner = port.user
     owner_ports = Portfolio.objects.filter(user=owner)
     login_user = request.user
     ctx = {'port': port,
-           'tags': tags, 'images': images,
            'owner': owner,
            'owner_ports': owner_ports,
            'login_user': login_user, }
@@ -193,10 +193,10 @@ class PortfolioLike(View):
         data = json.loads(request.body)
         portfolio_id = data["id"]
         portfolio = Portfolio.objects.get(id=portfolio_id)
-        portfolio.like = not portfolio.like
+        portfolio.like_users = not portfolio.like_users
         portfolio.save()
 
-        return JsonResponse({'id': portfolio_id, 'like': portfolio.like})
+        return JsonResponse({'id': portfolio_id, 'like_users': portfolio.like_users})
 
 
 class PortfolioSave(View):
@@ -211,52 +211,52 @@ class PortfolioSave(View):
         data = json.loads(request.body)
         portfolio_id = data["id"]
         portfolio = Portfolio.objects.get(id=portfolio_id)
-        portfolio.save = not portfolio.save
+        portfolio.save_users = not portfolio.save_users
         portfolio.save()
 
-        return JsonResponse({'id': portfolio_id, 'save': portfolio.save})
+        return JsonResponse({'id': portfolio_id, 'save_users': portfolio.save_users})
 
 
 ###################### contact section ######################
 def contact_list(request):
-    
+
     if request.method == 'POST':
         pass
     else:
         contacts = Contact.objects.all()
 
-        
         category = request.GET.get('category', 'all')
         search = request.GET.get('search', '')  # 검색어
         sort = request.GET.get('sort', 'recent')  # 정렬기준
-        
-        #category 분류
+
+        # category 분류
         if category != 'all':
             if category == User.CATEGORY_PHOTOGRAPHER:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
-                ).distinct().order_by("?")
+                                           ).distinct().order_by("?")
             elif category == User.CATEGORY_MODEL:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_MODEL)
-                ).distinct().order_by("?")
+                                           ).distinct().order_by("?")
             elif category == User.CATEGORY_HM:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_HM)
-                ).distinct().order_by("?")
+                                           ).distinct().order_by("?")
             elif category == User.CATEGORY_STYLIST:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_STYLIST)
-                ).distinct().order_by("?")
+                                           ).distinct().order_by("?")
             elif category == User.CATEGORY_OTHER:
                 contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHER)
-                ).distinct().order_by("?")
-                #카테고리가 없는 유저들이 other use는 아님. 따로 있다!
-        
+                                           ).distinct().order_by("?")
+                # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
+
         # 정렬
         if sort == 'save':
-            contacts = contacts.annotate(num_save=Count('save_users')).order_by('-num_save', '-created_at')
-        elif sort == 'pay':  
+            contacts = contacts.annotate(num_save=Count(
+                'save_users')).order_by('-num_save', '-created_at')
+        elif sort == 'pay':
             contacts = contacts.order_by('-pay', '-created_at')
         elif sort == 'recent':
             contacts = contacts.order_by('-created_at')
-        
+
         # 검색
         if search:
             contacts = contacts.filter(
@@ -265,8 +265,9 @@ def contact_list(request):
                 Q(user__username__icontains=search)  # 질문 글쓴이검색
             ).distinct()
 
-        context = {'contacts': contacts, 'sort':sort, 'category':category, 'search':search,}
-        return render(request, 'myApp/contact/contact_list.html', context = context)
+        context = {'contacts': contacts, 'sort': sort,
+                   'category': category, 'search': search, }
+        return render(request, 'myApp/contact/contact_list.html', context=context)
 
 
 def contact_detail(request, pk):

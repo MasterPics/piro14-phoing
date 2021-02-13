@@ -3,11 +3,12 @@
 {% load static %}
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/portfolio/portfolio_list.css' %}">
+<script src="https://kit.fontawesome.com/9ada8679dc.js" crossorigin="anonymous"></script>
 {% endblock stylesheet %}
 
 {% block content %}
-    <div class="ports_container">
-        <div class="ports_left">
+    <div class="port_container">
+        <div class="port_left">
             <ul> 
                 <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' 'all' %}">All</a></li>  
                 <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' 'photographer' %}">Photographer</a></li>  
@@ -17,23 +18,61 @@
                 <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' 'otheruse' %}">Others</a></li>  
             </ul>
         </div>
-        <div class="ports_right">
-            <!-- check random_ports 외의 5가지 링크 눌렀을 때 고려 -->
+        <div class="port_create"><button type="button">+</button></div>
+        <div class="port_right">
+            <!-- TODO random_ports 외의 5가지 링크 눌렀을 때 고려 -->
             {% for port in ports %}
             <div>
                 <div class="port_profile">
                     <a href="{% url 'myApp:portfolio_detail' port.pk %}">
-                        <p>{{port.user}}</p>
+                        <p>{{port.user.username}}</p>
+                        <p>{{port.user.category}}</p>
+                        <p>{{port.title}}</p>
                         <img src="{{port.thumbnail.url}}" alt="thumbnail">
                     </a>
                 </div>
                 <div class="port_info">
-                    <div>{{port.like}}</div>
+                    <div class="like like-{{port.id}}">
+                        {% if login_user in port.like_users %}
+                            <i class="fas fa-heart" onclick="onClickLike({{ portfolio.pk }})"></i>
+                            <p class="like_content">{{port.like_users}}</p>
+                        {% else %}
+                            <i class="far fa-heart" onclick="onClickLike({{ portfolio.pk }})"></i>
+                        {% endif %}
+                    </div>
+
                     <div>{{port.view_count}}</div>
-                    <div>{{port.save}}</div>
+                    <div>{{port.save_users}}</div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
+
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+`   <script>
+        const onClickLike = async (id) => {
+            const url = "portfolio/like/";
+
+            const {data} = await axios.portfolio(url, {
+                id
+            })
+
+            modify(data.id, data.like_users);
+        }
+        const modify = (id, like) => {
+            const heart = document.querySelector(`.like-${id} i`);
+            const like_con = document.querySelector(`.like-${id} .like_content`);
+
+            if (like === false) {
+                heart.className = "far fa-heart";
+                like_con.innerHTML = "";
+            }
+            else {
+                heart.className = "fas fa-heart";
+                like_con.innerHTML = "{{port.like_users}}";
+            }
+        }   
 {% endblock content%}

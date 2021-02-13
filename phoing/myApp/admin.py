@@ -19,7 +19,7 @@ class UserAdmin(DjangoUserAdmin):
         (None, {'fields': ('username', 'email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
-                                       'groups', 'user_permissions')}),
+                                       'groups', 'user_permissions', 'category')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
@@ -28,7 +28,8 @@ class UserAdmin(DjangoUserAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
     )
-    list_display = ('id', 'username', 'first_name', 'last_name', 'email')
+    list_display = ('id', 'username', 'first_name',
+                    'last_name', 'email', 'category')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('id',)
 
