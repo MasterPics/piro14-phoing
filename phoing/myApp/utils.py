@@ -4,9 +4,11 @@ from django.utils import timezone
 import math
 
 import requests
-
+import re
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
+
+from .models import Tag
 
 
 def uuid_name_upload_to(instance, filename):
@@ -67,3 +69,5 @@ def save_image_from_url(user, url):
 
     user.image.save(uuid_name_upload_to(user, user.email),
                     File(img_temp), save=True)
+
+

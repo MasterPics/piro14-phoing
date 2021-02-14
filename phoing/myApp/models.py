@@ -51,6 +51,9 @@ class Portfolio(models.Model):
     view_count = models.PositiveIntegerField(default=0)
 
 
+     
+
+
 class Comment(models.Model):
     contact = models.ForeignKey(
         to=Contact, null=True, blank=True, related_name='contact_comments', on_delete=models.CASCADE)
@@ -80,6 +83,23 @@ class Image(models.Model):
     image = models.ImageField(upload_to=uuid_name_upload_to)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+
+class Reference():
+
+    # NOTE: 변수 이름  self.desc/self.tags로 가정하고 add_tags 함수 만듬!
+    
+    def add_tags(self):
+        # NOTE: self.desc 말고 TAG FIELD 따로 만들까?
+        tags = re.findall(r'#(\w+)\b', self.desc)
+
+        if not tags:
+            return
+
+        for t in tags:
+            tag, tag_created = Tag.objects.get_or_create(name=t)
+            self.tag_set.add(tag)  
 
 
 
