@@ -7,72 +7,236 @@
 {% endblock stylesheet %}
 
 {% block content %}
-    <div class="port_container">
-        <div class="port_left">
+    <div class="portfolio_container">
+        <!-- category -->
+        <div class="category">
             <ul> 
-                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' 'all' %}">All</a></li>  
-                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' 'photographer' %}">Photographer</a></li>  
-                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' 'model' %}">Model</a></li>  
-                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' 'HairMakeup' %}">Hair&Makeup</a></li>  
-                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' 'stylist' %}">Stylist</a></li>  
-                <li><a class="choose_portfolio" href="{% url 'myApp:portfolio_list' 'otheruse' %}">Others</a></li>  
+                <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>  
+                <li><a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a></li>  
+                <li><a href="javascript:void(0)" onclick="onClickLink('model')">Model</a></li>  
+                <li><a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair&Makeup</a></li>  
+                <li><a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a></li>  
+                <li><a href="javascript:void(0)" onclick="onClickLink('otheruse')">Others</a></li>  
             </ul>
         </div>
-        <div class="port_create"><button type="button">+</button></div>
-        <div class="port_right">
-            <!-- TODO random_ports 외의 5가지 링크 눌렀을 때 고려 -->
-            {% for port in ports %}
+        
+        <!-- create_portfolio -->
+        <a class="create_btn" href="{% url 'myApp:portfolio_create' %}"><button type="button">+</button></a>
+        
+        <!--sort-->
+        <div>
+            <select name="" id="" class="form-control sort ">
+                <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
+                    최신순
+                </option>
+                <option value="view" {% if sort == 'view' %}selected{% endif %}>
+                    조회순
+                </option>
+                <option value="like" {% if sort == 'like' %}selected{% endif %}>
+                    좋아요순
+                </option>
+                <option value="save" {% if sort == 'save' %}selected{% endif %}>
+                    저장순
+                </option>
+            </select>
+        </div>
+
+        
+        
+        <div class="infinite-container portfolio_content">
+            {% for portfolio in portfolios %}
             <div>
-                <div class="port_profile">
-                    <a href="{% url 'myApp:portfolio_detail' port.pk %}">
-                        <p>{{port.user.username}}</p>
-                        <p>{{port.user.category}}</p>
-                        <p>{{port.title}}</p>
-                        <img src="{{port.thumbnail.url}}" alt="thumbnail">
+                <div class="portfolio_profile">
+                    <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
+                        <p>{{portfolio.user.username}}</p>
+                        <p>{{portfolio.user.category}}</p>
+                        <p>{{portfolio.title}}</p>
+                        <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
                     </a>
                 </div>
-                <div class="port_info">
-                    <div class="like like-{{port.id}}">
-                        {% if login_user in port.like_users %}
-                            <i class="fas fa-heart" onclick="onClickLike({{ portfolio.pk }})"></i>
-                            <p class="like_content">{{port.like_users}}</p>
+                <div class="portfolio_info">
+                    <div class="like like-{{portfolio.id}}">
+                        {% if request_user in portfolio.like_users.all %}
+                        <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                            value="like"></i>
                         {% else %}
-                            <i class="far fa-heart" onclick="onClickLike({{ portfolio.pk }})"></i>
+                        <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                            value="like"></i>
                         {% endif %}
+                        <span class="like__content">{{ portfolio.like_users.count }}</span>
                     </div>
-
-                    <div>{{port.view_count}}</div>
-                    <div>{{port.save_users}}</div>
+                    <div>{{portfolio.view_count}}</div>
+                    <div class="save save-{{portfolio.id}}">
+                        {% if request_user in portfolio.save_users.all %}
+                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                            value="save"></i>
+                        {% else %}
+                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                            value="save"></i>
+                        {% endif %}
+                        <span class="save__content">{{ portfolio.save_users.count }}</span>
+                    </div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
 
+    {% if portfolios.has_next %}
+    <a class="infinite-more-link" href="?page={{ portfolios.next_page_number }}">
+        <div class="loading" style="display: none;">Loading...</div>
+    </a>
+    {% endif %}
 
 
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-`   <script>
-        const onClickLike = async (id) => {
-            const url = "portfolio/like/";
-
-            const {data} = await axios.portfolio(url, {
-                id
-            })
-
-            modify(data.id, data.like_users);
-        }
-        const modify = (id, like) => {
-            const heart = document.querySelector(`.like-${id} i`);
-            const like_con = document.querySelector(`.like-${id} .like_content`);
-
-            if (like === false) {
-                heart.className = "far fa-heart";
-                like_con.innerHTML = "";
-            }
-            else {
-                heart.className = "fas fa-heart";
-                like_con.innerHTML = "{{port.like_users}}";
-            }
-        }   
+<!--filter form-->
+<div style="height: 0;">
+    <form id="searchForm" method="get" action="{% url 'myApp:portfolio_list' %}">
+        <!--category-->
+        <input type="hidden" id="category" name="category" value="{{ category }}">
+        <!--sort-->
+        <input type="hidden" id="sort" name="sort" value="{{ sort }}">
+    </form>
+</div>
+ 
 {% endblock content%}
+
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+
+<script type='text/javascript'>
+    // infinite scroll
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function ($items) {
+            $('.loading').hide();
+        }
+    });
+
+    // save
+    const onClickSave = async (portfolio_id) => {
+        try {
+            // const url = '/portfolio/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     portfolio_id,
+            // })
+            // modify(data.portfolio_id, data.is_saved)
+
+            const options = {
+                url: '/portfolio/save/',
+                method: 'POST',
+                data: {
+                    portfolio_id: portfolio_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modify(data.portfolio_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modify = (portfolio_id, is_saved) => {
+        const save = document.querySelector(`.save-${portfolio_id} i`);
+        const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
+        const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+
+    // like
+    const onClickLike = async (portfolio_id) => {
+        try {
+            // const url = '/portfolio/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     portfolio_id,
+            // })
+            // modify(data.portfolio_id, data.is_liked)
+
+            const options = {
+                url: '/portfolio/like/',
+                method: 'POST',
+                data: {
+                    portfolio_id: portfolio_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                modify(data.portfolio_id, data.is_liked)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modify = (portfolio_id, is_liked) => {
+        const like = document.querySelector(`.like-${portfolio_id} i`);
+        const like_content = document.querySelector(`.like-${portfolio_id} .like__content`)
+        const num = like_content.innerText; // [ {{ portfolio.like_users.count }} ]
+        console.log(num)
+        if (is_liked === true) {
+
+            like.className = "fas fa-heart";
+
+            const count = Number(num) + 1;
+            like_content.innerHTML = count
+        } else {
+            like.className = "far fa-heart";
+
+            const count = Number(num) - 1;
+            like_content.innerHTML = count
+        }
+
+    }
+
+
+
+    // category
+    const onClickLink = (category) => {
+        const categoryIdInput = document.querySelector('#category')
+        categoryIdInput.value = category
+        const searchForm = document.querySelector('#searchForm')
+        searchForm.submit()
+    }
+
+    //sort
+    const sortClassInput = document.querySelector('.sort')
+    sortClassInput.addEventListener('input', (e) => {
+        const sortIdInput = document.querySelector('#sort')
+        const searchForm = document.querySelector('#searchForm')
+        sortIdInput.value = e.target.value
+        searchForm.submit()
+    })
+</script>
+{% endblock script %}
