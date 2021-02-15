@@ -27,8 +27,8 @@
         <div class="bar">
 
             <!--search-->
-            <div class="search">
-                <input type="text" class="search_input" value="{{ search|default_if_none:"" }}">
+            <div class="input-group">
+                <input type="text" class="form-control search" value="{{ search|default_if_none:"" }}">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary btn_search" type="button" id="">찾기</button>
                 </div>
@@ -52,9 +52,9 @@
 
             <!--contact_create-->
             <div class="contact_create">
-            {% if request_user.is_authenticated %}
-            <a class="update_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
-            {% endif %}
+                {% if request_user.is_authenticated %}
+                <a class="update_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
+                {% endif %}
             </div>
         </div>
 
@@ -64,52 +64,64 @@
             <!---->
             <div class="infinite-container">
                 {% for contact in contacts %}
-                <a href="{% url 'myApp:contact_detail' contact.pk %}">
+
                 <div class="infinite-item">
-                        <div class="item_top">
-                            <div>
-                                <!-- user_img -->
-                                User : {{ contact.user }}
-                            </div>
+                    <div class="item_top">
+                        <div>
+                            <!-- user_img -->
+                            User : {{ contact.user }}
+                        </div>
+                        <a href="{% url 'myApp:contact_detail' contact.pk %}">
                             <div>{{ contact.title }}</div>
-                            <div class="thumbnail_desc">
-                                <img src="{{ contact.thumbnail.url }}" alt="">
-                                <div class="desc">
-                                    <!-- desc ... -->
-                                </div>
-                            </div>
-                            <div class="pay_date">
-                                Pay : {{ contact.pay }}원
-                                <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
+                        </a>
+                        <div class="thumbnail_desc">
+                            <img src="{{ contact.thumbnail.url }}" alt="">
+                            <div class="desc">
+                                <!-- desc ... -->
                             </div>
                         </div>
-
-                        <div class="item_bottom">
-                            <div class="comment">
-                                <i class="far fa-comment-dots"></i>
-                                <span class="comment__content">{{ contact.contact_comments.count }}</span>
-                            </div>
-
-                            <div class="save">
-                                {% if request_user in contact.save_users.all %}
-                                <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
-                                    value="save"></i>
-                                {% else %}
-                                <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
-                                    value="save"></i>
-                                {% endif %}
-                                <span class="save__content">{{ contact.save_users.count }}</span>
-                            </div>
+                        <div class="pay_date">
+                            {% if contact.pay == 0 %}
+                            Pay : 상호 무페이
+                            {% else %}
+                            Pay : {{ contact.pay }}원
+                            {% endif %}
+                            <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
                         </div>
-                    <div class="caption">
-                        <div class="caption-content"><p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p></div>
                     </div>
+
+                    <div class="item_bottom">
+                        <div class="comment">
+                            <i class="far fa-comment-dots"></i>
+                            <span class="comment__content">{{ contact.contact_comments.count }}</span>
+                        </div>
+
+                        <div class="save save-{{contact.id}}">
+                            {% if request_user in contact.save_users.all %}
+                            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
+                                value="save"></i>
+                            {% else %}
+                            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
+                                value="save"></i>
+                            {% endif %}
+                            <span class="save__content">{{ contact.save_users.count }}</span>
+                        </div>
+
+                    </div>
+
+
+                    <!--
+                    <div class="caption">
+                        <div class="caption-content">
+                            <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
+                        </div>
+                    </div>
+                    -->
                 </div>
-                </a>
+
                 {% endfor %}
-                
-               
             </div>
+
 
             <!-- 무한로딩 보류 -->
             {% if contacts.has_next %}
@@ -118,7 +130,6 @@
             </a>
             {% endif %}
 
-            
             <!--filter form-->
             <div style="height: 0;">
                 <form id="searchForm" method="get" action="{% url 'myApp:contact_list' %}">
@@ -133,18 +144,107 @@
         </div>
 
     </div>
-    
-<div>
-{% endblock content %}
+
+    <div>
+        {% endblock content %}
 
 
 
-<!--js-->
-{% block script %}
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-<script src="{% static 'js/infinite.min.js' %}"></script>
-<script src="{% static 'js/contact.js' %}" defer></script>
-{% endblock script %}
+        <!--js-->
+        {% block script %}
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+        <script src="{% static 'js/infinite.min.js' %}"></script>
+        <script src="{% static 'js/contact.js' %}" defer></script>
+
+        <script>
+            var infinite = new Waypoint.Infinite({
+                element: $('.infinite-container')[0],
+                onBeforePageLoad: function () {
+                    $('.loading').show();
+                },
+                onAfterPageLoad: function ($items) {
+                    $('.loading').hide();
+                }
+            });
+
+            //Save
+            const onClickSave = async (contact_id) => {
+                try {
+                    // const url = '/contact/';
+                    // const {
+                    //     data
+                    // } = await axios.post(url, {
+                    //     contact_id,
+                    // })
+                    // modify(data.contact_id, data.is_saved)
+
+                    const options = {
+                        url: '/contact/save/',
+                        method: 'POST',
+                        data: {
+                            contact_id: contact_id,
+                        }
+                    }
+                    const response = await axios(options)
+                    const responseOK = response && response.status === 200 && response.statusText === 'OK'
+                    if (responseOK) {
+                        const data = response.data
+                        //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                        modify(data.contact_id, data.is_saved)
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+
+            const modify = (contact_id, is_saved) => {
+                const save = document.querySelector(`.save-${contact_id} i`);
+                const save_content = document.querySelector(`.save-${contact_id} .save__content`)
+                const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
+                console.log(num)
+                if (is_saved === true) {
+
+                    save.className = "fas fa-bookmark";
+
+                    const count = Number(num) + 1;
+                    save_content.innerHTML = count
+                } else {
+                    save.className = "far fa-bookmark";
+
+                    const count = Number(num) - 1;
+                    save_content.innerHTML = count
+                }
+
+            }
+            //category
+            const onClickLink = (category) => {
+                const categoryIdInput = document.querySelector('#category')
+                categoryIdInput.value = category
+                const searchForm = document.querySelector('#searchForm')
+                searchForm.submit()
+            }
+
+            //search
+            const searchButton = document.querySelector('.btn_search')
+            searchButton.addEventListener('click', () => {
+                const searchClassInput = document.querySelector('.search')
+                const searchIdInput = document.querySelector('#search')
+                const searchForm = document.querySelector('#searchForm')
+                searchIdInput.value = searchClassInput.value
+                searchForm.submit()
+            })
+
+
+            //sort
+            const sortClassInput = document.querySelector('.sort')
+            sortClassInput.addEventListener('input', (e) => {
+                const sortIdInput = document.querySelector('#sort')
+                const searchForm = document.querySelector('#searchForm')
+                sortIdInput.value = e.target.value
+                searchForm.submit()
+            })
+        </script>
+        {% endblock script %}

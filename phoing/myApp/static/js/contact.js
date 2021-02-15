@@ -1,4 +1,4 @@
-    var infinite = new Waypoint.Infinite({
+ /*   var infinite = new Waypoint.Infinite({
         element: $('.infinite-container')[0],
         onBeforePageLoad: function () {
             $('.loading').show();
@@ -84,3 +84,4 @@
         sortIdInput.value = e.target.value
         searchForm.submit()
     })
+*/

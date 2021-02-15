@@ -293,7 +293,8 @@ def contact_list(request):
         elif category == User.CATEGORY_OTHERS:
             contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHERS)
                                        ).distinct().order_by("?")
-            # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
+    
+    # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
     # SORT
     if sort == 'save':
         contacts = contacts.annotate(num_save=Count(
@@ -302,6 +303,8 @@ def contact_list(request):
         contacts = contacts.order_by('-pay', '-created_at')
     elif sort == 'recent':
         contacts = contacts.order_by('-created_at')
+
+
     # SEARCH
     if search:
         contacts = contacts.filter(
