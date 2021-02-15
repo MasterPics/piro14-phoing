@@ -163,12 +163,14 @@ def portfolio_list(request):
 
 def portfolio_detail(request, pk):
     portfolio = Portfolio.objects.get(pk=pk)
+    # tags=portfolio.tags.all()
     # TODO 태그, 추가 이미지 보이도록 tags = port.tags/images = port.images
     owner = portfolio.user
     owner_portfolios = Portfolio.objects.filter(user=owner)
     request_user = request.user
     ctx = {'portfolio': portfolio,
            'owner': owner,
+           #    'tags': contact.tags.all(),
            'owner_portfolios': owner_portfolios,
            'request_user': request_user, }
     return render(request, 'myApp/portfolio/portfolio_detail.html', context=ctx)
