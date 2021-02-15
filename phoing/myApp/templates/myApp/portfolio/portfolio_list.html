@@ -51,6 +51,11 @@
                         <p>{{portfolio.user.username}}</p>
                         <p>{{portfolio.user.category}}</p>
                         <p>{{portfolio.title}}</p>
+                        <div class="portfolio_tags">
+                            {% for tag in portfolio.tags.all %}
+                                <a href="" class="portfolio_tag">#{{ tag.tag }}</a>
+                            {% endfor %}
+                        </div>
                         <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
                     </a>
                 </div>
