@@ -8,7 +8,7 @@ from .models import *
 import random
 from django.http import JsonResponse
 
-#for SAVE, LIKE
+# for SAVE, LIKE
 import json
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -16,12 +16,11 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import login as auth_login
 
 
-#category filtering
+# category filtering
 from django.db.models import Count, Q
 
-#infinite loading
+# infinite loading
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 
 
 def main_list(request):
@@ -107,63 +106,105 @@ def profile_detail_other(request, pk):
 ###################### portfolio section ######################
 
 
-def portfolio_list(request, category):
-    ports = Portfolio.objects.all()
+def portfolio_list(request):
+    portfolios = Portfolio.objects.all().order_by("?")
+    request_user = request.user
 
-    # category 분류 # order by: random 으로 선택
-    if category == 'all':
-        ports = ports.order_by("?")
-    else:
+    # category 분류 # order_by("?"): random 으로 선택
+    category = request.GET.get('category', 'all')
+
+    if category != 'all':
         if category == User.CATEGORY_PHOTOGRAPHER:
-            ports = ports.objects.values('user').filter(
-                category=CATEGORY_PHOTOGRAPHER).order_by("?")
+            portfolios = portfolios.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
+                                           ).distinct().order_by("?")
         elif category == User.CATEGORY_MODEL:
-            ports = ports.order_by("?")
+            portfolios = portfolios.filter(Q(user__category=User.CATEGORY_MODEL)
+                                           ).distinct().order_by("?")
         elif category == User.CATEGORY_HM:
-            ports = ports.order_by("?")
+            portfolios = portfolios.filter(Q(user__category=User.CATEGORY_HM)
+                                           ).distinct().order_by("?")
         elif category == User.CATEGORY_STYLIST:
-            ports = ports.order_by("?")
+            portfolios = portfolios.filter(Q(user__category=User.CATEGORY_STYLIST)
+                                           ).distinct().order_by("?")
         elif category == User.CATEGORY_OTHERS:
-            ports = ports.order_by("?")
+            portfolios = portfolios.filter(Q(user__category=User.CATEGORY_OTHERS)
+                                           ).distinct().order_by("?")
 
-    context = {'ports': ports, }
+    # SORT 최신순, 조회순, 좋아요순, 저장순
+    sort = request.GET.get('sort', 'recent')
+
+    if sort == 'recent':
+        portfolios = portfolios.order_by('-updated_at')
+    elif sort == 'view':
+        portfolios = portfolios.annotate(num_save=Count(
+            'view_count')).order_by('-num_save', '-updated_at')
+    elif sort == 'like':
+        portfolios = portfolios.annotate(num_save=Count(
+            'like_users')).order_by('-num_save', '-updated_at')
+    elif sort == 'save':
+        portfolios = portfolios.annotate(num_save=Count(
+            'save_users')).order_by('-num_save', '-updated_at')
+
+    # infinite scroll
+    portfolios_per_page = 3
+    page = request.GET.get('page', 1)
+    paginator = Paginator(portfolios, portfolios_per_page)
+    try:
+        portfolios = paginator.page(page)
+    except PageNotAnInteger:
+        portfolios = paginator.page(1)
+    except EmptyPage:
+        portfolios = paginator.page(paginator.num_pages)
+
+    context = {'portfolios': portfolios, 'request_user': request_user, 'sort': sort,
+               'category': category, }
     return render(request, 'myApp/portfolio/portfolio_list.html', context=context)
 
 
 def portfolio_detail(request, pk):
-    port = Portfolio.objects.get(pk=pk)
-    tags = port.tags
-    images = port.images
-    owner = port.user
-    owner_ports = Portfolio.objects.filter(user=owner)
-    login_user = request.user
-    ctx = {'port': port,
-           'tags': tags, 'images': images,
+    portfolio = Portfolio.objects.get(pk=pk)
+    # tags=portfolio.tags.all()
+    # TODO 태그, 추가 이미지 보이도록 tags = port.tags/images = port.images
+    owner = portfolio.user
+    owner_portfolios = Portfolio.objects.filter(user=owner)
+    request_user = request.user
+    ctx = {'portfolio': portfolio,
            'owner': owner,
-           'owner_ports': owner_ports,
-           'login_user': login_user, }
+           'tags': portfolio.tags.all(),
+           'owner_portfolios': owner_portfolios,
+           'request_user': request_user, }
     return render(request, 'myApp/portfolio/portfolio_detail.html', context=ctx)
 
 
+@login_required
 def portfolio_delete(request, pk):
-    port = Portfolio.objects.get(pk=pk)
-    user = port.user
+    portfolio = Portfolio.objects.get(pk=pk)
+    owner = portfolio.user
     if request.method == 'POST':
-        port.delete()
+        portfolio.delete()
         messages.success(request, "삭제되었습니다.")
-        return redirect('myApp:profile_portfolio', user.id)
+        return redirect('myApp:profile_portfolio', owner.id)
     else:
-        ctx = {'port': port}
+        ctx = {'portfolio': portfolio}
         return render(request, 'myApp/portfolio/portfolio_delete.html', context=ctx)
 
 
+@login_required
 def portfolio_update(request, pk):
     portfolio = get_object_or_404(Portfolio, pk=pk)
     if request.method == 'POST':
         form = PortfolioForm(request.POST, request.FILES)
         if form.is_valid():
             portfolio = form.save()
-            portfolio.image = request.FILES['image']
+            portfolio.image = request.FILES.get('image')
+            portfolio.user = request.user
+            portfolio.save()
+
+            # save tag
+            tags = Tag.add_tags(portfolio.tag_str)
+            for tag in tags:
+                portfolio.tags.add(tag)
+
             return redirect('myApp:portfolio_detail', portfolio.id)
     else:
         form = PortfolioForm()
@@ -171,15 +212,24 @@ def portfolio_update(request, pk):
         return render(request, 'myApp/portfolio/portfolio_update.html', ctx)
 
 
+@login_required
 def portfolio_create(request):
     if request.method == 'POST':
         form = PortfolioForm(request.POST, request.FILES,)
         if form.is_valid():
-            portfolio = form.save()
+            portfolio = form.save(commit=False)
             portfolio.user = request.user
-            portfolio.image = request.FILES['image']
-            # TODO : save 다시
-            return redirect('myApp:portfolio_detail', portfolio.id)
+
+            portfolio.save()
+            # portfolio.user.save()
+            portfolio.image = request.FILES.get('image')
+
+            # save tag
+            tags = Tag.add_tags(portfolio.tag_str)
+            for tag in tags:
+                portfolio.tags.add(tag)
+
+            return redirect('myApp:portfolio_detail', portfolio.pk)
 
     else:
         form = PortfolioForm()
@@ -187,54 +237,77 @@ def portfolio_create(request):
 
     return render(request, 'myApp/portfolio/portfolio_create.html', ctx)
 
+    portfolio.save_users = not portfolio.save_users
+    portfolio.save()
 
-class PortfolioLike(View):
-    template_name = 'portfolio/portfolio_list.html'
+    return JsonResponse({'id': portfolio_id, 'save_users': portfolio.save_users})
 
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(PortfolioLike, self).dispatch(request, *args, **kwargs)
 
-    def portfolio(self, request):
-
+@csrf_exempt
+def portfolio_save(request):
+    if request.method == 'POST':
         data = json.loads(request.body)
-        portfolio_id = data["id"]
-        portfolio = Portfolio.objects.get(id=portfolio_id)
-        portfolio.like = not portfolio.like
+        portfolio_id = data["portfolio_id"]
+        portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
+        request_user = request.user
+        is_saved = request_user in portfolio.save_users.all()
+        if is_saved:
+            portfolio.save_users.remove(
+                get_object_or_404(User, pk=request_user.pk))
+        else:
+            portfolio.save_users.add(
+                get_object_or_404(User, pk=request_user.pk))
+        is_saved = not is_saved
         portfolio.save()
+        return JsonResponse({'portfolio_id': portfolio_id, 'is_saved': is_saved})
 
-        return JsonResponse({'id': portfolio_id, 'like': portfolio.like})
 
-
-class PortfolioSave(View):
-    template_name = 'portfolio/portfolio_list.html'
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(PortfolioSave, self).dispatch(request, *args, **kwargs)
-
-    def portfolio(self, request):
-
+@csrf_exempt
+def portfolio_like(request):
+    if request.method == 'POST':
         data = json.loads(request.body)
-        portfolio_id = data["id"]
-        portfolio = Portfolio.objects.get(id=portfolio_id)
-        portfolio.save = not portfolio.save
+        portfolio_id = data["portfolio_id"]
+        portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
+        request_user = request.user
+        is_liked = request_user in portfolio.like_users.all()
+        if is_liked:
+            portfolio.like_users.remove(
+                get_object_or_404(User, pk=request_user.pk))
+        else:
+            portfolio.like_users.add(
+                get_object_or_404(User, pk=request_user.pk))
+        is_liked = not is_liked
         portfolio.save()
+        return JsonResponse({'portfolio_id': portfolio_id, 'is_liked': is_liked})
 
-        return JsonResponse({'id': portfolio_id, 'save': portfolio.save})
+
+# TODO view_count 수정
+@csrf_exempt
+def portfolio_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        portfolio_id = data["portfolio_id"]
+        portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
+        request_user = request.user
+        is_viewed = request_user in portfolio.view_count.all()
+        portfolio.save_users.add(get_object_or_404(User, pk=request_user.pk))
+        is_saved = not is_saved
+        portfolio.save()
+        return JsonResponse({'portfolio_id': portfolio_id, 'is_saved': is_saved})
 
 
 ###################### contact section ######################
 @csrf_exempt
 def contact_comment_create(request, pk):
     if request.method == 'POST':
-        data =json.loads(request.body)
+        data = json.loads(request.body)
         contact_id = data["id"]
         comment_value = data["value"]
         contact = Contact.objects.get(id=contact_id)
         comment = Comment.objects.create(
             content=comment_value, contact=contact)
-        return JsonResponse({'contact_id':contact_id, 'comment_id': comment.id, 'value': comment_value})
+        return JsonResponse({'contact_id': contact_id, 'comment_id': comment.id, 'value': comment_value})
+
 
 @csrf_exempt
 def contact_comment_delete(request, pk):
@@ -248,6 +321,7 @@ def contact_comment_delete(request, pk):
 
         return JsonResponse({'comment_id': comment_id})
 
+
 @csrf_exempt
 def contact_save(request):
     if request.method == 'POST':
@@ -257,18 +331,20 @@ def contact_save(request):
         request_user = request.user
         is_saved = request_user in contact.save_users.all()
         if(is_saved):
-            contact.save_users.remove(get_object_or_404(User, pk=request_user.pk))
+            contact.save_users.remove(
+                get_object_or_404(User, pk=request_user.pk))
         else:
             contact.save_users.add(get_object_or_404(User, pk=request_user.pk))
         is_saved = not is_saved
         contact.save()
-        return JsonResponse({'contact_id': contact_id, 'is_saved':is_saved})
+        return JsonResponse({'contact_id': contact_id, 'is_saved': is_saved})
+
 
 def contact_list(request):
     request_user = request.user
     contacts = Contact.objects.all()
-        
-    category = request.GET.get('category', 'all') #CATEGORY
+
+    category = request.GET.get('category', 'all')  # CATEGORY
     sort = request.GET.get('sort', 'recent')  # SORT
     search = request.GET.get('search', '')  # SEARCH
 
@@ -306,8 +382,7 @@ def contact_list(request):
             Q(user__username__icontains=search)  # 질문 글쓴이검색
         ).distinct()
 
-
-    #infinite scroll
+    # infinite scroll
     contacts_per_page = 3
     page = request.GET.get('page', 1)
     paginator = Paginator(contacts, contacts_per_page)
@@ -318,15 +393,15 @@ def contact_list(request):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
 
-
     context = {
         'contacts': contacts,
         'sort': sort,
         'category': category,
         'search': search,
         'request_user': request_user,
-        }
+    }
     return render(request, 'myApp/contact/contact_list.html', context=context)
+
 
 def contact_detail(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
@@ -388,7 +463,6 @@ def contact_create(request):
     return render(request, 'myApp/contact/contact_create.html', {'form': contact_form})
 
 
-
 # # @login_required
 # class ContactSave(View):
 #     template_name = 'contact/contact_list.html'
@@ -406,10 +480,9 @@ def contact_create(request):
 #         data = json.loads(request.body)
 #         contact_id = data["id"]
 #         contact = Contact.objects.get(id=contact_id)
-#         save_users = contact.save_users.all()         
+#         save_users = contact.save_users.all()
 #         if user.is_authenticated():
 #             if request.user in save_user:
 #                 contact.save()
 
 #         return JsonResponse({'id': contact_id, 'save_users': contact.save_users})
-

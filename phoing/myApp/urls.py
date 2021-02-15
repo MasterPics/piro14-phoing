@@ -20,9 +20,12 @@ urlpatterns = [
     #####################contact#######################
     path('contact/', view=views.contact_list, name='contact_list'),
     #path('contact/<string:category>', view=views.contact_category, name='contact_category'),
-    path('contact/detail/<int:pk>/', view=views.contact_detail, name='contact_detail'),
-    path('contact/<int:pk>/comment_create/', view=views.contact_comment_create, name='contact_comment_create'),
-    path('contact/<int:pk>/comment_delete/', view=views.contact_comment_delete, name='contact_comment_delete'),
+    path('contact/detail/<int:pk>/',
+         view=views.contact_detail, name='contact_detail'),
+    path('contact/<int:pk>/comment_create/',
+         view=views.contact_comment_create, name='contact_comment_create'),
+    path('contact/<int:pk>/comment_delete/',
+         view=views.contact_comment_delete, name='contact_comment_delete'),
     path('contact/<int:pk>/delete/',
          view=views.contact_delete, name='contact_delete'),
     path('contact/<int:pk>/update/',
@@ -31,7 +34,7 @@ urlpatterns = [
     path('contact/save/', views.contact_save, name='contact_save'),
 
     #####################portfolio#######################
-    path('portfolio/<slug:category>',
+    path('portfolio/',
          view=views.portfolio_list, name='portfolio_list'),
     path('portfolio/<int:pk>/', view=views.portfolio_detail,
          name='portfolio_detail'),
@@ -40,5 +43,8 @@ urlpatterns = [
     path('portfolio/<int:pk>/update/',
          view=views.portfolio_update, name='portfolio_update'),
     path('portfolio/create/', view=views.portfolio_create, name='portfolio_create'),
-
+    path('portfolio/like/', view=views.portfolio_like,
+         name='portfolio_like'),
+    path('portfolio/save/', view=views.portfolio_save,
+         name='portfolio_save'),
 ]

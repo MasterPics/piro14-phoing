@@ -8,8 +8,8 @@
 {% block content %}
 <div class="container">
     <div class="portfolio_delete">
-        <h1>User delete</h1><br>
-        <form action="{% url 'myApp:portfolio_delete' port.pk %}" method="POST">
+        <h1>Portfolio delete</h1><br>
+        <form action="{% url 'myApp:portfolio_delete' portfolio.pk %}" method="POST">
             {% csrf_token %}
             <p>정말로 삭제하시겠습니까?</p>
             <input class="delete_btn" type="submit" value="삭제"/>
