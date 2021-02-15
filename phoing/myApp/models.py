@@ -11,9 +11,8 @@ from django.shortcuts import redirect
 from user.models import User
 
 
-
-class Contact(models.Model): 
-    #common field
+class Contact(models.Model):
+    # common field
     user = models.ForeignKey(
         to=User, related_name="contacts", on_delete=models.CASCADE)
     thumbnail = models.ImageField(upload_to=uuid_name_upload_to)
@@ -24,7 +23,7 @@ class Contact(models.Model):
         to=User, related_name='contact_save_users', blank=True)
     desc = models.TextField()
 
-    #specific field
+    # specific field
     file_attach = models.FileField()
     location = models.TextField()
     pay = models.PositiveIntegerField()
@@ -34,7 +33,7 @@ class Contact(models.Model):
 
 
 class Portfolio(models.Model):
-    #common field
+    # common field
     user = models.ForeignKey(
         to=User, related_name="portfolios", on_delete=models.CASCADE)
     thumbnail = models.ImageField(upload_to=uuid_name_upload_to)
@@ -45,13 +44,10 @@ class Portfolio(models.Model):
         to=User, related_name='portfolio_save_users', blank=True)
     desc = models.TextField()
 
-    #specific field
+    # specific field
     like_users = models.ManyToManyField(
         to=User, related_name='portfolio_like_users', blank=True)
     view_count = models.PositiveIntegerField(default=0)
-
-
-     
 
 
 class Comment(models.Model):
@@ -85,11 +81,10 @@ class Image(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-
 class Reference():
 
     # NOTE: 변수 이름  self.desc/self.tags로 가정하고 add_tags 함수 만듬!
-    
+
     def add_tags(self):
         # NOTE: self.desc 말고 TAG FIELD 따로 만들까?
         tags = re.findall(r'#(\w+)\b', self.desc)
@@ -99,8 +94,7 @@ class Reference():
 
         for t in tags:
             tag, tag_created = Tag.objects.get_or_create(name=t)
-            self.tag_set.add(tag)  
-
+            self.tag_set.add(tag)
 
 
 # class Post(models.Model):
@@ -135,7 +129,6 @@ class Reference():
 #         to=User, related_name='like_users', blank=True)
 #     location = models.TextField()
 #     pay = models.PositiveIntegerField()
-
 
 
 # class UserManager(BaseUserManager):
@@ -266,7 +259,6 @@ class Reference():
 
 #     USERNAME_FIELD = 'email'
 #     REQUIRED_FIELDS = []
-
 
 
 # @receiver(user_signed_up)
