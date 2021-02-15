@@ -3,11 +3,12 @@
 {% load static %}
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/contact_detail.css' %}">
-{% endblock stylesheet %}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+
 
 {% block content %}
 <div>
-    <p>{{ contact.title }}</pls>
+        <p>{{ contact.title }}</p>
         <p>{{ contact.user.category }}</p>
         <p>{{ contact.start_date }}</p>
         <p>{{ contact.end_date }}</p>
