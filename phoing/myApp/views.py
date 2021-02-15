@@ -170,7 +170,7 @@ def portfolio_detail(request, pk):
     request_user = request.user
     ctx = {'portfolio': portfolio,
            'owner': owner,
-           #    'tags': contact.tags.all(),
+           'tags': portfolio.tags.all(),
            'owner_portfolios': owner_portfolios,
            'request_user': request_user, }
     return render(request, 'myApp/portfolio/portfolio_detail.html', context=ctx)
@@ -199,6 +199,12 @@ def portfolio_update(request, pk):
             portfolio.image = request.FILES.get('image')
             portfolio.user = request.user
             portfolio.save()
+
+            # save tag
+            tags = Tag.add_tags(portfolio.tag_str)
+            for tag in tags:
+                portfolio.tags.add(tag)
+
             return redirect('myApp:portfolio_detail', portfolio.id)
     else:
         form = PortfolioForm()
@@ -217,6 +223,12 @@ def portfolio_create(request):
             portfolio.save()
             # portfolio.user.save()
             portfolio.image = request.FILES.get('image')
+
+            # save tag
+            tags = Tag.add_tags(portfolio.tag_str)
+            for tag in tags:
+                portfolio.tags.add(tag)
+
             return redirect('myApp:portfolio_detail', portfolio.pk)
 
     else:
