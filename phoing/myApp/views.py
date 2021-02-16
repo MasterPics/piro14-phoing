@@ -165,9 +165,9 @@ def portfolio_detail(request, pk):
     portfolio = Portfolio.objects.get(pk=pk)
     # tags=portfolio.tags.all()
     # TODO 태그, 추가 이미지 보이도록 tags = port.tags/images = port.images
-    owner = portfolio.user
+    owner = portfolio.user  # 게시글 작성자
     owner_portfolios = Portfolio.objects.filter(user=owner)
-    request_user = request.user
+    request_user = request.user  # 로그인한 유저
     ctx = {'portfolio': portfolio,
            'owner': owner,
            #    'tags': contact.tags.all(),
