@@ -3,50 +3,123 @@
 {% load static %}
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/contact_detail.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+
 {% endblock stylesheet %}
 
 {% block content %}
+<!-- 카테고리 왼쪽에 -->
+
 <div>
-    <p>{{ contact.title }}</pls>
-        <p>{{ contact.user.category }}</p>
-        <p>{{ contact.start_date }}</p>
-        <p>{{ contact.end_date }}</p>
-        <a href="{{ contact.file_attach.url }}">파일이름</a>
-        <div>
-            <img src="{{ contact.thumbnail.url }}" alt="">
-        </div>
-        <p>{{ contact.pay }}</p>
+    <!-- SHOW PROFILE 버튼 -->
+    <p>
+        <!--user img--> {{contact.user}}</p>
+    <p>{{ contact.user.category }}</p>
+    <p>{{ contact.title }}</p>
+    <div>
+        <img src="{{ contact.thumbnail.url }}" alt="">
+    </div>
+    <!-- DESC -->
+    <a href="{{ contact.file_attach.url }}">시안 첨부파일</a>
+    <p>{{ contact.pay }}</p>
+    <!-- 촬영날짜/마감여부 -->
+    <p>{{ contact.start_date }}</p>
+    <p>{{ contact.end_date }}</p>
 
-        <!--Comment-->
-        <div class="comments-{{ contact.id }} comments">
-            {% for comment in contact.contact_comments.all %}
-            <div class="comment comment-{{ comment.id }}">
-                <span>{{ contact.id }}</span>
-                <span>{{ comment.id }}</span>
-                <span>{{ comment.content }}</span>
-                <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
-            </div>
-            {% endfor %}
+    <!-- 댓글,저장수 ajax -->
+
+    <!--Comment-->
+    <div class="comments-{{ contact.id }} comments">
+        {% for comment in contact.contact_comments.all %}
+        <div class="comment comment-{{ comment.id }}">
+            <span>{{ contact.id }}</span>
+            <span>{{ comment.id }}</span>
+            <span>{{ comment.content }}</span>
+            <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
         </div>
-        <div class="createComment createComment-{{contact.id}}">
-            <input class="comment__value" type="text" placeholder="댓글 달기...">
-            <input class="comment__btn" onclick="onClickNewComment({{ contact.id }})" type="submit" value="게시">
-        </div>
+        {% endfor %}
+    </div>
+    <div class="createComment createComment-{{contact.id}}">
+        <input class="comment__value" type="text" placeholder="댓글 달기...">
+        <input class="comment__btn" onclick="onClickNewComment({{ contact.id }})" type="submit" value="게시">
+    </div>
+
+    <!-- 이게뭐져?? -->
+    <p>request_user: {{ request_user.username }}</p>
+    <p>contact.user: {{ contact.user.username }}</p>
+    {% if request_user.pk == contact.user.pk %}
+    <div class="profile_button">
+        <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>
+        <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">Contact 삭제</a>
+    </div>
+    {% endif %}
 
 
-        <p>request_user: {{ request_user.username }}</p>
-        <p>contact.user: {{ contact.user.username }}</p>
-        {% if request_user.pk == contact.user.pk %}
-        <div class="profile_button">
-            <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>
-            <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">Contact 삭제</a>
-        </div>
+    <div class="save">
+        {% if request_user in contact.save_users.all %}
+        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
+        {% else %}
+        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
         {% endif %}
+        <span class="save__content">{{ contact.save_users.count }}</span>
+    </div>
+
 </div>
 {% endblock content%}
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type='text/javascript'>
+    //Save
+    const onClickSave = async (contact_id) => {
+        try {
+            // const url = '/contact/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     contact_id,
+            // })
+            // modify(data.contact_id, data.is_saved)
+
+            const options = {
+                url: '/contact/save/',
+                method: 'POST',
+                data: {
+                    contact_id: contact_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modify(data.contact_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modify = (contact_id, is_saved) => {
+        const save = document.querySelector(`.save-${contact_id} i`);
+        const save_content = document.querySelector(`.save-${contact_id} .save__content`)
+        const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+
+
     const modifyNewComment = (contact_id, comment_id, value) => {
         const CommentContainer = document.querySelector(`.comments-${contact_id}`);
         console.log(CommentContainer)

@@ -7,86 +7,91 @@
 {% endblock stylesheet %}
 
 {% block content %}
-    <div class="portfolio_container">
-        <!-- category -->
-        <div class="category">
-            <ul> 
-                <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>  
-                <li><a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a></li>  
-                <li><a href="javascript:void(0)" onclick="onClickLink('model')">Model</a></li>  
-                <li><a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair&Makeup</a></li>  
-                <li><a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a></li>  
-                <li><a href="javascript:void(0)" onclick="onClickLink('otheruse')">Others</a></li>  
-            </ul>
-        </div>
-        
-        <!-- create_portfolio -->
-        <a class="create_btn" href="{% url 'myApp:portfolio_create' %}"><button type="button">+</button></a>
-        
-        <!--sort-->
-        <div>
-            <select name="" id="" class="form-control sort ">
-                <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
-                    최신순
-                </option>
-                <option value="view" {% if sort == 'view' %}selected{% endif %}>
-                    조회순
-                </option>
-                <option value="like" {% if sort == 'like' %}selected{% endif %}>
-                    좋아요순
-                </option>
-                <option value="save" {% if sort == 'save' %}selected{% endif %}>
-                    저장순
-                </option>
-            </select>
-        </div>
-
-        
-        
-        <div class="infinite-container portfolio_content">
-            {% for portfolio in portfolios %}
-            <div>
-                <div class="portfolio_profile">
-                    <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
-                        <p>{{portfolio.user.username}}</p>
-                        <p>{{portfolio.user.category}}</p>
-                        <p>{{portfolio.title}}</p>
-                        <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
-                    </a>
-                </div>
-                <div class="portfolio_info">
-                    <div class="like like-{{portfolio.id}}">
-                        {% if request_user in portfolio.like_users.all %}
-                        <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                            value="like"></i>
-                        {% else %}
-                        <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                            value="like"></i>
-                        {% endif %}
-                        <span class="like__content">{{ portfolio.like_users.count }}</span>
-                    </div>
-                    <div>{{portfolio.view_count}}</div>
-                    <div class="save save-{{portfolio.id}}">
-                        {% if request_user in portfolio.save_users.all %}
-                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                            value="save"></i>
-                        {% else %}
-                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                            value="save"></i>
-                        {% endif %}
-                        <span class="save__content">{{ portfolio.save_users.count }}</span>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+<div class="portfolio_container">
+    <!-- category -->
+    <div class="category">
+        <ul>
+            <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('model')">Model</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair&Makeup</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('otheruse')">Others</a></li>
+        </ul>
     </div>
 
-    {% if portfolios.has_next %}
-    <a class="infinite-more-link" href="?page={{ portfolios.next_page_number }}">
-        <div class="loading" style="display: none;">Loading...</div>
-    </a>
-    {% endif %}
+    <!-- create_portfolio -->
+    <a class="create_btn" href="{% url 'myApp:portfolio_create' %}"><button type="button">+</button></a>
+
+    <!--sort-->
+    <div>
+        <select name="" id="" class="form-control sort ">
+            <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
+                최신순
+            </option>
+            <option value="view" {% if sort == 'view' %}selected{% endif %}>
+                조회순
+            </option>
+            <option value="like" {% if sort == 'like' %}selected{% endif %}>
+                좋아요순
+            </option>
+            <option value="save" {% if sort == 'save' %}selected{% endif %}>
+                저장순
+            </option>
+        </select>
+    </div>
+
+
+
+    <div class="infinite-container portfolio_content">
+        {% for portfolio in portfolios %}
+        <div>
+            <div class="portfolio_profile">
+                <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
+                    <p>{{portfolio.user.username}}</p>
+                    <p>{{portfolio.user.category}}</p>
+                    <p>{{portfolio.title}}</p>
+                    <div class="portfolio_tags">
+                        {% for tag in portfolio.tags.all %}
+                        <a href="" class="portfolio_tag">#{{ tag.tag }}</a>
+                        {% endfor %}
+                    </div>
+                    <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
+                </a>
+            </div>
+            <div class="portfolio_info">
+                <div class="like like-{{portfolio.id}}">
+                    {% if request_user in portfolio.like_users.all %}
+                    <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                        value="like"></i>
+                    {% else %}
+                    <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                        value="like"></i>
+                    {% endif %}
+                    <span class="like__content">{{ portfolio.like_users.count }}</span>
+                </div>
+                <div>{{portfolio.view_count}}</div>
+                <div class="save save-{{portfolio.id}}">
+                    {% if request_user in portfolio.save_users.all %}
+                    <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                        value="save"></i>
+                    {% else %}
+                    <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                        value="save"></i>
+                    {% endif %}
+                    <span class="save__content">{{ portfolio.save_users.count }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% if portfolios.has_next %}
+<a class="infinite-more-link" href="?page={{ portfolios.next_page_number }}">
+    <div class="loading" style="display: none;">Loading...</div>
+</a>
+{% endif %}
 
 
 <!--filter form-->
@@ -98,7 +103,7 @@
         <input type="hidden" id="sort" name="sort" value="{{ sort }}">
     </form>
 </div>
- 
+
 {% endblock content%}
 
 
@@ -120,6 +125,57 @@
             $('.loading').hide();
         }
     });
+
+
+    // like
+    const onClickLike = async (portfolio_id) => {
+        try {
+            // const url = '/portfolio/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     portfolio_id,
+            // })
+            // modify(data.portfolio_id, data.is_liked)
+
+            const options = {
+                url: '/portfolio/like/',
+                method: 'POST',
+                data: {
+                    portfolio_id: portfolio_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                modifyLike(data.portfolio_id, data.is_liked)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modifyLike = (portfolio_id, is_liked) => {
+        const like = document.querySelector(`.like-${portfolio_id} i`);
+        const like_content = document.querySelector(`.like-${portfolio_id} .like__content`)
+        const num = like_content.innerText; // [ {{ portfolio.like_users.count }} ]
+        console.log(num)
+        if (is_liked === true) {
+
+            like.className = "fas fa-heart";
+
+            const count = Number(num) + 1;
+            like_content.innerHTML = count
+        } else {
+            like.className = "far fa-heart";
+
+            const count = Number(num) - 1;
+            like_content.innerHTML = count
+        }
+
+    }
+
 
     // save
     const onClickSave = async (portfolio_id) => {
@@ -144,14 +200,14 @@
             if (responseOK) {
                 const data = response.data
                 //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                modify(data.portfolio_id, data.is_saved)
+                modifySave(data.portfolio_id, data.is_saved)
             }
         } catch (error) {
             console.log(error)
         }
     }
 
-    const modify = (portfolio_id, is_saved) => {
+    const modifySave = (portfolio_id, is_saved) => {
         const save = document.querySelector(`.save-${portfolio_id} i`);
         const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
         const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
@@ -171,54 +227,6 @@
 
     }
 
-    // like
-    const onClickLike = async (portfolio_id) => {
-        try {
-            // const url = '/portfolio/';
-            // const {
-            //     data
-            // } = await axios.post(url, {
-            //     portfolio_id,
-            // })
-            // modify(data.portfolio_id, data.is_liked)
-
-            const options = {
-                url: '/portfolio/like/',
-                method: 'POST',
-                data: {
-                    portfolio_id: portfolio_id,
-                }
-            }
-            const response = await axios(options)
-            const responseOK = response && response.status === 200 && response.statusText === 'OK'
-            if (responseOK) {
-                const data = response.data
-                modify(data.portfolio_id, data.is_liked)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const modify = (portfolio_id, is_liked) => {
-        const like = document.querySelector(`.like-${portfolio_id} i`);
-        const like_content = document.querySelector(`.like-${portfolio_id} .like__content`)
-        const num = like_content.innerText; // [ {{ portfolio.like_users.count }} ]
-        console.log(num)
-        if (is_liked === true) {
-
-            like.className = "fas fa-heart";
-
-            const count = Number(num) + 1;
-            like_content.innerHTML = count
-        } else {
-            like.className = "far fa-heart";
-
-            const count = Number(num) - 1;
-            like_content.innerHTML = count
-        }
-
-    }
 
 
 

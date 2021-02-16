@@ -23,6 +23,13 @@
                         <img class="portfolio_content" src="{{portfolio.thumbnail.url}}" alt="portfolio_image" width="20%">
                     </div>    
                     <div class="portfolio_content">{{portfolio.desc}}</div>
+                    <div class="portfolio_tags">
+                        {% for tag in tags %}
+                        <a href="" class="portfolio_tag tag-button">
+                            #{{ tag.tag }}
+                        </a>
+                        {% endfor %}
+                    </div>
                     <div class="portfolio_content">{{portfolio.created_at}}</div>
                     <div class="portfolio_content">{{portfolio.updated_at}}</div>
                     <div class="portfolio_info">
