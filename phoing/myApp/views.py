@@ -55,12 +55,16 @@ def profile_update(request, pk):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            print("form.is_valid")
+            # print("form.is_valid")
 
+            # user = form.save()
+            # if user.image:
+            #     user.image = request.FILES.get('image')
+            # return redirect('myApp:profile_detail', user.id)
+            user.image = request.FILES.get('image')
             user = form.save()
-            if user.image:
-                user.image = request.FILES['image']
             return redirect('myApp:profile_detail', user.id)
+
     else:
         form = ProfileForm(instance=user)
         ctx = {'form': form}
@@ -365,7 +369,8 @@ def contact_list(request):
         elif category == User.CATEGORY_OTHERS:
             contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHERS)
                                        ).distinct().order_by("?")
-            # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
+    
+    # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
     # SORT
     if sort == 'save':
         contacts = contacts.annotate(num_save=Count(
@@ -374,6 +379,8 @@ def contact_list(request):
         contacts = contacts.order_by('-pay', '-created_at')
     elif sort == 'recent':
         contacts = contacts.order_by('-created_at')
+
+
     # SEARCH
     if search:
         contacts = contacts.filter(

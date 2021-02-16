@@ -3,68 +3,16 @@
 
 
 {% block stylesheet %}
-<style>
-    .loading,
-    .loading:after {
-        border-radius: 50%;
-        width: 2em;
-        height: 2em;
-    }
-
-    .loading {
-        display: none;
-        margin: 60px auto;
-        font-size: 10px;
-        position: relative;
-        text-indent: -9999em;
-        border-top: 0.3em solid rgba(160, 160, 160, 0.2);
-        border-right: 0.3em solid rgba(160, 160, 160, 0.2);
-        border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
-        border-left: 0.em solid rgba(80, 80, 80, 0.2);
-        -webkit-transform: translateZ(0);
-        -ms-transform: translateZ(0);
-        transform: translateZ(0);
-        -webkit-animation: load8 0.6s infinite linear;
-        animation: load8 0.6s infinite linear;
-    }
-
-    .loading.show {
-        opacity: 1;
-    }
-
-    @-webkit-keyframes load8 {
-        0% {
-            -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-        }
-
-        100% {
-            -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-        }
-    }
-
-    @keyframes load8 {
-        0% {
-            -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-        }
-
-        100% {
-            -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-        }
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/contact/contact.css' %}">
 {% endblock stylesheet %}
 
 
 {% block content %}
 
 
-<div>
+<div class="contact_list">
     <!--category-->
-    <div>
+    <div class="contactlist_left">
         <ul class="category">
             <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>
             <li><a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a></li>
@@ -75,188 +23,228 @@
         </ul>
     </div>
 
+    <div class="contactlist_right">
+        <div class="bar">
 
-    <!--sort-->
-    <div>
-        <select name="" id="" class="form-control sort ">
-            <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
-                최신순
-            </option>
-            <option value="save" {% if sort == 'save' %}selected{% endif %}>
-                저장순
-            </option>
-            <option value="pay" {% if sort == 'pay' %}selected{% endif %}>
-                가격순
-            </option>
-        </select>
-    </div>
+            <!--search-->
+            <div class="input-group">
+                <input type="text" class="form-control search" value="{{ search|default_if_none:"" }}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary btn_search" type="button" id="">찾기</button>
+                </div>
+            </div>
 
-    <!--search-->
-    <div class="col-4 input-group">
-        <input type="text" class="form-control search" value="{{ search|default_if_none:"" }}">
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary btn_search" type="button" id="">찾기</button>
+            <!--sort-->
+            <div class="sort">
+                <select name="" id="" class="form-control sort ">
+                    <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
+                        최신순
+                    </option>
+                    <option value="save" {% if sort == 'save' %}selected{% endif %}>
+                        저장순
+                    </option>
+                    <option value="pay" {% if sort == 'pay' %}selected{% endif %}>
+                        가격순
+                    </option>
+                </select>
+            </div>
+
+
+            <!--contact_create-->
+            <div class="contact_create">
+                {% if request_user.is_authenticated %}
+                <a class="update_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
+                {% endif %}
+            </div>
         </div>
-    </div>
-</div>
-
-<!--contact_create-->
-{% if request_user.is_authenticated %}
-<p><a class="update_btn" href="{% url 'myApp:contact_create' %}">contact 만들기</a></p>
-{% endif %}
 
 
-<!--contact_list-->
+        <!--contact_list-->
+        <div class="content">
+            <!---->
+            <div class="infinite-container">
+                {% for contact in contacts %}
 
-<!---->
-<div class="infinite-container">
-    {% for contact in contacts %}
-    <div class="infinite-item" style="height: 500px; width: 500px; border: red 10px solid;">
-        <p>User : {{ contact.user }}</p>
-        <p>Pay : {{ contact.pay }}원</p>
-        <a href="{% url 'myApp:contact_detail' contact.pk %}">
-            <p>{{ contact.title }}</p>
-        </a>
-        <div class="save save-{{contact.id}}">
-            {% if request_user in contact.save_users.all %}
-            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
-                value="save"></i>
-            {% else %}
-            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
-                value="save"></i>
+                <div class="infinite-item">
+                    <div class="item_top">
+                        <div>
+                            <!-- user_img -->
+                            User : {{ contact.user }}
+                        </div>
+                        <a href="{% url 'myApp:contact_detail' contact.pk %}">
+                            <div>{{ contact.title }}</div>
+                        </a>
+                        <div class="thumbnail_desc">
+                            <img src="{{ contact.thumbnail.url }}" alt="">
+                            <div class="desc">
+                                <!-- desc ... -->
+                            </div>
+                        </div>
+                        <div class="pay_date">
+                            {% if contact.pay == 0 %}
+                            Pay : 상호 무페이
+                            {% else %}
+                            Pay : {{ contact.pay }}원
+                            {% endif %}
+                            <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
+                        </div>
+                    </div>
+
+                    <div class="item_bottom">
+                        <div class="comment">
+                            <i class="far fa-comment-dots"></i>
+                            <span class="comment__content">{{ contact.contact_comments.count }}</span>
+                        </div>
+
+                        <div class="save save-{{contact.id}}">
+                            {% if request_user in contact.save_users.all %}
+                            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
+                                value="save"></i>
+                            {% else %}
+                            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
+                                value="save"></i>
+                            {% endif %}
+                            <span class="save__content">{{ contact.save_users.count }}</span>
+                        </div>
+
+                    </div>
+
+
+                    <!--
+                    <div class="caption">
+                        <div class="caption-content">
+                            <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
+                        </div>
+                    </div>
+                    -->
+                </div>
+
+                {% endfor %}
+            </div>
+
+
+            <!-- 무한로딩 보류 -->
+            {% if contacts.has_next %}
+            <a class="infinite-more-link" href="?page={{ contacts.next_page_number }}">
+                <div class="loading" style="display: none;">Loading...</div>
+            </a>
             {% endif %}
-            <span class="save__content">{{ contact.save_users.count }}</span>
+
+            <!--filter form-->
+            <div style="height: 0;">
+                <form id="searchForm" method="get" action="{% url 'myApp:contact_list' %}">
+                    <!--category-->
+                    <input type="hidden" id="category" name="category" value="{{ category }}">
+                    <!--sort-->
+                    <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
+                    <!--search-->
+                    <input type="hidden" id="sort" name="sort" value="{{ sort }}">
+                </form>
+            </div>
         </div>
 
-        <div>
-            <i class="far fa-comment-dots"></i>
-            <span class="comment__content">{{ contact.contact_comments.count }}</span>
-        </div>
     </div>
-    {% endfor %}
-</div>
 
-{% if contacts.has_next %}
-<a class="infinite-more-link" href="?page={{ contacts.next_page_number }}">
-    <div class="loading" style="display: none;">Loading...</div>
-</a>
-{% endif %}
+    <div>
+        {% endblock content %}
 
 
 
+        <!--js-->
+        {% block script %}
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+        <script src="{% static 'js/infinite.min.js' %}"></script>
+        <script src="{% static 'js/contact.js' %}" defer></script>
 
+        <script>
+            var infinite = new Waypoint.Infinite({
+                element: $('.infinite-container')[0],
+                onBeforePageLoad: function () {
+                    $('.loading').show();
+                },
+                onAfterPageLoad: function ($items) {
+                    $('.loading').hide();
+                }
+            });
 
+            //Save
+            const onClickSave = async (contact_id) => {
+                try {
+                    // const url = '/contact/';
+                    // const {
+                    //     data
+                    // } = await axios.post(url, {
+                    //     contact_id,
+                    // })
+                    // modify(data.contact_id, data.is_saved)
 
-
-<!--filter form-->
-<div style="height: 0;">
-    <form id="searchForm" method="get" action="{% url 'myApp:contact_list' %}">
-        <!--category-->
-        <input type="hidden" id="category" name="category" value="{{ category }}">
-        <!--sort-->
-        <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
-        <!--search-->
-        <input type="hidden" id="sort" name="sort" value="{{ sort }}">
-    </form>
-</div>
-{% endblock content %}
-
-
-
-<!--js-->
-{% block script %}
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-<script src="{% static 'js/infinite.min.js' %}"></script>
-
-<script type='text/javascript'>
-    var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
-        onBeforePageLoad: function () {
-            $('.loading').show();
-        },
-        onAfterPageLoad: function ($items) {
-            $('.loading').hide();
-        }
-    });
-
-    //Save
-    const onClickSave = async (contact_id) => {
-        try {
-            // const url = '/contact/';
-            // const {
-            //     data
-            // } = await axios.post(url, {
-            //     contact_id,
-            // })
-            // modify(data.contact_id, data.is_saved)
-
-            const options = {
-                url: '/contact/save/',
-                method: 'POST',
-                data: {
-                    contact_id: contact_id,
+                    const options = {
+                        url: '/contact/save/',
+                        method: 'POST',
+                        data: {
+                            contact_id: contact_id,
+                        }
+                    }
+                    const response = await axios(options)
+                    const responseOK = response && response.status === 200 && response.statusText === 'OK'
+                    if (responseOK) {
+                        const data = response.data
+                        //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                        modify(data.contact_id, data.is_saved)
+                    }
+                } catch (error) {
+                    console.log(error)
                 }
             }
-            const response = await axios(options)
-            const responseOK = response && response.status === 200 && response.statusText === 'OK'
-            if (responseOK) {
-                const data = response.data
-                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                modify(data.contact_id, data.is_saved)
+
+            const modify = (contact_id, is_saved) => {
+                const save = document.querySelector(`.save-${contact_id} i`);
+                const save_content = document.querySelector(`.save-${contact_id} .save__content`)
+                const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
+                console.log(num)
+                if (is_saved === true) {
+
+                    save.className = "fas fa-bookmark";
+
+                    const count = Number(num) + 1;
+                    save_content.innerHTML = count
+                } else {
+                    save.className = "far fa-bookmark";
+
+                    const count = Number(num) - 1;
+                    save_content.innerHTML = count
+                }
+
             }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+            //category
+            const onClickLink = (category) => {
+                const categoryIdInput = document.querySelector('#category')
+                categoryIdInput.value = category
+                const searchForm = document.querySelector('#searchForm')
+                searchForm.submit()
+            }
 
-    const modify = (contact_id, is_saved) => {
-        const save = document.querySelector(`.save-${contact_id} i`);
-        const save_content = document.querySelector(`.save-${contact_id} .save__content`)
-        const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
-        console.log(num)
-        if (is_saved === true) {
-
-            save.className = "fas fa-bookmark";
-
-            const count = Number(num) + 1;
-            save_content.innerHTML = count
-        } else {
-            save.className = "far fa-bookmark";
-
-            const count = Number(num) - 1;
-            save_content.innerHTML = count
-        }
-
-    }
-    //category
-    const onClickLink = (category) => {
-        const categoryIdInput = document.querySelector('#category')
-        categoryIdInput.value = category
-        const searchForm = document.querySelector('#searchForm')
-        searchForm.submit()
-    }
-
-    //search
-    const searchButton = document.querySelector('.btn_search')
-    searchButton.addEventListener('click', () => {
-        const searchClassInput = document.querySelector('.search')
-        const searchIdInput = document.querySelector('#search')
-        const searchForm = document.querySelector('#searchForm')
-        searchIdInput.value = searchClassInput.value
-        searchForm.submit()
-    })
+            //search
+            const searchButton = document.querySelector('.btn_search')
+            searchButton.addEventListener('click', () => {
+                const searchClassInput = document.querySelector('.search')
+                const searchIdInput = document.querySelector('#search')
+                const searchForm = document.querySelector('#searchForm')
+                searchIdInput.value = searchClassInput.value
+                searchForm.submit()
+            })
 
 
-    //sort
-    const sortClassInput = document.querySelector('.sort')
-    sortClassInput.addEventListener('input', (e) => {
-        const sortIdInput = document.querySelector('#sort')
-        const searchForm = document.querySelector('#searchForm')
-        sortIdInput.value = e.target.value
-        searchForm.submit()
-    })
-</script>
-{% endblock script %}
+            //sort
+            const sortClassInput = document.querySelector('.sort')
+            sortClassInput.addEventListener('input', (e) => {
+                const sortIdInput = document.querySelector('#sort')
+                const searchForm = document.querySelector('#searchForm')
+                sortIdInput.value = e.target.value
+                searchForm.submit()
+            })
+        </script>
+        {% endblock script %}
