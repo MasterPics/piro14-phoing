@@ -4,6 +4,11 @@
     <title>{% block head_title %}{% endblock %}</title>
     {% block extra_head %}
     {% endblock %}
+    {% block stylesheet %}
+    {% load static %}
+    {% block stylesheet %}
+      <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% endblock stylesheet %}
   </head>
   <body>
     {% block body %}
