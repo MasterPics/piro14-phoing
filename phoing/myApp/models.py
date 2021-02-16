@@ -54,7 +54,7 @@ class Contact(models.Model):
 
 class Portfolio(models.Model):
     # common field
-    user = models.ForeignKey(
+    user = models.ForeignKey(   
         to=User, related_name="portfolios", on_delete=models.CASCADE)
     thumbnail = models.ImageField(upload_to=uuid_name_upload_to)
     title = models.CharField(max_length=30)
@@ -88,11 +88,21 @@ class Image(models.Model):
         to=Contact, null=True, blank=True, related_name='contact_images', on_delete=models.CASCADE)
     portfolio = models.ForeignKey(
         to=Portfolio, null=True, blank=True, related_name='portfolio_images', on_delete=models.CASCADE)
+    reference = models.ForeignKey(
+        to=Reference, null=True, blank=True, related_name='reference_images', on_delete=models.CASCADE)
 
     image = models.ImageField(upload_to=uuid_name_upload_to)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+class Reference(models.Model):
+    tag = models.models.OneToOneField(to=Tag, related_name='reference' on_delete=models.CASCADE)
+    save_users = models.ManyToManyField(
+        to=User, related_name='reference_save_users', blank=True)
+    like_users = models.ManyToManyField(
+        to=User, related_name='reference_like_users', blank=True)
+    desc = models.TextField()
 
 # class Post(models.Model):
 #     user = models.ForeignKey(
