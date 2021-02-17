@@ -10,6 +10,12 @@
 
 <p>마커를 드래그해 위치를 설정하세요!</p>
 <div id="map" style="width:100%;height:350px;"></div>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <input type="submit" value="Submit">
+</form>
   
 {% endblock content %}
 
@@ -17,7 +23,8 @@
 
 {% block script %}
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b"></script>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
 <script type="text/javascript" src="{% static 'js/place_select.js' %}"></script>
 
 {% endblock script%}

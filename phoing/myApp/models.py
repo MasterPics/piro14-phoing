@@ -45,11 +45,15 @@ class Contact(models.Model):
 
     # specific field
     file_attach = models.FileField()
-    location = models.TextField()
+    location = models.TextField() # 도로명 주소
     pay = models.PositiveIntegerField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     is_closed = models.BooleanField(default=False)
+
+    # location
+    lat = models.FloatField(blank=True)
+    lon = models.FloatField(blank=True)
 
 
 class Portfolio(models.Model):
