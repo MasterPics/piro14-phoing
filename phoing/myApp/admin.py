@@ -56,8 +56,8 @@ class TagAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
+@admin.register(Images)
+class ImagesAdmin(admin.ModelAdmin):
     pass
 
 

@@ -22,6 +22,9 @@ from django.db.models import Count, Q
 # infinite loading
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+# for multiple images
+from django.forms import modelformset_factory
+
 
 def main_list(request):
     ctx = {}
@@ -103,7 +106,8 @@ def profile_portfolio(request, pk):
 
 def profile_detail_other(request, pk):
     user = User.objects.get(pk=pk)
-    portfolios = Portfolio.objects.filter(user=user)
+    portfolios = user.portfolios.all()
+    # portfolios = Portfolio.objects.filter(user=user)
     ctx = {'user': user, 'portfolios': portfolios}
     return render(request, 'myApp/profile/profile_detail_other.html', context=ctx)
 
@@ -167,16 +171,22 @@ def portfolio_list(request):
 
 def portfolio_detail(request, pk):
     portfolio = Portfolio.objects.get(pk=pk)
-    # tags=portfolio.tags.all()
     # TODO 태그, 추가 이미지 보이도록 tags = port.tags/images = port.images
+    images = portfolio.portfolio_images.all()
+    num_of_imgs = images.count
+
+    tags = portfolio.tags.all()
+
     owner = portfolio.user  # 게시글 작성자
     owner_portfolios = Portfolio.objects.filter(user=owner)
     request_user = request.user  # 로그인한 유저
     ctx = {'portfolio': portfolio,
+           'images': images,
+           'tags': tags,
            'owner': owner,
-           'tags': portfolio.tags.all(),
            'owner_portfolios': owner_portfolios,
-           'request_user': request_user, }
+           'request_user': request_user,
+           'num_of_imgs': num_of_imgs, }
     return render(request, 'myApp/portfolio/portfolio_detail.html', context=ctx)
 
 
@@ -196,13 +206,22 @@ def portfolio_delete(request, pk):
 @login_required
 def portfolio_update(request, pk):
     portfolio = get_object_or_404(Portfolio, pk=pk)
+    ImageFormSet = modelformset_factory(Images, form=ImageForm, extra=10)
     if request.method == 'POST':
         form = PortfolioForm(request.POST, request.FILES)
-        if form.is_valid():
-            portfolio = form.save()
-            portfolio.image = request.FILES.get('image')
+        formset = ImageFormSet(request.POST, request.FILES,
+                               queryset=Images.objects.none())
+        if form.is_valid() and formset.is_valid():
+            portfolio = form.save(commit=False)
             portfolio.user = request.user
             portfolio.save()
+            portfolio.image = request.FILES.get('image')
+            for form in formset.cleaned_data:
+                if form:
+                    image = form['image']
+                    photo = Images(portfolio=portfolio, image=image)
+                    photo.save()
+            messages.success(request, "posted!")
 
             # save tag
             tags = Tag.add_tags(portfolio.tag_str)
@@ -212,21 +231,31 @@ def portfolio_update(request, pk):
             return redirect('myApp:portfolio_detail', portfolio.id)
     else:
         form = PortfolioForm()
-        ctx = {'form': form}
+        formset = ImageFormSet(queryset=Images.objects.none())
+        ctx = {'form': form, 'formset': formset}
         return render(request, 'myApp/portfolio/portfolio_update.html', ctx)
 
 
 @login_required
 def portfolio_create(request):
+    ImageFormSet = modelformset_factory(Images, form=ImageForm, extra=10)
+    # 'extra' : number of photos
     if request.method == 'POST':
         form = PortfolioForm(request.POST, request.FILES,)
-        if form.is_valid():
+        formset = ImageFormSet(request.POST, request.FILES,
+                               queryset=Images.objects.none())
+
+        if form.is_valid() and formset.is_valid():
             portfolio = form.save(commit=False)
             portfolio.user = request.user
-
             portfolio.save()
-            # portfolio.user.save()
             portfolio.image = request.FILES.get('image')
+            for form in formset.cleaned_data:
+                if form:
+                    image = form['image']
+                    photo = Images(portfolio=portfolio, image=image)
+                    photo.save()
+            messages.success(request, "posted!")
 
             # save tag
             tags = Tag.add_tags(portfolio.tag_str)
@@ -234,17 +263,14 @@ def portfolio_create(request):
                 portfolio.tags.add(tag)
 
             return redirect('myApp:portfolio_detail', portfolio.pk)
-
+        else:
+            print(form.errors, formset.errors)
     else:
         form = PortfolioForm()
-        ctx = {'form': form}
+        formset = ImageFormSet(queryset=Images.objects.none())
+        ctx = {'form': form, 'formset': formset}
 
     return render(request, 'myApp/portfolio/portfolio_create.html', ctx)
-
-    portfolio.save_users = not portfolio.save_users
-    portfolio.save()
-
-    return JsonResponse({'id': portfolio_id, 'save_users': portfolio.save_users})
 
 
 @csrf_exempt
@@ -369,7 +395,7 @@ def contact_list(request):
         elif category == User.CATEGORY_OTHERS:
             contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHERS)
                                        ).distinct().order_by("?")
-    
+
     # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
     # SORT
     if sort == 'save':
@@ -379,7 +405,6 @@ def contact_list(request):
         contacts = contacts.order_by('-pay', '-created_at')
     elif sort == 'recent':
         contacts = contacts.order_by('-created_at')
-
 
     # SEARCH
     if search:
