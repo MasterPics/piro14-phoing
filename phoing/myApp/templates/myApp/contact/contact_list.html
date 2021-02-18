@@ -72,13 +72,10 @@
                             User : {{ contact.user }}
                         </div>
                         <a href="{% url 'myApp:contact_detail' contact.pk %}">
-                            <div>{{ contact.title }}</div>
+                            <div style="font-weight:bolder;">{{ contact.title }}</div>
                         </a>
                         <div class="thumbnail_desc">
                             <img src="{{ contact.thumbnail.url }}" alt="">
-                            <div class="desc">
-                                <!-- desc ... -->
-                            </div>
                         </div>
                         <div class="pay_date">
                             {% if contact.pay == 0 %}

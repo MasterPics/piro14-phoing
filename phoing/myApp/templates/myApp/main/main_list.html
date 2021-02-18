@@ -3,7 +3,21 @@
 {% load static %}
 {% block stylesheet %}
 <style>
-    
+  
+  .carousel__photo p:hover{
+    cursor: pointer;
+  }
+
+  .carousel__photo p:hover + .jb i {
+    transition: all ease 0.8s;
+    transform: rotate(45deg);
+  }
+  
+  *{
+    scroll-behavior: smooth;
+  }
+
+      
 /**TITLE**/
 
 @import url("https://fonts.googleapis.com/css?family=Lobster&display=swap")
@@ -97,7 +111,7 @@ animation: letter 3s ease-in-out infinite alternate;
       <div class="carousel__photo initial">
         <div class="about_left">
             <p class="first" style="font-size:2rem; ">ABOUT US</p>
-            <div class="jb"><i class="fas fa-square-full"><a href="#"></a></i></div>
+            <div class="jb"><i class="fas fa-square-full"><a href="#magazine"></a></i></div>
         </div>
         <div class="about_right">
             <p class="first" style="padding-bottom: 1%;">개인작업을 위한 컨택트 및 포트폴리오 웹사이트 </p>
@@ -170,14 +184,17 @@ animation: letter 3s ease-in-out infinite alternate;
 </div>
 
 <!-- random template -->
+<div id="magazine">
 
-<div style="margin: 5%; ">
-    <img style="width:20%" src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
-</div>
+    <div style="margin: 5%; ">
+        <img style="width:20%" src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+    </div>
 
-<div style="position:absolute; top:200vh; left:10px; writing-mode:vertical-rl; font-size:smaller">
-    recommendation
-    collage
+    <div style="position:absolute; top:200vh; left:10px; writing-mode:vertical-rl; font-size:smaller">
+        recommendation
+        collage
+    </div>
+
 </div>
 
 
