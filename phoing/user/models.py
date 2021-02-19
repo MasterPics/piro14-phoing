@@ -72,6 +72,9 @@ class User(AbstractUser):
 
     objects = MyUserManager()
 
+    def __str__(self):
+        return self.username
+
 
 # @receiver(user_signed_up)
 # def populate_profile(sociallogin, user, **kwargs):

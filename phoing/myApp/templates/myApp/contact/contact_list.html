@@ -4,6 +4,30 @@
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/contact/contact.css' %}">
+<style>
+    /* modal */
+    #my_modal {
+    display: none;
+    width: 80%;
+    padding: 20px 60px;
+    background-color: #fefefe;
+    border: 1px solid #888;
+    border-radius: 3px;
+    }
+
+    #my_modal .modal_close_btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    }
+
+    #map {
+    height: 400px;
+    overflow: scroll;
+    }
+
+
+</style>
 {% endblock stylesheet %}
 
 
@@ -56,6 +80,21 @@
                 <a class="update_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
                 {% endif %}
             </div>
+
+            
+            <!-- 모달...어렵네... 지도가 어려운건가 -->
+            <!-- <div class="contact_map"> 
+                <div id="my_modal">
+                    <div id="map"></div>
+                    <br />
+                    <a class="modal_close_btn">닫기</a>
+                </div>
+
+                <button id="popup_open_btn">위치 확인하기</button>
+            </div> -->
+            <button id="popup_open_btn">
+                <a href="{% url 'myApp:contact_map' %}">위치 확인하기</a>
+            </button>
         </div>
 
 
@@ -66,7 +105,7 @@
                 {% for contact in contacts %}
 
                 <div class="infinite-item">
-                    <div class="item_top">
+                    <div class="item_top contact-{{contact.pk}}">
                         <div>
                             <!-- user_img -->
                             User : {{ contact.user }}
@@ -143,6 +182,12 @@
             </div>
         </div>
 
+
+       
+
+
+        
+
     </div>
 
     <div>
@@ -158,6 +203,11 @@
         <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
         <script src="{% static 'js/infinite.min.js' %}"></script>
         <script src="{% static 'js/contact.js' %}" defer></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+        <script src="{% static 'js/contact/contact_list_map.js' %}" ></script>
+        
 
         <script>
             var infinite = new Waypoint.Infinite({
@@ -246,5 +296,65 @@
                 sortIdInput.value = e.target.value
                 searchForm.submit()
             })
+
+
+            function modal(id) {
+                var zIndex = 9999;
+                var modal = document.getElementById(id);
+
+                // 모달 div 뒤에 희끄무레한 레이어
+                var bg = document.createElement('div');
+                bg.setStyle({
+                    position: 'fixed',
+                    zIndex: zIndex,
+                    left: '0px',
+                    top: '0px',
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'auto',
+                    // 레이어 색갈은 여기서 바꾸면 됨
+                    backgroundColor: 'rgba(0,0,0,0.4)'
+                });
+                document.body.append(bg);
+
+                // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
+                modal.querySelector('.modal_close_btn').addEventListener('click', function() {
+                    bg.remove();
+                    modal.style.display = 'none';
+                });
+
+                modal.setStyle({
+                    position: 'fixed',
+                    display: 'block',
+                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+
+                    // 시꺼먼 레이어 보다 한칸 위에 보이기
+                    zIndex: zIndex + 1,
+
+                    // div center 정렬
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    msTransform: 'translate(-50%, -50%)',
+                    webkitTransform: 'translate(-50%, -50%)'
+                });
+            }
+
+            // Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+            Element.prototype.setStyle = function(styles) {
+                for (var k in styles) this.style[k] = styles[k];
+                return this;
+            };
+
+            document.getElementById('popup_open_btn').addEventListener('click', function() {
+                // 모달창 띄우기
+                modal('my_modal');
+            });
+
+           
+
+
         </script>
         {% endblock script %}
+
+        

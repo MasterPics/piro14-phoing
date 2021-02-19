@@ -14,6 +14,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth import login as auth_login
+from place.forms import LocationForm
 
 
 # category filtering
@@ -369,7 +370,7 @@ def contact_list(request):
         elif category == User.CATEGORY_OTHERS:
             contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHERS)
                                        ).distinct().order_by("?")
-    
+
     # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
     # SORT
     if sort == 'save':
@@ -379,7 +380,6 @@ def contact_list(request):
         contacts = contacts.order_by('-pay', '-created_at')
     elif sort == 'recent':
         contacts = contacts.order_by('-created_at')
-
 
     # SEARCH
     if search:
@@ -455,19 +455,25 @@ def contact_create(request):
 
     if request.method == 'POST':
         contact_form = ContactForm(request.POST, request.FILES)
-        if contact_form.is_valid():
+        location_form = LocationForm(request.POST)
+
+        if contact_form.is_valid() and location_form.is_valid():
             print('here')
             contact = contact_form.save(commit=False)
+            location = location_form.save(commit=False)
+            location.save()
             contact.user = request.user
             contact.is_closed = False
+            contact.location = location
             contact.save()
             contact.image = request.FILES.get('image')
             return redirect('myApp:contact_detail', contact.pk)
 
     else:
         contact_form = ContactForm()
+        location_form = LocationForm()
 
-    return render(request, 'myApp/contact/contact_create.html', {'form': contact_form})
+    return render(request, 'myApp/contact/contact_create.html', {'contact_form': contact_form, 'location_form': location_form})
 
 
 # # @login_required
@@ -493,3 +499,14 @@ def contact_create(request):
 #                 contact.save()
 
 #         return JsonResponse({'id': contact_id, 'save_users': contact.save_users})
+
+
+def contact_map(request):
+
+    contacts = Contact.objects.filter(is_closed=False)
+
+    ctx = {
+        'contacts_json': json.dumps([contact.to_json() for contact in contacts])
+    }
+
+    return render(request, 'myApp/contact/contact_map.html', context=ctx)
