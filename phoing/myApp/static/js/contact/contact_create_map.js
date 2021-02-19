@@ -3,9 +3,9 @@ let geocoder = new kakao.maps.services.Geocoder();
 let DEFAULT_LAT = 37.564214;
 let DEFAULT_LON = 127.001699;
 
-let location_input = document.getElementById('place-location'), // 도로명 주소 input
-    lat_input = document.getElementById('place-lat'), // lat input
-    lon_input = document.getElementById('place-lon'); // lon input
+let location_input = document.getElementById('location-address'), // 도로명 주소 input
+    lat_input = document.getElementById('location-lat'), // lat input
+    lon_input = document.getElementById('location-lon'); // lon input
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
@@ -41,6 +41,7 @@ userMarker = new kakao.maps.Marker({
     zIndex: 3
 }); 
 
+renewLocationInputs();
 
 // 출발 마커에 dragend 이벤트를 등록합니다
 kakao.maps.event.addListener(userMarker, 'dragend', function() {
@@ -55,9 +56,7 @@ kakao.maps.event.addListener(userMarker, 'dragend', function() {
             // // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
             // infowindow.setContent(content);
             // infowindow.open(map, marker);
-            location_input.value = !!result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;
-            lat_input.value = userMarker.getPosition().getLat();
-            lon_input.value = userMarker.getPosition().getLng();
+            renewLocationInputs();
         }   
     });
 });

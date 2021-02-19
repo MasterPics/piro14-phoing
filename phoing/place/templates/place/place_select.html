@@ -3,13 +3,31 @@
 
 
 {% block stylesheet %}
-  
+  <link rel="stylesheet" href="{% static 'css/place_select.css' %}">
 {% endblock stylesheet %}
 
 {% block content %}
 
 <p>마커를 드래그해 위치를 설정하세요!</p>
-<div id="map" style="width:100%;height:350px;"></div>
+<button id="button">검색창 열기/닫기</button>
+
+<div class="map_wrap">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+
+    <div id="menu_wrap" class="bg_white">
+        <div class="option">
+            <div>
+                <form onsubmit="searchPlaces(); return false;">
+                    키워드 : <input type="text" value="" id="keyword" size="15" placeholder="검색어를 입력하세요"> 
+                    <button type="submit">검색하기</button> 
+                </form>
+            </div>
+        </div>
+        <hr>
+        <ul id="placesList"></ul>
+        <div id="pagination"></div>
+    </div>
+</div>
 
 <form action="" method="post">
     {% csrf_token %}
@@ -23,7 +41,7 @@
 
 {% block script %}
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
 <script type="text/javascript" src="{% static 'js/place_select.js' %}"></script>
 

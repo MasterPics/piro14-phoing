@@ -1,37 +1,37 @@
-from myApp.models import Contact
+from .models import Location
 from django import forms
 
 
-class PlaceForm(forms.ModelForm):
+class LocationForm(forms.ModelForm):
     class Meta:
-        model = Contact
-        fields = ('location', 'lat', 'lon',)
+        model = Location
+        fields = ('address', 'lat', 'lon',)
         # exclude = ('start_date_time', 'end_date_time',)
         widgets = {
-            'location': forms.TextInput(
-                attrs={'class': 'form-control place place-location',
-                       'id': 'place-location',
+            'address': forms.TextInput(
+                attrs={'class': 'form-control location location-address',
+                       'id': 'location-address',
                        'style': 'width:100%; margin:0 auto;',
                        'placeholder': ''}
             ),
             'lat': forms.TextInput(
-                attrs={'class': 'form-control place place-lat',
-                       'id': 'place-lat',
+                attrs={'class': 'form-control location location-lat',
+                       'id': 'location-lat',
                        'style': 'width:30%;'}
             ),
             'lon': forms.TextInput(
-                attrs={'class': 'form-control place place-lon',
-                       'id': 'place-lon',
+                attrs={'class': 'form-control location location-lon',
+                       'id': 'location-lon',
                        'style': 'width:30%;'}
             ),
         }
         labels = {
-            'location': '도로명 주소',
+            'address': '도로명 주소',
             'lat': 'latitude',
             'lon': 'longitude',
         }
         required = {
-            # 'location':True,
+            # 'address':True,
             # 'lat':True,
             # 'lon':True,
         }

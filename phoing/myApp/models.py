@@ -10,7 +10,10 @@ import urllib
 from django.shortcuts import redirect
 from user.models import User
 import re
+import json
+import datetime
 
+from place.models import Location
 
 class Tag(models.Model):
     tag = models.CharField(max_length=30)
@@ -45,15 +48,24 @@ class Contact(models.Model):
 
     # specific field
     file_attach = models.FileField()
-    location = models.TextField() # 도로명 주소
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, default=None, blank=True)
     pay = models.PositiveIntegerField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     is_closed = models.BooleanField(default=False)
 
-    # location
-    lat = models.FloatField(blank=True)
-    lon = models.FloatField(blank=True)
+    def to_json(self):
+    	return {
+            "pk" : self.pk,
+            "title" : self.title,
+            "pay" : self.pay,
+            "start_date" : self.start_date.strftime('%Y-%m-%d'), 
+            "end_date" : self.end_date.strftime('%Y-%m-%d'),
+            "address" : self.location.address,
+            "lat" : self.location.lat,
+            "lon" : self.location.lon,
+        }
+
 
 
 class Portfolio(models.Model):
