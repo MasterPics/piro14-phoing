@@ -48,4 +48,19 @@ urlpatterns = [
          name='portfolio_like'),
     path('portfolio/save/', view=views.portfolio_save,
          name='portfolio_save'),
+
+    #####################reference#######################
+    path('reference/', view=views.reference_list, name='reference_list'),
+
+    path('reference/like/', view=views.reference_like, name='reference_like'),
+    path('reference/save/', view=views.reference_save, name='reference_save'),
+
+    path('reference/detail/<int:pk>/',
+         view=views.reference_detail, name='reference_detail'),
+    path('reference/<int:pk>/delete/',
+         view=views.reference_delete, name='reference_delete'),
+    path('reference/<int:pk>/update/',
+         view=views.reference_update, name='reference_update'),
+    path('reference/create/', view=views.reference_create, name='reference_create'),
+
 ]

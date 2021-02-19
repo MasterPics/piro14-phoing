@@ -14,14 +14,17 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth import login as auth_login
+from .utils import *
 from place.forms import LocationForm
-
 
 # category filtering
 from django.db.models import Count, Q
 
 # infinite loading
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+# for multiple images
+from django.forms import modelformset_factory
 
 
 def main_list(request):
@@ -104,7 +107,8 @@ def profile_portfolio(request, pk):
 
 def profile_detail_other(request, pk):
     user = User.objects.get(pk=pk)
-    portfolios = Portfolio.objects.filter(user=user)
+    portfolios = user.portfolios.all()
+    # portfolios = Portfolio.objects.filter(user=user)
     ctx = {'user': user, 'portfolios': portfolios}
     return render(request, 'myApp/profile/profile_detail_other.html', context=ctx)
 
@@ -161,23 +165,29 @@ def portfolio_list(request):
     except EmptyPage:
         portfolios = paginator.page(paginator.num_pages)
 
-    context = {'portfolios': portfolios, 'request_user': request_user, 'sort': sort,
+    context = {'portfolios': portfolios, 'request_user': request.user, 'sort': sort,
                'category': category, }
     return render(request, 'myApp/portfolio/portfolio_list.html', context=context)
 
 
 def portfolio_detail(request, pk):
     portfolio = Portfolio.objects.get(pk=pk)
-    # tags=portfolio.tags.all()
     # TODO 태그, 추가 이미지 보이도록 tags = port.tags/images = port.images
-    owner = portfolio.user
+    images = portfolio.portfolio_images.all()
+    num_of_imgs = images.count
+
+    tags = portfolio.tags.all()
+
+    owner = portfolio.user  # 게시글 작성자
     owner_portfolios = Portfolio.objects.filter(user=owner)
-    request_user = request.user
+    request_user = request.user  # 로그인한 유저
     ctx = {'portfolio': portfolio,
+           'images': images,
+           'tags': tags,
            'owner': owner,
-           'tags': portfolio.tags.all(),
            'owner_portfolios': owner_portfolios,
-           'request_user': request_user, }
+           'request_user': request_user,
+           'num_of_imgs': num_of_imgs, }
     return render(request, 'myApp/portfolio/portfolio_detail.html', context=ctx)
 
 
@@ -197,13 +207,22 @@ def portfolio_delete(request, pk):
 @login_required
 def portfolio_update(request, pk):
     portfolio = get_object_or_404(Portfolio, pk=pk)
+    ImageFormSet = modelformset_factory(Images, form=ImageForm, extra=10)
     if request.method == 'POST':
         form = PortfolioForm(request.POST, request.FILES)
-        if form.is_valid():
-            portfolio = form.save()
-            portfolio.image = request.FILES.get('image')
+        formset = ImageFormSet(request.POST, request.FILES,
+                               queryset=Images.objects.none())
+        if form.is_valid() and formset.is_valid():
+            portfolio = form.save(commit=False)
             portfolio.user = request.user
             portfolio.save()
+            portfolio.image = request.FILES.get('image')
+            for form in formset.cleaned_data:
+                if form:
+                    image = form['image']
+                    photo = Images(portfolio=portfolio, image=image)
+                    photo.save()
+            messages.success(request, "posted!")
 
             # save tag
             tags = Tag.add_tags(portfolio.tag_str)
@@ -213,21 +232,31 @@ def portfolio_update(request, pk):
             return redirect('myApp:portfolio_detail', portfolio.id)
     else:
         form = PortfolioForm()
-        ctx = {'form': form}
+        formset = ImageFormSet(queryset=Images.objects.none())
+        ctx = {'form': form, 'formset': formset}
         return render(request, 'myApp/portfolio/portfolio_update.html', ctx)
 
 
 @login_required
 def portfolio_create(request):
+    ImageFormSet = modelformset_factory(Images, form=ImageForm, extra=10)
+    # 'extra' : number of photos
     if request.method == 'POST':
         form = PortfolioForm(request.POST, request.FILES,)
-        if form.is_valid():
+        formset = ImageFormSet(request.POST, request.FILES,
+                               queryset=Images.objects.none())
+
+        if form.is_valid() and formset.is_valid():
             portfolio = form.save(commit=False)
             portfolio.user = request.user
-
             portfolio.save()
-            # portfolio.user.save()
             portfolio.image = request.FILES.get('image')
+            for form in formset.cleaned_data:
+                if form:
+                    image = form['image']
+                    photo = Images(portfolio=portfolio, image=image)
+                    photo.save()
+            messages.success(request, "posted!")
 
             # save tag
             tags = Tag.add_tags(portfolio.tag_str)
@@ -235,17 +264,14 @@ def portfolio_create(request):
                 portfolio.tags.add(tag)
 
             return redirect('myApp:portfolio_detail', portfolio.pk)
-
+        else:
+            print(form.errors, formset.errors)
     else:
         form = PortfolioForm()
-        ctx = {'form': form}
+        formset = ImageFormSet(queryset=Images.objects.none())
+        ctx = {'form': form, 'formset': formset}
 
     return render(request, 'myApp/portfolio/portfolio_create.html', ctx)
-
-    portfolio.save_users = not portfolio.save_users
-    portfolio.save()
-
-    return JsonResponse({'id': portfolio_id, 'save_users': portfolio.save_users})
 
 
 @csrf_exempt
@@ -273,7 +299,6 @@ def portfolio_like(request):
         data = json.loads(request.body)
         portfolio_id = data["portfolio_id"]
         portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
-        request_user = request.user
         is_liked = request_user in portfolio.like_users.all()
         if is_liked:
             portfolio.like_users.remove(
@@ -333,20 +358,18 @@ def contact_save(request):
         data = json.loads(request.body)
         contact_id = data["contact_id"]
         contact = get_object_or_404(Contact, pk=contact_id)
-        request_user = request.user
-        is_saved = request_user in contact.save_users.all()
+        is_saved = request.user in contact.save_users.all()
         if(is_saved):
             contact.save_users.remove(
-                get_object_or_404(User, pk=request_user.pk))
+                get_object_or_404(User, pk=request.user.pk))
         else:
-            contact.save_users.add(get_object_or_404(User, pk=request_user.pk))
+            contact.save_users.add(get_object_or_404(User, pk=request.user.pk))
         is_saved = not is_saved
         contact.save()
         return JsonResponse({'contact_id': contact_id, 'is_saved': is_saved})
 
 
 def contact_list(request):
-    request_user = request.user
     contacts = Contact.objects.all()
 
     category = request.GET.get('category', 'all')  # CATEGORY
@@ -393,6 +416,7 @@ def contact_list(request):
     contacts_per_page = 3
     page = request.GET.get('page', 1)
     paginator = Paginator(contacts, contacts_per_page)
+    print(contacts)
     try:
         contacts = paginator.page(page)
     except PageNotAnInteger:
@@ -400,22 +424,23 @@ def contact_list(request):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
 
+    print(contacts)
+
     context = {
         'contacts': contacts,
         'sort': sort,
         'category': category,
         'search': search,
-        'request_user': request_user,
+        'request_user': request.user,
     }
     return render(request, 'myApp/contact/contact_list.html', context=context)
 
 
 def contact_detail(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
-    request_user = request.user
     ctx = {
         'contact': contact,
-        'request_user': request_user,
+        'request_user': request.user,
     }
     return render(request, 'myApp/contact/contact_detail.html', context=ctx)
 
@@ -438,7 +463,6 @@ def contact_update(request, pk):
     if request.method == 'POST':
         form = ContactForm(request.POST, request.FILES, instance=contact)
         if form.is_valid():
-            print("form.is_valid")
             contact.image = request.FILES.get('image')
             contact = form.save()
             return redirect('myApp:contact_detail', contact.pk)
@@ -476,29 +500,128 @@ def contact_create(request):
     return render(request, 'myApp/contact/contact_create.html', {'contact_form': contact_form, 'location_form': location_form})
 
 
-# # @login_required
-# class ContactSave(View):
-#     template_name = 'contact/contact_list.html'
+###################### reference section ######################
+@csrf_exempt
+def reference_save(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        reference_id = data["reference_id"]
+        reference = get_object_or_404(Reference, pk=reference_id)
+        is_saved = request.user in reference.save_users.all()
+        if(is_saved):
+            reference.save_users.remove(
+                get_object_or_404(User, pk=request.user.pk))
+        else:
+            reference.save_users.add(
+                get_object_or_404(User, pk=request.user.pk))
+        is_saved = not is_saved
+        reference.save()
+        return JsonResponse({'reference_id': reference_id, 'is_saved': is_saved})
 
-#     @method_decorator(csrf_exempt)
-#     def dispatch(self, request, *args, **kwargs):
-#         return super(ContactSave, self).dispatch(request, *args, **kwargs)
 
-#     def get(self, request):
-#         contacts = Contact.objects.all()
-#         ctx = {"contacts": contacts}
-#         return render(request, self.template_name, ctx)
+def reference_list(request):
+    references = Reference.objects.all()
 
-#     def post(self, request):
-#         data = json.loads(request.body)
-#         contact_id = data["id"]
-#         contact = Contact.objects.get(id=contact_id)
-#         save_users = contact.save_users.all()
-#         if user.is_authenticated():
-#             if request.user in save_user:
-#                 contact.save()
+    context = {
+        'references': references,
+        'request_user': request.user,
+    }
+    return render(request, 'myApp/reference/reference_list.html', context=context)
 
-#         return JsonResponse({'id': contact_id, 'save_users': contact.save_users})
+
+def reference_detail(request, pk):
+    reference = get_object_or_404(Reference, pk=pk)
+    reference_image_urls = reference.image_url
+
+    # infinite scroll
+    reference_image_per_page = 20
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reference_image_urls, reference_image_per_page)
+    try:
+        reference_image_urls = paginator.page(page)
+    except PageNotAnInteger:
+        reference_image_urls = paginator.page(1)
+    except EmptyPage:
+        reference_image_urls = paginator.page(paginator.num_pages)
+
+    ctx = {
+        'reference': reference,
+        'reference_image_urls': reference_image_urls,
+        'idx': range(20),
+    }
+    return render(request, 'myApp/reference/reference_detail.html', context=ctx)
+
+    # ctx = {
+    #     'reference': reference,
+    #     'request_user': request.user,
+    # }
+    # return render(request, 'myApp/reference/reference_detail.html', context=ctx)
+
+
+@login_required
+def reference_delete(request, pk):
+    reference = get_object_or_404(Reference, pk=pk)
+    if request.method == 'POST':
+        reference.delete()
+        messages.success(request, "탈퇴되었습니다.")
+        return redirect('myApp:reference_list')
+    else:
+        ctx = {'reference': reference}
+        return render(request, 'myApp/reference/reference_delete.html', context=ctx)
+
+
+@login_required
+def reference_update(request, pk):
+    reference = get_object_or_404(Reference, pk=pk)
+    if request.method == 'POST':
+        form = ReferenceForm(request.POST, request.FILES, instance=reference)
+        if form.is_valid():
+            reference.image = request.FILES.get('image')
+            reference = form.save()
+            return redirect('myApp:reference_detail', reference.pk)
+    else:
+        form = ReferenceForm(instance=reference)
+        ctx = {'form': form}
+        return render(request, 'myApp/reference/reference_update.html', ctx)
+
+
+@login_required
+def reference_create(request):
+    # if request.user.is_authenticated:
+    #     return redirect('myApp:profile_detail')
+
+    if request.method == 'POST':
+        reference_form = ReferenceForm(request.POST, request.FILES)
+        if reference_form.is_valid():
+            reference = reference_form.save(commit=False)
+            reference.user = request.user
+            reference.is_closed = False
+            reference.save()
+            reference.image = request.FILES.get('image')
+            return redirect('myApp:reference_detail', reference.pk)
+
+    else:
+        reference_form = ReferenceForm()
+
+    return render(request, 'myApp/reference/reference_create.html', {'form': reference_form})
+
+
+@csrf_exempt
+def reference_like(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        reference_id = data["reference_id"]
+        reference = get_object_or_404(Portfolio, pk=reference_id)
+        is_liked = request_user in reference.like_users.all()
+        if is_liked:
+            reference.like_users.remove(
+                get_object_or_404(User, pk=request_user.pk))
+        else:
+            reference.like_users.add(
+                get_object_or_404(User, pk=request_user.pk))
+        is_liked = not is_liked
+        reference.save()
+        return JsonResponse({'reference_id': reference_id, 'is_liked': is_liked})
 
 
 def contact_map(request):

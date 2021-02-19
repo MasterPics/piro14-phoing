@@ -14,12 +14,14 @@ import json
 import datetime
 
 from place.models import Location
+from django_mysql.models import ListCharField
+
 
 class Tag(models.Model):
     tag = models.CharField(max_length=30)
 
     @classmethod
-    def add_tags(selt, tag_str):
+    def add_tags(self, tag_str):
         # NOTE: self.desc 말고 TAG FIELD 따로 만들까?
         tags = re.findall(r'#(\w+)\b', tag_str)
         tag_lst = []
@@ -31,7 +33,7 @@ class Tag(models.Model):
         return tag_lst
 
     def __str__(self):
-        return tag.tag
+        return self.tag
 
 
 class Contact(models.Model):
@@ -88,6 +90,19 @@ class Portfolio(models.Model):
     tags = models.ManyToManyField(Tag, related_name='portfolios', blank=True)
 
 
+class Reference(models.Model):
+    thumbnail = models.ImageField(upload_to=uuid_name_upload_to)
+    tag = models.OneToOneField(
+        to=Tag, related_name='reference', on_delete=models.CASCADE)
+    save_users = models.ManyToManyField(
+        to=User, related_name='reference_save_users', blank=True)
+    like_users = models.ManyToManyField(
+        to=User, related_name='reference_like_users', blank=True)
+    desc = models.TextField()
+    image_url = ListCharField(base_field=models.CharField(
+        max_length=100), max_length=60000)
+
+
 class Comment(models.Model):
     contact = models.ForeignKey(
         to=Contact, null=True, blank=True, related_name='contact_comments', on_delete=models.CASCADE)
@@ -99,13 +114,16 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Image(models.Model):
+class Images(models.Model):
     contact = models.ForeignKey(
         to=Contact, null=True, blank=True, related_name='contact_images', on_delete=models.CASCADE)
     portfolio = models.ForeignKey(
         to=Portfolio, null=True, blank=True, related_name='portfolio_images', on_delete=models.CASCADE)
+    reference = models.ForeignKey(
+        to=Reference, null=True, blank=True, related_name='reference_images', on_delete=models.CASCADE)
 
-    image = models.ImageField(upload_to=uuid_name_upload_to)
+    image = models.ImageField(
+        upload_to=uuid_name_upload_to, blank=True, verbose_name='Image')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

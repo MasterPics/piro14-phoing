@@ -13,6 +13,11 @@
         <table>
             {{ form.as_table }}
         </table>
+        
+        {{ formset.management_form }}
+        {% for form in formset %}
+                {{ form }}
+        {% endfor %}
         <input type="submit" value="저장하기">
     </form>
     

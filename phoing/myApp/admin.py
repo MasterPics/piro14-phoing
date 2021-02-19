@@ -41,6 +41,11 @@ class ContactAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 
+@admin.register(Reference)
+class PortfolioAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
     pass
@@ -56,8 +61,8 @@ class TagAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
+@admin.register(Images)
+class ImagesAdmin(admin.ModelAdmin):
     pass
 
 

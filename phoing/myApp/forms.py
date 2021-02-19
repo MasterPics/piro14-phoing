@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 
 
-
 class ProfileForm(UserCreationForm):
     class Meta:
         model = get_user_model()
@@ -24,7 +23,7 @@ class ProfileForm(UserCreationForm):
 class PortfolioForm(forms.ModelForm):
     class Meta:
         model = Portfolio
-        fields = ('title', 'thumbnail',  'desc', 'tag_str')
+        fields = ('title', 'thumbnail',  'desc', 'tag_str',)
 
     def __init__(self, *args, **kwargs):
         super(PortfolioForm, self).__init__(*args, **kwargs)
@@ -53,3 +52,11 @@ class ContactForm(forms.ModelForm):
                 'class': field + " form",
                 'id': 'form-id', })
             #self.fields[''].widget = forms.HiddenInput()
+
+
+class ImageForm(forms.ModelForm):
+    image = forms.ImageField(label='Image')
+
+    class Meta:
+        model = Images
+        fields = ('image', )
