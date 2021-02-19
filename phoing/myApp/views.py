@@ -347,10 +347,19 @@ def contact_save(request):
 def contact_list(request):
     request_user = request.user
     contacts = Contact.objects.all()
-
     category = request.GET.get('category', 'all')  # CATEGORY
     sort = request.GET.get('sort', 'recent')  # SORT
     search = request.GET.get('search', '')  # SEARCH
+    no_pay = request.GET.get('no_pay', False)
+    print(type(no_pay), no_pay)
+    if no_pay == 'true':
+        print("here no_pay O")
+        contacts = contacts.filter(pay=0).distinct()
+        print(contacts)
+    else:
+        print("here no_pay X")
+        contacts = Contact.objects.all()
+        print(contacts)
 
     # CATEGORY
     if category != 'all':
@@ -369,7 +378,7 @@ def contact_list(request):
         elif category == User.CATEGORY_OTHERS:
             contacts = contacts.filter(Q(user__category=User.CATEGORY_OTHERS)
                                        ).distinct().order_by("?")
-    
+
     # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
     # SORT
     if sort == 'save':
@@ -379,7 +388,6 @@ def contact_list(request):
         contacts = contacts.order_by('-pay', '-created_at')
     elif sort == 'recent':
         contacts = contacts.order_by('-created_at')
-
 
     # SEARCH
     if search:
