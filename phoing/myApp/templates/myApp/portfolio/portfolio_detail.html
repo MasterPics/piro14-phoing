@@ -4,6 +4,188 @@
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/portfolio_detail.css' %}">
 <script src="https://kit.fontawesome.com/9ada8679dc.js" crossorigin="anonymous"></script>
+<style>
+    /*********************** carousel **************************/
+    .row > .column {
+    padding: 0 8px;
+    }
+
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+
+    /* Create four equal columns that floats next to eachother */
+    .column {
+    float: left;
+    width: 25%;
+    }
+
+    /* The Modal (background) */
+    .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: black;
+    }
+
+    /* Modal Content */
+    .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    width: 90%;
+    max-width: 1200px;
+    }
+
+    /* The Close Button */
+    .close {
+    color: white;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 35px;
+    font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+    color: #999;
+    text-decoration: none;
+    cursor: pointer;
+    }
+
+    /* Hide the slides by default */
+    .mySlides {
+    display: none;
+    }
+
+    /* Next & previous buttons */
+    .prev,
+    .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -50px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    -webkit-user-select: none;
+    }
+
+    /* Position the "next button" to the right */
+    .next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+    }
+
+    /* On hover, add a black background color with a little bit see-through */
+    .prev:hover,
+    .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Number text (1/3 etc) */
+    .numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+    }
+
+    /* Caption text */
+    .caption-container {
+    text-align: center;
+    background-color: black;
+    padding: 2px 16px;
+    color: white;
+    }
+
+    img.demo {
+    opacity: 0.4;
+    }
+
+    .active,
+    .demo:hover {
+    opacity: 1;
+    }
+
+    img.hover-shadow {
+    transition: 0.3s;
+    }
+
+    .hover-shadow:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    /* Fading animation */
+    .fade {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+    }
+
+    @-webkit-keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+    }
+
+    @keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
+    }
+
+    /* demo img_size: calc로 연산가능*/
+    /* .demo{
+    width : 9vw; // 구식 브라우저를 위한 대비책(fallback)
+    width: -webkit-calc(90vw / 10); // for Chrome, Safari
+    width: -moz-calc(90vw / 10); // for Firefox
+    width : calc(90vw / 10); // for IE
+    } */
+
+
+    /************************* carousel 예전 버전: slide btn + slide pagination  **************************/
+    /* #slide_container { box-sizing: border-box; padding: 0; margin: 0; text-align: center; }
+    *, *:before, *:after { box-sizing: inherit; }
+
+    .clearfix:after { content: ''; display: block; clear: both; float: none; }
+
+    #slide_container { width: 1000px; margin: auto; }
+    .slide_wrap { position: relative; width: 400px; margin: auto; padding-bottom: 30px; }
+    .slide_box { width: 100%; margin: auto; overflow-x: hidden; }
+    .slide_content { display: table; float: left; width: 400px; height: 400px; }
+    .slide_btn_box > i { position: absolute; top: 50%; margin-top: -45px; width: 60px; height: 60px; font-size: 16px; color:black; background: none; cursor: pointer; }
+    .slide_btn:focus {
+    outline: none;
+    }
+    .slide_btn_box > i {transition: all ease 0.8s; color: black; font-size: 1.2rem;}
+    .slide_btn_box > .prev { left: -100px; }
+    .slide_btn_box > .prev:hover {transform: rotate(-45deg); cursor: pointer;}
+    .slide_btn_box > .next { right: -100px; }
+    .slide_btn_box > .next:hover {transform: rotate(45deg); cursor: pointer;}
+    .slide_pagination { position: absolute; left: 50%; bottom: 0; list-style: none; margin: 0; padding: 0; transform: translateX(-50%); }
+    .slide_pagination .dot { display: inline-block; width: 15px; height: 15px; margin: 0 5px; overflow: hidden; background: #ddd; border-radius: 50%; transition: 0.3s; }
+    .slide_pagination .dot.dot_active { background: #333; }
+    .slide_pagination .dot a { display: block; width: 100%; height: 100%; } */
+
+
+
+</style>
 {% endblock stylesheet %}
 
 {% block content %}
@@ -19,19 +201,95 @@
                 </div>
                 <div class="portfolio_detail">
                     <div class="portfolio_content">{{portfolio.title}}</div>
-                    <div>
-                        <img class="portfolio_content" src="{{portfolio.thumbnail.url}}" alt="portfolio_image" width="20%">
+                    <div id="slide_container" class="portfolio_images"></div>
+                        <!-- Images used to open the lightbox -->
+                        <div class="row">
+                            <div class="column fade">
+                                <img class="hover-shadow" onclick="openModal();currentSlide(1)" src="{{portfolio.thumbnail.url}}" alt="portfolio_image" width="300px">
+                            </div>
+                            {% for image in images %}
+                                {% if image %}
+                                <div class="column fade">
+                                    <img class="hover-shadow" onclick="openModal();currentSlide({{forloop.counter}}+1)" src="{{image.image.url}}" alt="portfolio_image" width="300px">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+
+                        <!-- The Modal/Lightbox -->
+                        <div id="myModal" class="modal">
+                            <span class="close cursor" onclick="closeModal()">&times;</span>
+                            <div class="modal-content">
+                                <div class="mySlides fade">
+                                    <div class="numbertext">1 / {{num_of_imgs|add:"1"}}</div>
+                                    <img src="{{portfolio.thumbnail.url}}" style="width:100%">
+                                </div>
+                                {% for image in images %}
+                                    {% if image %}
+                                    <div class="mySlides fade">
+                                        <div class="numbertext"> {{forloop.counter|add:"1"}} / {{num_of_imgs|add:"1"}}</div>
+                                        <img src="{{image.image.url}}" style="width:100%">
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            
+                                <!-- Next/previous controls -->
+                                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                            
+                                <!-- Caption text -->
+                                <div class="caption-container">
+                                    <p id="caption"></p>
+                                </div>
+                            
+                                <!-- Thumbnail image controls -->
+                                <div class="column">
+                                    <img class="demo" src="{{portfolio.thumbnail.url}}" onclick="currentSlide(1)" alt="img" width="300px">
+                                </div>
+                                {% for image in images %}
+                                    {% if image %}
+                                    <div class="column">
+                                        <img class="demo" src="{{image.image.url}}" onclick="currentSlide({{forloop.counter}}+1)" alt="img" width="300px">
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                            </div>
+                        </div>
+
+
+                        <!------------------- carousel 예전 버전: slide btn + slide pagination  ------------------->
+                        <!-- <div class="slide_wrap">
+                            <div class="slide_box">
+                                <div class="slide_list clearfix">
+                                    <div><img class="slide_content" src="{{portfolio.thumbnail.url}}" alt="portfolio_image" width="20%"></div>
+                                    {% for image in images %}
+                                        {% if image %}
+                                            <div><img class="slide_content" src="{{image.image.url}}" alt="images" width="20%"></div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            slide_btn_box 
+                            <div class="slide_btn_box">
+                                <i class="slide_btn prev fas fa-square-full"></i>
+                                <i class="slide_btn next fas fa-square-full"></i>
+                            </div>
+                            
+                            slide_pagination
+                            <ul class="slide_pagination"></ul>
+                        </div> -->
                     </div>    
+
+
                     <div class="portfolio_content">{{portfolio.desc}}</div>
-                    <div class="portfolio_tags">
-                        {% for tag in tags %}
-                        <a href="" class="portfolio_tag tag-button">
-                            #{{ tag.tag }}
-                        </a>
-                        {% endfor %}
-                    </div>
+                   
                     <div class="portfolio_content">{{portfolio.created_at}}</div>
                     <div class="portfolio_content">{{portfolio.updated_at}}</div>
+
+
                     <div class="portfolio_info">
                         <div class="like like-{{portfolio.id}}">
                             {% if request_user in portfolio.like_users.all %}
@@ -55,13 +313,27 @@
                             <span class="save__content">{{ portfolio.save_users.count }}</span>
                         </div>
                     </div>
-                    {% if request_user.username == owner.username %}
+
+                    <div class="portfolio_tags">
+                        {% for tag in tags %}
+                            <a href="" class="portfolio_tag tag-button">
+                                #{{ tag.tag }}
+                            </a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                <!-- 작성자만 수정 혹은 삭제 가능 -->
+                {% if request_user.username == owner.username %}
                     <div class="protfolio_button">
                         <a class="edit_btn" href="{% url 'myApp:portfolio_update' portfolio.pk %}">수정</a> 
                         <a class="delete_btn" href="{% url 'myApp:portfolio_delete' portfolio.pk %}">삭제</a>
                     </div>
-                    {% endif %}
-                </div>
+                {% endif %}
+
+
+                <!-- 해당 portfolio 작성자의 다른 portfolio -->
                 {% for portfolio in owner_portfolios %}
                     <div class="profile_owner_portfolio">
                         <!-- 사진 누르면 detail 넘어가도록 : <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}"> </a> -->
@@ -96,7 +368,7 @@
             </div>
         </div>
     </div>
-{% endblock content%}
+{% endblock content %}
 
 
 {% block script %}
@@ -131,14 +403,14 @@
             if (responseOK) {
                 const data = response.data
                 //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                modify(data.portfolio_id, data.is_saved)
+                modifySave(data.portfolio_id, data.is_saved)
             }
         } catch (error) {
             console.log(error)
         }
     }
 
-    const modify = (portfolio_id, is_saved) => {
+    const modifySave = (portfolio_id, is_saved) => {
         const save = document.querySelector(`.save-${portfolio_id} i`);
         const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
         const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
@@ -180,14 +452,14 @@
             const responseOK = response && response.status === 200 && response.statusText === 'OK'
             if (responseOK) {
                 const data = response.data
-                modify(data.portfolio_id, data.is_liked)
+                modifyLike(data.portfolio_id, data.is_liked)
             }
         } catch (error) {
             console.log(error)
         }
     }
 
-    const modify = (portfolio_id, is_liked) => {
+    const modifyLike = (portfolio_id, is_liked) => {
         const like = document.querySelector(`.like-${portfolio_id} i`);
         const like_content = document.querySelector(`.like-${portfolio_id} .like__content`)
         const num = like_content.innerText; // [ {{ portfolio.like_users.count }} ]
@@ -206,5 +478,150 @@
         }
 
     }
+
+    /*********************** carousel **************************/
+    // Open the Modal
+    function openModal() {
+    document.getElementById("myModal").style.display = "block";
+    }
+
+    // Close the Modal
+    function closeModal() {
+    document.getElementById("myModal").style.display = "none";
+    }
+
+    var slideIndex = 1;
+    showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+    showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+    showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+    var i;
+    var slides = document.getElementsByClassName("mySlides");
+    var dots = document.getElementsByClassName("demo");
+    var captionText = document.getElementById("caption");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "block";
+    dots[slideIndex-1].className += " active";
+    captionText.innerHTML = dots[slideIndex-1].alt;
+    }
+
+
+
+    /************************* carousel 예전 버전: slide btn + slide pagination  **************************/
+    // (function () {
+    //   const slideList = document.querySelector('.slide_list');  // Slide parent dom
+    //   const slideContents = document.querySelectorAll('.slide_content');  // each slide dom
+    //   const slideBtnNext = document.querySelector('.next'); // next button
+    //   const slideBtnPrev = document.querySelector('.prev'); // prev button
+    //   const pagination = document.querySelector('.slide_pagination');
+    //   const slideLen = slideContents.length;  // slide length
+    //   const slideWidth = 400; // slide width
+    //   const slideSpeed = 600; // slide speed
+    //   const startNum = 0; // initial slide index (0 ~ 4)
+      
+    //   slideList.style.width = slideWidth * (slideLen + 2) + "px";
+      
+    //   // Copy first and last slide
+    //   let firstChild = slideList.firstElementChild;
+    //   let lastChild = slideList.lastElementChild;
+    //   let clonedFirst = firstChild.cloneNode(true);
+    //   let clonedLast = lastChild.cloneNode(true);
+
+    //   // Add copied Slides
+    //   slideList.appendChild(clonedFirst);
+    //   slideList.insertBefore(clonedLast, slideList.firstElementChild);
+
+    //   // Add pagination dynamically
+    //   let pageChild = '';
+    //   for (var i = 0; i < slideLen; i++) {
+    //     pageChild += '<li class="dot';
+    //     pageChild += (i === startNum) ? ' dot_active' : '';
+    //     pageChild += '" data-index="' + i + '"><a href="#"></a></li>';
+    //   }
+    //   pagination.innerHTML = pageChild;
+    //   const pageDots = document.querySelectorAll('.dot'); // each dot from pagination
+
+    //   slideList.style.transform = "translate3d(-" + (slideWidth * (startNum + 1)) + "px, 0px, 0px)";
+
+    //   let curIndex = startNum; // current slide index (except copied slide)
+    //   let curSlide = slideContents[curIndex]; // current slide dom
+    //   curSlide.classList.add('slide_active');
+
+    //   /** Next Button Event */
+    //   slideBtnNext.addEventListener('click', function() {
+    //     if (curIndex <= slideLen - 1) {
+    //       slideList.style.transition = slideSpeed + "ms";
+    //       slideList.style.transform = "translate3d(-" + (slideWidth * (curIndex + 2)) + "px, 0px, 0px)";
+    //     }
+    //     if (curIndex === slideLen - 1) {
+    //       setTimeout(function() {
+    //         slideList.style.transition = "0ms";
+    //         slideList.style.transform = "translate3d(-" + slideWidth + "px, 0px, 0px)";
+    //       }, slideSpeed);
+    //       curIndex = -1;
+    //     }
+    //     curSlide.classList.remove('slide_active');
+    //     pageDots[(curIndex === -1) ? slideLen - 1 : curIndex].classList.remove('dot_active');
+    //     curSlide = slideContents[++curIndex];
+    //     curSlide.classList.add('slide_active');
+    //     pageDots[curIndex].classList.add('dot_active');
+    //   });
+
+    //   /** Prev Button Event */
+    //   slideBtnPrev.addEventListener('click', function() {
+    //     if (curIndex >= 0) {
+    //       slideList.style.transition = slideSpeed + "ms";
+    //       slideList.style.transform = "translate3d(-" + (slideWidth * curIndex) + "px, 0px, 0px)";
+    //     }
+    //     if (curIndex === 0) {
+    //       setTimeout(function() {
+    //         slideList.style.transition = "0ms";
+    //         slideList.style.transform = "translate3d(-" + (slideWidth * slideLen) + "px, 0px, 0px)";
+    //       }, slideSpeed);
+    //       curIndex = slideLen;
+    //     }
+    //     curSlide.classList.remove('slide_active');
+    //     pageDots[(curIndex === slideLen) ? 0 : curIndex].classList.remove('dot_active');
+    //     curSlide = slideContents[--curIndex];
+    //     curSlide.classList.add('slide_active');
+    //     pageDots[curIndex].classList.add('dot_active');
+    //   });
+
+    //   /** Pagination Button Event */
+    //   let curDot;
+    //   Array.prototype.forEach.call(pageDots, function (dot, i) {
+    //     dot.addEventListener('click', function (e) {
+    //       e.preventDefault();
+    //       curDot = document.querySelector('.dot_active');
+    //       curDot.classList.remove('dot_active');
+          
+    //       curDot = this;
+    //       this.classList.add('dot_active');
+
+    //       curSlide.classList.remove('slide_active');
+    //       curIndex = Number(this.getAttribute('data-index'));
+    //       curSlide = slideContents[curIndex];
+    //       curSlide.classList.add('slide_active');
+    //       slideList.style.transition = slideSpeed + "ms";
+    //       slideList.style.transform = "translate3d(-" + (slideWidth * (curIndex + 1)) + "px, 0px, 0px)";
+    //     });
+    //   });
+    // })();
 </script>
 {% endblock script %}

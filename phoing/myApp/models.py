@@ -98,7 +98,7 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Image(models.Model):
+class Images(models.Model):
     contact = models.ForeignKey(
         to=Contact, null=True, blank=True, related_name='contact_images', on_delete=models.CASCADE)
     portfolio = models.ForeignKey(
@@ -106,7 +106,8 @@ class Image(models.Model):
     reference = models.ForeignKey(
         to=Reference, null=True, blank=True, related_name='reference_images', on_delete=models.CASCADE)
 
-    image = models.ImageField(upload_to=uuid_name_upload_to)
+    image = models.ImageField(
+        upload_to=uuid_name_upload_to, blank=True, verbose_name='Image')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
