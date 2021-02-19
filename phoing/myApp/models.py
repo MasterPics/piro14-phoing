@@ -11,12 +11,14 @@ from django.shortcuts import redirect
 from user.models import User
 import re
 
+from django_mysql.models import ListCharField
+
 
 class Tag(models.Model):
     tag = models.CharField(max_length=30)
 
     @classmethod
-    def add_tags(selt, tag_str):
+    def add_tags(self, tag_str):
         # NOTE: self.desc 말고 TAG FIELD 따로 만들까?
         tags = re.findall(r'#(\w+)\b', tag_str)
         tag_lst = []
@@ -28,7 +30,7 @@ class Tag(models.Model):
         return tag_lst
 
     def __str__(self):
-        return tag.tag
+        return self.tag
 
 
 class Contact(models.Model):
@@ -54,7 +56,7 @@ class Contact(models.Model):
 
 class Portfolio(models.Model):
     # common field
-    user = models.ForeignKey(   
+    user = models.ForeignKey(
         to=User, related_name="portfolios", on_delete=models.CASCADE)
     thumbnail = models.ImageField(upload_to=uuid_name_upload_to)
     title = models.CharField(max_length=30)
@@ -70,6 +72,19 @@ class Portfolio(models.Model):
     view_count = models.PositiveIntegerField(default=0)
     tag_str = models.CharField(max_length=50, blank=True)
     tags = models.ManyToManyField(Tag, related_name='portfolios', blank=True)
+
+
+class Reference(models.Model):
+    thumbnail = models.ImageField(upload_to=uuid_name_upload_to)
+    tag = models.OneToOneField(
+        to=Tag, related_name='reference', on_delete=models.CASCADE)
+    save_users = models.ManyToManyField(
+        to=User, related_name='reference_save_users', blank=True)
+    like_users = models.ManyToManyField(
+        to=User, related_name='reference_like_users', blank=True)
+    desc = models.TextField()
+    image_url = ListCharField(base_field=models.CharField(
+        max_length=100), max_length=60000)
 
 
 class Comment(models.Model):
@@ -95,14 +110,6 @@ class Image(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
-class Reference(models.Model):
-    tag = models.models.OneToOneField(to=Tag, related_name='reference' on_delete=models.CASCADE)
-    save_users = models.ManyToManyField(
-        to=User, related_name='reference_save_users', blank=True)
-    like_users = models.ManyToManyField(
-        to=User, related_name='reference_like_users', blank=True)
-    desc = models.TextField()
 
 # class Post(models.Model):
 #     user = models.ForeignKey(

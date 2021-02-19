@@ -65,7 +65,7 @@
             <ul class="nav__menu">
                 <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
                 <li><a href="{% url 'myApp:portfolio_list' %}">Portfolio</a></li>
-                <li><a href="#">Reference</a></li>
+                <li><a href="{% url 'myApp:reference_list' %}">Reference</a></li>
                 <li><a href="#">Place</a></li>
                 <li><a href="#">Collaboration</a></li>
                 <h1>{{ request.user.username }}</h1>
@@ -99,16 +99,18 @@
         {% endblock %}
     </section>
     <footer id="footer">
-        <ul class="footer__left">
-            <li class="footer__logo">PHOING</li>
-            <li>Copyright PHOING All right reserved</li>
-            <li><a href="#">개인정보처리방침</a></li>
-        </ul>
-        <ul class="footer__right">
-            <li><i class="fab fa-instagram"></i></li>
-            <li><i class="fab fa-facebook-square"></i></li>
-            <li><i class="fab fa-youtube-square"></i></li>
-        </ul>
+        <div>
+            <ul class="footer__left">
+                <li class="footer__logo">PHOING</li>
+                <li>Copyright PHOING All right reserved</li>
+                <li><a href="#">개인정보처리방침</a></li>
+            </ul>
+            <ul class="footer__right">
+                <li><i class="fab fa-instagram"></i></li>
+                <li><i class="fab fa-facebook-square"></i></li>
+                <li><i class="fab fa-youtube-square"></i></li>
+            </ul>
+        </div>
     </footer>
     {% block script %}
     {% endblock script%}
