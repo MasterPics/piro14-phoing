@@ -16,7 +16,7 @@
     <div class="grid">
         {% for reference_image_url in reference_image_urls %}
         <div class="grid-item">
-            <img src="{{ reference_image_url }}" style="width: 28rem;" alt="">
+            <img src="{{ reference_image_url }}" style="width: 28rem;" alt="" value=>
         </div>
         {% endfor %}
     </div>
@@ -52,30 +52,12 @@
             })
         }
     });
+
     let msnry = new Masonry('.grid', {
         // optionsW
         itemSelector: '.grid-item',
         gutter: 10,
         // columnWidth: 200
     });
-
-    // $(window).load(function () {
-    //     var container = $('.infinite-container');
-    //     container.masonry({
-    //         itemSelector: '.box'
-    //     });
-    //     $('.infinite-container').waypoint('infinite', {
-    //         container: 'auto',
-    //         items: '.box',
-    //         more: '.infinite-more-link',
-    //         offset: 'bottom-in-view',
-    //         loadingClass: 'infinite-loading',
-    //         onBeforePageLoad: $.noop,
-    //         onAfterPageLoad: function () {
-    //             $(container).masonry('reloadItems');
-    //             $(container).masonry('layout')
-    //         }
-    //     });
-    // });
 </script>
 {% endblock script %}
