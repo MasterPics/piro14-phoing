@@ -5,7 +5,7 @@ let DEFAULT_LON = 127.001699;
 let mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
         center: new kakao.maps.LatLng(DEFAULT_LAT, DEFAULT_LON), // 지도의 중심좌표
-        level: 10 // 지도의 확대 레벨 
+        level: 15 // 지도의 확대 레벨 
     }; 
 
 let map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
