@@ -221,10 +221,45 @@
 
 {% block content %}
 
+<div>
+    <div class="contact_owner">
+        <a href="{% url 'myApp:profile_detail_other' contact_owner.pk %}">
+            {% if contact_owner.image  %}
+            <img class="profile_image" src="{{contact_owner.image.url}}" alt="profile_image" width="20%">    
+            {% else %}
+            <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
+            {% endif %}
+        
+            <div class="contact_owner">{{contact_owner.username}}</div>
+            <div class="contact_owner">{{contact_owner.category}}</div>
+        </a>
+        <a href="{% url 'myApp:profile_detail_other' contact_owner.pk %}">
+            <button type="button">Show Profile</button>
+        </a>
+    </div>
+    <p>{{ contact.title }}</p>
+    <div>
+        <img src="{{ contact.thumbnail.url }}" alt="">
 <!-- SHOW PROFILE 버튼 ''profile_detail_other''로 가게 하기-->
     <div class="choose">
         <a class="choose_profile" href="{% url 'myApp:profile_detail_other' request.user.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
     </div>
+    
+    <div class="contact_content">{{contact.desc}}</div>
+
+    <div class="contact_tags">
+        {% for tag in tags %}
+            <a href="" class="contact_tag tag-button">
+                #{{ tag.tag }}
+            </a>
+        {% endfor %}
+    </div>
+
+
+    <a href="{{ contact.file_attach.url }}">시안 첨부파일</a>
+    <p>{{ contact.pay }}</p>
+    <!-- 촬영날짜/마감여부 -->
+    <p>{{ contact.start_date }}</p>
 
     <div class="container_8">
         <div class="user">
