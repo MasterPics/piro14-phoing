@@ -1,0 +1,421 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+
+<style>
+    /*show profile btn*/
+
+    * {
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        color: black;
+    }
+
+    .btn {
+        width: 150px;
+        height: 50px;
+        border: 1px solid #333;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 0;
+        transition: 1s;
+    }
+
+    .btn::before,
+    .btn::after {
+        position: absolute;
+        background: #fff;
+        z-index: -1;
+        transition: 1s;
+        content: "";
+    }
+
+    .btn::before {
+        height: 50px;
+        width: 130px;
+    }
+
+    .btn::after {
+        width: 150px;
+        height: 30px;
+    }
+
+    .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .btn:hover::before {
+        width: 0px;
+        background: #fff;
+    }
+
+    .btn:hover::after {
+        height: 0px;
+        background: #fff;
+    }
+
+    .btn:hover {
+        background: #fff;
+    }
+
+    .choose a,
+    .profile_button a {
+        color: black;
+    }
+
+    .choose {
+        display: flex;
+        justify-content: center;
+        margin: 40px auto;
+        margin-top: 60px;
+    }
+
+    /*with_artist_detail*/
+
+    .container_8 {
+        display: grid;
+        grid-template-rows: auto;
+        justify-content: center;
+        margin: 10px auto;
+        padding: 10px;
+        max-width: 70%;
+    }
+
+    .container_8>div {
+        padding: 13px;
+    }
+
+    .with_artist_img {
+        width: 300px;
+        height: 300px;
+        text-align: center;
+    }
+
+    .with_artist_img img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain
+    }
+
+    .container_8 .user {
+        display: flex;
+        align-items: center;
+        border-bottom: rgb(180, 180, 180) 1px solid;
+    }
+
+    .container_8 .user div {
+        border: #333 2px solid;
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        margin-right: 10px;
+
+    }
+
+    .container_8 .user p {
+        margin-right: 15px;
+    }
+
+    .container_8 .file a {
+        color: red;
+    }
+
+
+    .pay_date {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .comment_bookmark {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 50px;
+        border-top: rgb(180, 180, 180) 1px solid;
+        font-size: 1.3rem;
+    }
+
+    .comment_bookmark i:hover {
+        cursor: pointer;
+    }
+
+    .createComment {
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+
+    .createComment .comment__value {
+        border: 0;
+        padding: 5px;
+        font-size: 1rem;
+        border: solid 1px rgb(70, 70, 70);
+        width: 60%;
+        border-radius: 3px;
+        margin-right: 10px;
+    }
+
+    .createComment .comment__value:focus {
+        outline: none !important;
+        border-color: #000000;
+        box-shadow: 0 0 10px #000000;
+    }
+
+    .createComment .comment__btn {
+        padding: 6px;
+        border: solid 1px rgb(131, 131, 131);
+        border-radius: 3px;
+    }
+
+    .createComment .comment__btn:hover {
+        cursor: pointer;
+    }
+
+    .comment {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .comment .comment-btn {
+        padding: 2px;
+        margin-left: 13px;
+        background-color: rgba(100, 30, 30, 0.884);
+        border: none;
+        color: white;
+        font-size: 0.65rem;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+
+    .with_artist_button {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+        padding: 2px;
+    }
+
+    .with_artist_button .edit_btn {
+        border: 1px solid black;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .with_artist_button .delete_btn {
+        border: 1px solid black;
+        padding: 5px;
+        margin: 5px;
+    }
+</style>
+{% endblock stylesheet %}
+
+{% block content %}
+
+<!-- SHOW PROFILE 버튼 ''profile_detail_other''로 가게 하기-->
+<div class="choose">
+    <a class="choose_profile" href="{% url 'myApp:profile_detail_other' request.user.pk %}">
+        <div class="btn"><span class="noselect">Show Profile</span></div>
+    </a>
+</div>
+<!-- 촬영날짜/마감여부 -->
+<p>{{ with_artist.start_date }}</p>
+
+<div class="container_8">
+    <div class="user">
+        <!-- user profile img 추가하기! -->
+        <div></div>
+        <p> User: {{with_artist.user}} </p>
+        <p>{{ with_artist.user.category }}</p>
+    </div>
+
+    <div>
+        <p style="font-weight: bolder; font-size:larger">{{ with_artist.title }}</p>
+    </div>
+    <div class="with_artist_img">
+        <img src="{{ with_artist.thumbnail.url }}" alt="">
+    </div>
+
+    <div style="line-height: 1.8em;">{{with_artist.desc}}</div>
+
+    <!-- Tags -->
+    <div>#Tags #Tags #Tags</div>
+
+    <div class="file"><a href="{{ with_artist.file_attach.url }}">시안 첨부파일</a></div>
+
+    <div class="pay_date">
+        <p>pay: {{ with_artist.pay }}</p>
+        <!-- 촬영날짜/마감여부 -->
+        <p>{{ with_artist.start_date }} ~ {{ with_artist.end_date }}</p>
+
+    </div>
+
+    <!-- 댓글,저장수 ajax -->
+    <div class="comment_bookmark">
+        <div class="comment"><a href="#comment">
+                <i class="far fa-comment-dots"></i>
+                <span class="comment__content">{{ with_artist.with_artist_comments.count }}</span>
+            </a></div>
+
+        <div class="save save-{{with_artist.id}}">
+            {% if request_user in with_artist.save_users.all %}
+            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ with_artist.id }})" name="type"
+                value="save"></i>
+            {% else %}
+            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ with_artist.id }})" name="type"
+                value="save"></i>
+            {% endif %}
+            <span class="save__content">{{ with_artist.save_users.count }}</span>
+        </div>
+    </div>
+
+
+    <!--Comment-->
+    <div id="comment" class="createComment createComment-{{with_artist.id}}">
+        <input class="comment__value" type="text" placeholder="댓글 달기...">
+        <input class="comment__btn" onclick="onClickNewComment({{ with_artist.id }})" type="submit" value="게시">
+    </div>
+    <div class="comments-{{ with_artist.id }} comments">
+        {% for comment in with_artist.with_artist_comments.all %}
+        <div class="comment comment-{{ comment.id }}">
+            <span style="line-height: 1.6em;">{{ comment.content }}</span>
+            <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if request_user.pk == with_artist.user.pk %}
+    <div class="with_artist_button">
+        <a class="edit_btn" href="{% url 'myApp:with_artist_update' with_artist.pk %}">게시물 수정</a>
+        <a class="delete_btn" href="{% url 'myApp:with_artist_delete' with_artist.pk %}">삭제</a>
+    </div>
+    {% endif %}
+</div>
+
+
+<!-- 이게뭐져?? -->
+<!-- <p>request_user: {{ request_user.username }}</p>
+    <p>with_artist.user: {{ with_artist.user.username }}</p> -->
+
+
+
+
+
+{% endblock content%}
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type='text/javascript'>
+    //Save
+    const onClickSave = async (with_artist_id) => {
+        try {
+            // const url = '/with_artist/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     with_artist_id,
+            // })
+            // modify(data.with_artist_id, data.is_saved)
+
+            const options = {
+                url: '/with_artist/save/',
+                method: 'POST',
+                data: {
+                    with_artist_id: with_artist_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modify(data.with_artist_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modify = (with_artist_id, is_saved) => {
+        const save = document.querySelector(`.save-${with_artist_id} i`);
+        const save_content = document.querySelector(`.save-${with_artist_id} .save__content`)
+        const num = save_content.innerText; // [ {{ with_artist.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+
+
+    const modifyNewComment = (with_artist_id, comment_id, value) => {
+        const CommentContainer = document.querySelector(`.comments-${with_artist_id}`);
+        console.log(CommentContainer)
+
+        const tempContainer = document.createElement("div");
+        tempContainer.className = `comment comment-${comment_id}`;
+
+
+        tempContainer.textContent = value;
+
+        const deleteBtn = document.createElement("input");
+        deleteBtn.className = "comment-btn";
+        deleteBtn.setAttribute("type", "submit");
+        deleteBtn.setAttribute("value", "삭제");
+        deleteBtn.setAttribute("onclick", `onClickDeleteComment(${comment_id})`)
+
+        tempContainer.appendChild(deleteBtn);
+        CommentContainer.appendChild(tempContainer);
+    }
+
+    const onClickNewComment = async (id) => {
+        const url = `/with_artist/${id}/comment_create/`;
+        const value = document.querySelector(`.createComment-${id} .comment__value`);
+        const value_text = value.value
+        const {
+            data
+        } = await axios.post(url, {
+            id,
+            value: value_text
+        })
+
+        modifyNewComment(id, data.comment_id, data.value);
+    }
+
+    const modifyDeleteComment = (comment_id) => {
+
+        const targetCommentContainer = document.querySelector(`.comment-${comment_id}`);
+        targetCommentContainer.remove();
+    }
+
+    const onClickDeleteComment = async (comment_id) => {
+        const url = `/with_artist/${comment_id}/comment_delete/`;
+
+        const {
+            data
+        } = await axios.post(url, {
+            comment_id
+        })
+        modifyDeleteComment(data.comment_id);
+    }
+</script>
+{% endblock script %}
