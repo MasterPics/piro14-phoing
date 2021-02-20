@@ -1,0 +1,175 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/place_detail.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+
+{% endblock stylesheet %}
+
+{% block content %}
+<!-- 카테고리 왼쪽에 -->
+
+<div>
+    <!-- SHOW PROFILE 버튼 -->
+    <p>
+        <!--user img--> {{place.user}}</p>
+    <p>{{ place.user.category }}</p>
+    <p>{{ place.title }}</p>
+    <div>
+        <img src="{{ place.thumbnail.url }}" alt="">
+    </div>
+    <!-- DESC -->
+    <a href="{{ place.file_attach.url }}">시안 첨부파일</a>
+    <p>{{ place.pay }}</p>
+    <!-- 촬영날짜/마감여부 -->
+    <p>{{ place.start_date }}</p>
+    <p>{{ place.end_date }}</p>
+    <p>{{ place.location }}</p>
+
+    <!-- 댓글,저장수 ajax -->
+
+    <!--Comment-->
+    <div class="comments-{{ place.id }} comments">
+        {% for comment in place.place_comments.all %}
+        <div class="comment comment-{{ comment.id }}">
+            <span>{{ place.id }}</span>
+            <span>{{ comment.id }}</span>
+            <span>{{ comment.content }}</span>
+            <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
+        </div>
+        {% endfor %}
+    </div>
+    <div class="createComment createComment-{{place.id}}">
+        <input class="comment__value" type="text" placeholder="댓글 달기...">
+        <input class="comment__btn" onclick="onClickNewComment({{ place.id }})" type="submit" value="게시">
+    </div>
+
+    <!-- 이게뭐져?? -->
+    <p>request.user: {{ request.user.username }}</p>
+    <p>place.user: {{ place.user.username }}</p>
+    {% if request.user.pk == place.user.pk %}
+    <div class="profile_button">
+        <a class="edit_btn" href="{% url 'place:place_update' place.pk %}">Contact 수정</a>
+        <a class="delete_btn" href="{% url 'place:place_delete' place.pk %}">Contact 삭제</a>
+    </div>
+    {% endif %}
+
+
+    <div class="save">
+        {% if request.user in place.save_users.all %}
+        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ place.id }})" name="type" value="save"></i>
+        {% else %}
+        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ place.id }})" name="type" value="save"></i>
+        {% endif %}
+        <span class="save__content">{{ place.save_users.count }}</span>
+    </div>
+
+</div>
+{% endblock content%}
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type='text/javascript'>
+    //Save
+    const onClickSave = async (place_id) => {
+        try {
+            // const url = '/place/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     place_id,
+            // })
+            // modify(data.place_id, data.is_saved)
+
+            const options = {
+                url: '/place/save/',
+                method: 'POST',
+                data: {
+                    place_id: place_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modify(data.place_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modify = (place_id, is_saved) => {
+        const save = document.querySelector(`.save-${place_id} i`);
+        const save_content = document.querySelector(`.save-${place_id} .save__content`)
+        const num = save_content.innerText; // [ {{ place.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+
+
+    const modifyNewComment = (place_id, comment_id, value) => {
+        const CommentContainer = document.querySelector(`.comments-${place_id}`);
+        console.log(CommentContainer)
+
+        const tempContainer = document.createElement("div");
+        tempContainer.className = `comment comment-${comment_id}`;
+
+
+        tempContainer.textContent = value;
+
+        const deleteBtn = document.createElement("input");
+        deleteBtn.className = "comment-btn";
+        deleteBtn.setAttribute("type", "submit");
+        deleteBtn.setAttribute("value", "삭제");
+        deleteBtn.setAttribute("onclick", `onClickDeleteComment(${comment_id})`)
+
+        tempContainer.appendChild(deleteBtn);
+        CommentContainer.appendChild(tempContainer);
+    }
+
+    const onClickNewComment = async (id) => {
+        const url = `/place/${id}/comment_create/`;
+        const value = document.querySelector(`.createComment-${id} .comment__value`);
+        const value_text = value.value
+        const {
+            data
+        } = await axios.post(url, {
+            id,
+            value: value_text
+        })
+
+        modifyNewComment(id, data.comment_id, data.value);
+    }
+
+    const modifyDeleteComment = (comment_id) => {
+
+        const targetCommentContainer = document.querySelector(`.comment-${comment_id}`);
+        targetCommentContainer.remove();
+    }
+
+    const onClickDeleteComment = async (comment_id) => {
+        const url = `/place/${comment_id}/comment_delete/`;
+
+        const {
+            data
+        } = await axios.post(url, {
+            comment_id
+        })
+        modifyDeleteComment(data.comment_id);
+    }
+</script>
+{% endblock script %}
