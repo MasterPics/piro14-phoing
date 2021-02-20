@@ -58,10 +58,13 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.kakao',
+    
+    'channels',
 
     'myApp',
     'user',
     'place',
+    'chat',
 
 ]
 
@@ -76,6 +79,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+
 # '''
 # TEMPLATES = [
 #     {
@@ -95,6 +100,7 @@ ROOT_URLCONF = 'config.urls'
 #     },
 # ]
 # '''
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -332,4 +338,19 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
+
+
 # SOCIALACCOUNT_ADAPTER = "user.adapter.MyCustomSocialAccountAdapter"
+
+
+# WEBCHAT
+# Channels
+ASGI_APPLICATION = 'config.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
