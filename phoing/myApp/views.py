@@ -509,24 +509,6 @@ def contact_create(request):
 
 
 ###################### reference section ######################
-@csrf_exempt
-def reference_save(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        reference_id = data["reference_id"]
-        reference = get_object_or_404(Reference, pk=reference_id)
-        is_saved = request.user in reference.save_users.all()
-        if(is_saved):
-            reference.save_users.remove(
-                get_object_or_404(User, pk=request.user.pk))
-        else:
-            reference.save_users.add(
-                get_object_or_404(User, pk=request.user.pk))
-        is_saved = not is_saved
-        reference.save()
-        return JsonResponse({'reference_id': reference_id, 'is_saved': is_saved})
-
-
 def reference_list(request):
     references = Reference.objects.all()
 
