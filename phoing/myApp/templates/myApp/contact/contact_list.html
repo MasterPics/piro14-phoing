@@ -3,59 +3,406 @@
 
 
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'css/contact/contact.css' %}">
+
+
+<style>
+
+    /*category btn*/
+
+    * {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    color:black;
+
+    }
+    
+    .dropdown .btn {
+        width: 150px;
+        height: 50px;
+        border: 1px solid #333;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 0;
+        transition: 1s;
+    }
+    
+    .dropdown .btn::before,
+    .dropdown .btn::after {
+        position: absolute;
+        background: #fff;
+        z-index: -1;
+        transition: 1s;
+        content: "";
+    }
+    
+    .dropdown .btn::before {
+        height: 50px;
+        width: 130px;
+    }
+    
+    .dropdown .btn::after {
+        width: 150px;
+        height: 30px;
+    }
+    
+    .dropdown .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    .dropdown .btn:hover::before {
+        width: 0px;
+        background: #fff;
+    }
+    
+    .dropdown .btn:hover::after {
+        height: 0px;
+        background: #fff;
+    }
+    
+    .dropdown .btn:hover {
+        background: #fff;
+    }
+
+        /* Dropdown Button */
+        .dropbtn {
+            padding: 16px;
+        }
+        
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            min-width: 160px;
+            z-index: 1;
+            margin-left:11px;
+        }
+        
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            background-color: white;
+            border:#ddd solid 1px;
+        }
+        
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {background-color: #ddd;}
+        
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {display: block;}
+        
+    
+        /* 무한스크롤 */
+
+.loading,
+.loading:after {
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+}
+
+.loading {
+  display: none;
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 0.3em solid rgba(160, 160, 160, 0.2);
+  border-right: 0.3em solid rgba(160, 160, 160, 0.2);
+  border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
+  border-left: 0.3em solid rgb(0, 0, 0);
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 0.6s infinite linear;
+  animation: load8 0.6s infinite linear;
+}
+
+.loading.show {
+  opacity: 1;
+}
+
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/* Contact List CSS */
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.contactlist .bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 3% 5%;
+}
+
+.bar_right{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bar .input-group {
+    display: flex;
+  margin-right: 5px;
+  padding: 0;
+}
+
+.input-group .form-control.search {
+  border: 0;
+  padding: 5px;
+  font-size: 1em;
+  border: solid 1px black;
+  border-radius: 3px;
+  margin-right: 10px;
+  width:300px;
+}
+
+/*
+.bar .search {
+  display: flex;
+  justify-content: center;
+  margin-right: 5px;
+  width: 40%;
+  padding: 0;
+}
+
+
+.bar .search .form-control {
+  border: 0;
+  padding: 5px;
+  font-size: 1em;
+  border: solid 1px black;
+  width: 60%;
+  height: 50%;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+*/
+
+.bar .btn_search {
+  padding: 6px;
+  border: solid 1px #ccc;
+  border-radius: 3px;
+  margin-right:20px;
+}
+
+.bar .sort {
+  margin-right: 10px;
+}
+
+.bar .sort select {
+  border: 0;
+  padding: 5px;
+  border: solid 1px black;
+  border-radius: 3px;
+}
+
+.bar .contact_create i {
+  font-size: 2rem;
+  font-weight: lighter;
+  color: rgb(75, 75, 75);
+}
+
+.contactlist .content{
+    display:grid;
+    justify-content: center;
+    margin:auto 5%;
+}
+
+.infinite-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.infinite-item {
+  height: 400px;
+  width: 300px;
+  border: rgb(117, 117, 117) 1px solid;
+  margin-right: 20px;
+  padding: 10px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-rows: 1fr 35px;
+}
+
+.infinite-item .item_top {
+  display: grid;
+  grid-template-rows: 30px 30px 250px 30px;
+  padding-bottom: 10px;
+}
+
+.item_top img {
+  /* display: flex;
+  justify-content: center; */
+  width: 80%;
+  align-content: center;
+}
+
+.item_bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-top: #ccc 1px solid;
+}
+
+/* hover */
+
+.infinite-item {
+  /*cursor: pointer;*/
+  position: relative;
+  overflow: hidden;
+}
+
+.caption {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.caption-content {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  transform: scale(1.1);
+}
+
+/*
+.infinite-item:hover .caption-content i {
+  transform: scale(1.8);
+  -webkit-transform: scale(1.8);
+  -ms-transform: scale(1.8);
+}
+
+.infinite-item:hover .caption {
+  opacity: 0.85;
+}
+
+.infinite-item:hover .caption i {
+  opacity: 1;
+  color: white;
+  padding-left: 8px;
+}
+*/
+
+.caption-content i {
+  -webkit-transition: all 300ms ease-in-out;
+  transition: all 300ms ease-in-out;
+}
+
+.caption-content {
+  color: white;
+}
+
+    </style>
 {% endblock stylesheet %}
 
 
 {% block content %}
 
 
-<div class="contact_list">
-    <!--category-->
-    <div class="contactlist_left">
-        <ul class="category">
-            <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('model')">Model</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair/Makeup</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('otheruse')">Other Use</a></li>
-        </ul>
-    </div>
-
-    <div class="contactlist_right">
+    <div class="contactlist">
         <div class="bar">
-
-            <!--search-->
-            <div class="input-group">
-                <input type="text" class="form-control search" value="{{ search|default_if_none:"" }}">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary btn_search" type="button" id="">찾기</button>
+            <div class="bar_left">
+                <!--category-->
+                <div class="dropdown">
+                    <div class="dropbtn"><div class="btn"><span class="noselect"><a href="javascript:void(0)" onclick="onClickLink('all')">Category</a></span></div></div>
+                    <div class="dropdown-content">
+                        <a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a>
+                        <a href="javascript:void(0)" onclick="onClickLink('model')">Model</a>
+                        <a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair/makeup</a>
+                        <a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a>
+                        <a href="javascript:void(0)" onclick="onClickLink('otheruse')">Other use</a>
+                    </div>
                 </div>
             </div>
+            <div class="bar_right">
+                <!--search-->
+                <div class="input-group">
+                    <input type="text" class="form-control search" value="{{ search|default_if_none:"" }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary btn_search" type="button" id="">찾기</button>
+                    </div>
+                </div>
 
-            <!--sort-->
-            <div class="sort">
-                <select name="" id="" class="form-control sort ">
-                    <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
-                        최신순
-                    </option>
-                    <option value="save" {% if sort == 'save' %}selected{% endif %}>
-                        저장순
-                    </option>
-                    <option value="pay" {% if sort == 'pay' %}selected{% endif %}>
-                        가격순
-                    </option>
-                </select>
+                <!--sort-->
+                <div class="sort">
+                    <select name="" id="" class="form-control sort ">
+                        <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
+                            최신순
+                        </option>
+                        <option value="save" {% if sort == 'save' %}selected{% endif %}>
+                            저장순
+                        </option>
+                        <option value="pay" {% if sort == 'pay' %}selected{% endif %}>
+                            가격순
+                        </option>
+                    </select>
+                </div>
+
+
+                <!--contact_create-->
+                <div class="contact_create">
+                    {% if request_user.is_authenticated %}
+                    <a class="update_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
+                    {% endif %}
+                </div>
             </div>
-
-
-            <!--contact_create-->
-            <div class="contact_create">
-                {% if request_user.is_authenticated %}
-                <a class="update_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
-                {% endif %}
-            </div>
+            
         </div>
 
 
@@ -140,10 +487,9 @@
             </div>
         </div>
 
-    </div>
 
     <div>
-        {% endblock content %}
+{% endblock content %}
 
 
 

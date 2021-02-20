@@ -5,85 +5,245 @@
 <link rel="stylesheet" href="{% static 'css/portfolio_detail.css' %}">
 <script src="https://kit.fontawesome.com/9ada8679dc.js" crossorigin="anonymous"></script>
 <style>
-    /*********************** carousel **************************/
-    .row > .column {
-    padding: 0 8px;
-    }
+/*show profile btn*/
 
-    .row:after {
-    content: "";
-    display: table;
-    clear: both;
-    }
-
-    /* Create four equal columns that floats next to eachother */
-    .column {
-    float: left;
-    width: 25%;
-    }
-
-    /* The Modal (background) */
-    .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: black;
-    }
-
-    /* Modal Content */
-    .modal-content {
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 0;
-    width: 90%;
-    max-width: 1200px;
-    }
-
-    /* The Close Button */
-    .close {
-    color: white;
-    position: absolute;
-    top: 10px;
-    right: 25px;
-    font-size: 35px;
-    font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-    color: #999;
-    text-decoration: none;
+* {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    color:black;
+  }
+  
+  .btn {
+    width: 150px;
+    height: 50px;
+    border: 1px solid #333;
+    font-family: "Cinzel", serif;
+    font-size: 15px;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 0;
+    transition: 1s;
+  }
+  
+  .btn::before,
+  .btn::after {
+    position: absolute;
+    background: #fff;
+    z-index: -1;
+    transition: 1s;
+    content: "";
+  }
+  
+  .btn::before {
+    height: 50px;
+    width: 130px;
+  }
+  
+  .btn::after {
+    width: 150px;
+    height: 30px;
+  }
+  
+  .noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  .btn:hover::before {
+    width: 0px;
+    background: #fff;
+  }
+  
+  .btn:hover::after {
+    height: 0px;
+    background: #fff;
+  }
+  
+  .btn:hover {
+    background: #fff;
+  }
+  
+  .choose a,
+  .profile_button a {
+    color: black;
+  }
+  
+  .choose{
+      display: flex;
+      justify-content: center;
+      margin:40px auto;
+      margin-top: 60px;
+  }
+
+   
+    /*********************** carousel **************************/
+   
+   /*container&grid*/
+
+
+   .container_4{
+       display: grid;
+       justify-content: center;
+       margin:10px auto;
+       padding:10px;
+       max-width:80%;
+   }
+
+   .container_4 > div{
+       padding:10px;
+   }
+
+   .container_4 .user{
+       display:flex;
+       align-items: center;
+       border-bottom: rgb(180, 180, 180) 1px solid;
+   }
+   .container_4 .user div{
+       margin-right:10px;
+   }
+
+   .container_4 .user .user_img{
+    border: #333 2px solid;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 10px;
+
+  }
+
+  .portfolio_title{
+      display: flex;
+      align-items: center;
+      margin-top: 20px;      
+      font-size: 1.1rem;
+      font-weight: bolder;
+  }
+
+
+  .portfolio_detail{
+      display: grid;
+      grid-template-columns: 1fr 0.3fr;
+      justify-content: center;
+      align-items: start;
+  }
+
+  .detail_left{
+      display: grid;
+      padding:0 10px;
+      
+  }
+
+  .detail_left > div{
+      padding-top:15px;
+      padding-bottom:15px;
+      display: flex;
+      align-items: center;
+  }
+
+
+
+  .slides{
+      position: relative;
+      display: flex;
+      justify-content: center;
+}
+
+
+  .mySlides {
+    display: grid;
+    justify-content: center;
+  }
+  .mySlides > div{
+      margin-bottom: 10px;
+  }
+
+  .mySlides .img_container{
+    width: 580px;
+    height: 580px;
+    margin: 0 auto;
+  }
+
+  .mySlides .img_container img{
+      width:100%; height:100%; object-fit: contain; 
     }
 
-    /* Hide the slides by default */
-    .mySlides {
-    display: none;
+
+    img{
+        margin: 0 auto;
+
     }
+
+    .portfolio_content{
+        line-height: 1.8em;
+    }
+
+  .portfolio_date{
+      display: flex;
+      justify-content: flex-end;
+      border-bottom: rgb(180, 180, 180) 1px solid;
+  }
+
+  .portfolio_info{
+      display: flex;
+      justify-content: space-between;
+      padding:0 10px;
+      font-size: 1.3rem;
+  }
+  .portfolio_info i:hover{
+    cursor:pointer;
+    color:#333;
+  }
+
+  .detail_right{
+      margin-left:15px;
+      padding: 0 5px;
+  }
+  .detail_right .img_container{
+    display: grid;
+    justify-content: center;
+    width:90%;
+    margin: 0 auto;
+  }
+  .detail_right .img_container img{
+      width:100%; object-fit: contain;
+      margin-bottom: 10px;
+  }
+
+  .detail_right .img_container img:hover{
+    box-shadow: 0 0 10px #000000;
+      cursor: pointer;
+  }
+
+    
 
     /* Next & previous buttons */
     .prev,
     .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    width: auto;
-    padding: 16px;
-    margin-top: -50px;
-    color: white;
-    font-weight: bold;
-    font-size: 20px;
-    transition: 0.6s ease;
-    border-radius: 0 3px 3px 0;
-    user-select: none;
-    -webkit-user-select: none;
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        width: auto;
+        margin-top: -50px;
+        padding:5px;
+        color: rgb(0, 0, 0);
+        font-weight: bold;
+        font-size: 20px;
+        transition: 0.6s ease;
+        border-radius: 0 3px 3px 0;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .prev{
+        left:0;
     }
 
     /* Position the "next button" to the right */
@@ -95,279 +255,138 @@
     /* On hover, add a black background color with a little bit see-through */
     .prev:hover,
     .next:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    color:#333    
     }
 
     /* Number text (1/3 etc) */
     .numbertext {
-    color: #f2f2f2;
-    font-size: 12px;
-    padding: 8px 12px;
     position: absolute;
-    top: 0;
+    top:0;
+    right:0;
+    color: #707070;
+    font-size: 12px;
     }
 
-    /* Caption text */
-    .caption-container {
-    text-align: center;
-    background-color: black;
-    padding: 2px 16px;
-    color: white;
+
+    
+   .portfolio_button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5%;
+    padding: 2px;
+    border-bottom:none;
     }
 
-    img.demo {
-    opacity: 0.4;
+    .portfolio_button .edit_btn {
+    border: 1px solid black;
+    padding: 5px;
+    margin-right:10px;
     }
+    .portfolio_button .delete_btn {
+    border: 1px solid black;
+    padding: 5px;
 
-    .active,
-    .demo:hover {
-    opacity: 1;
     }
-
-    img.hover-shadow {
-    transition: 0.3s;
-    }
-
-    .hover-shadow:hover {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
-
-    /* Fading animation */
-    .fade {
-    -webkit-animation-name: fade;
-    -webkit-animation-duration: 1.5s;
-    animation-name: fade;
-    animation-duration: 1.5s;
-    }
-
-    @-webkit-keyframes fade {
-    from {opacity: .4}
-    to {opacity: 1}
-    }
-
-    @keyframes fade {
-    from {opacity: .4}
-    to {opacity: 1}
-    }
-
-    /* demo img_size: calc로 연산가능*/
-    /* .demo{
-    width : 9vw; // 구식 브라우저를 위한 대비책(fallback)
-    width: -webkit-calc(90vw / 10); // for Chrome, Safari
-    width: -moz-calc(90vw / 10); // for Firefox
-    width : calc(90vw / 10); // for IE
-    } */
-
-
-    /************************* carousel 예전 버전: slide btn + slide pagination  **************************/
-    /* #slide_container { box-sizing: border-box; padding: 0; margin: 0; text-align: center; }
-    *, *:before, *:after { box-sizing: inherit; }
-
-    .clearfix:after { content: ''; display: block; clear: both; float: none; }
-
-    #slide_container { width: 1000px; margin: auto; }
-    .slide_wrap { position: relative; width: 400px; margin: auto; padding-bottom: 30px; }
-    .slide_box { width: 100%; margin: auto; overflow-x: hidden; }
-    .slide_content { display: table; float: left; width: 400px; height: 400px; }
-    .slide_btn_box > i { position: absolute; top: 50%; margin-top: -45px; width: 60px; height: 60px; font-size: 16px; color:black; background: none; cursor: pointer; }
-    .slide_btn:focus {
-    outline: none;
-    }
-    .slide_btn_box > i {transition: all ease 0.8s; color: black; font-size: 1.2rem;}
-    .slide_btn_box > .prev { left: -100px; }
-    .slide_btn_box > .prev:hover {transform: rotate(-45deg); cursor: pointer;}
-    .slide_btn_box > .next { right: -100px; }
-    .slide_btn_box > .next:hover {transform: rotate(45deg); cursor: pointer;}
-    .slide_pagination { position: absolute; left: 50%; bottom: 0; list-style: none; margin: 0; padding: 0; transform: translateX(-50%); }
-    .slide_pagination .dot { display: inline-block; width: 15px; height: 15px; margin: 0 5px; overflow: hidden; background: #ddd; border-radius: 50%; transition: 0.3s; }
-    .slide_pagination .dot.dot_active { background: #333; }
-    .slide_pagination .dot a { display: block; width: 100%; height: 100%; } */
-
-
 
 </style>
 {% endblock stylesheet %}
 
 {% block content %}
-    <div class="container">
-        <div class="portfolio_container">  
-            <div class="portfolio_info_container">
-                <div class="portfolio_owner">
-                    <a href="{% url 'myApp:profile_detail_other' owner.pk %}">
-                        <div class="portfolio_owner">{{owner.username}}</div>
-                        <button type="button">Show Profile</button>
-                    </a>
-                    <div class="portfolio_owner">{{owner.category}}</div>
-                </div>
-                <div class="portfolio_detail">
-                    <div class="portfolio_content">{{portfolio.title}}</div>
-                    <div id="slide_container" class="portfolio_images"></div>
-                        <!-- Images used to open the lightbox -->
-                        <div class="row">
-                            <div class="column fade">
-                                <img class="hover-shadow" onclick="openModal();currentSlide(1)" src="{{portfolio.thumbnail.url}}" alt="portfolio_image" width="300px">
-                            </div>
-                            {% for image in images %}
-                                {% if image %}
-                                <div class="column fade">
-                                    <img class="hover-shadow" onclick="openModal();currentSlide({{forloop.counter}}+1)" src="{{image.image.url}}" alt="portfolio_image" width="300px">
-                                </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
 
+<div class="choose">
+    <a class="choose_profile" href="{% url 'myApp:profile_detail_other' owner.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
+</div>
 
-                        <!-- The Modal/Lightbox -->
-                        <div id="myModal" class="modal">
-                            <span class="close cursor" onclick="closeModal()">&times;</span>
-                            <div class="modal-content">
-                                <div class="mySlides fade">
-                                    <div class="numbertext">1 / {{num_of_imgs|add:"1"}}</div>
-                                    <img src="{{portfolio.thumbnail.url}}" style="width:100%">
-                                </div>
-                                {% for image in images %}
-                                    {% if image %}
-                                    <div class="mySlides fade">
-                                        <div class="numbertext"> {{forloop.counter|add:"1"}} / {{num_of_imgs|add:"1"}}</div>
-                                        <img src="{{image.image.url}}" style="width:100%">
-                                    </div>
-                                    {% endif %}
-                                {% endfor %}
-                            
-                                <!-- Next/previous controls -->
-                                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                                <a class="next" onclick="plusSlides(1)">&#10095;</a>
-                            
-                                <!-- Caption text -->
-                                <div class="caption-container">
-                                    <p id="caption"></p>
-                                </div>
-                            
-                                <!-- Thumbnail image controls -->
-                                <div class="column">
-                                    <img class="demo" src="{{portfolio.thumbnail.url}}" onclick="currentSlide(1)" alt="img" width="300px">
-                                </div>
-                                {% for image in images %}
-                                    {% if image %}
-                                    <div class="column">
-                                        <img class="demo" src="{{image.image.url}}" onclick="currentSlide({{forloop.counter}}+1)" alt="img" width="300px">
-                                    </div>
-                                    {% endif %}
-                                {% endfor %}
-                                
-                            </div>
-                        </div>
-
-
-                        <!------------------- carousel 예전 버전: slide btn + slide pagination  ------------------->
-                        <!-- <div class="slide_wrap">
-                            <div class="slide_box">
-                                <div class="slide_list clearfix">
-                                    <div><img class="slide_content" src="{{portfolio.thumbnail.url}}" alt="portfolio_image" width="20%"></div>
-                                    {% for image in images %}
-                                        {% if image %}
-                                            <div><img class="slide_content" src="{{image.image.url}}" alt="images" width="20%"></div>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            slide_btn_box 
-                            <div class="slide_btn_box">
-                                <i class="slide_btn prev fas fa-square-full"></i>
-                                <i class="slide_btn next fas fa-square-full"></i>
-                            </div>
-                            
-                            slide_pagination
-                            <ul class="slide_pagination"></ul>
-                        </div> -->
-                    </div>    
-
-
-                    <div class="portfolio_content">{{portfolio.desc}}</div>
-                   
-                    <div class="portfolio_content">{{portfolio.created_at}}</div>
-                    <div class="portfolio_content">{{portfolio.updated_at}}</div>
-
-
-                    <div class="portfolio_info">
-                        <div class="like like-{{portfolio.id}}">
-                            {% if request_user in portfolio.like_users.all %}
-                            <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                                value="like"></i>
-                            {% else %}
-                            <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                                value="like"></i>
-                            {% endif %}
-                            <span class="like__content">{{ portfolio.like_users.count }}</span>
-                        </div>
-                        <div>{{portfolio.view_count}}</div>
-                        <div class="save save-{{portfolio.id}}">
-                            {% if request_user in portfolio.save_users.all %}
-                            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                                value="save"></i>
-                            {% else %}
-                            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                                value="save"></i>
-                            {% endif %}
-                            <span class="save__content">{{ portfolio.save_users.count }}</span>
-                        </div>
-                    </div>
-
-                    <div class="portfolio_tags">
-                        {% for tag in tags %}
-                            <a href="" class="portfolio_tag tag-button">
-                                #{{ tag.tag }}
-                            </a>
-                        {% endfor %}
-                    </div>
-
-                </div>
-
-                <!-- 작성자만 수정 혹은 삭제 가능 -->
-                {% if request_user.username == owner.username %}
-                    <div class="protfolio_button">
-                        <a class="edit_btn" href="{% url 'myApp:portfolio_update' portfolio.pk %}">수정</a> 
-                        <a class="delete_btn" href="{% url 'myApp:portfolio_delete' portfolio.pk %}">삭제</a>
-                    </div>
-                {% endif %}
-
-
-                <!-- 해당 portfolio 작성자의 다른 portfolio -->
-                {% for portfolio in owner_portfolios %}
-                    <div class="profile_owner_portfolio">
-                        <!-- 사진 누르면 detail 넘어가도록 : <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}"> </a> -->
-                        <div>
-                            <img class="portfolio_content" src="{{portfolio.thumbnail.url}}" alt="portfolio_image" width="20%">
-                        </div>
-                        <div class="portfolio_info">
-                            <div class="like like-{{portfolio.id}}">
-                                {% if request_user in portfolio.like_users.all %}
-                                <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                                    value="like"></i>
-                                {% else %}
-                                <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                                    value="like"></i>
-                                {% endif %}
-                                <span class="like__content">{{ portfolio.like_users.count }}</span>
-                            </div>
-                            <div>{{portfolio.view_count}}</div>
-                            <div class="save save-{{portfolio.id}}">
-                                {% if request_user in portfolio.save_users.all %}
-                                <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                                    value="save"></i>
-                                {% else %}
-                                <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                                    value="save"></i>
-                                {% endif %}
-                                <span class="save__content">{{ portfolio.save_users.count }}</span>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+    <div class="container_4">
+        <div class="user">
+            <div class="user_img"></div>
+            <div class="portfolio_owner">User: {{owner.username}}</div>
+            <div class="portfolio_owner">Category: {{owner.category}}</div>
         </div>
+        <div class="portfolio_title">{{portfolio.title}}</div>
+        <div class="portfolio_detail">
+            <div class="detail_left">
+                <div class="slides">
+                    <div class="mySlides fade">
+                        <div class="numbertext">1 / {{num_of_imgs|add:"1"}}</div>
+                        <div class="img_container"><img src="{{portfolio.thumbnail.url}}" ></div>
+                    </div>
+                    {% for image in images %}
+                        {% if image %}
+                        <div class="mySlides fade">
+                            <div class="numbertext"> {{forloop.counter|add:"1"}} / {{num_of_imgs|add:"1"}}</div>
+                            <div class="img_container"><img src="{{image.image.url}}"></div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    <!-- Next/previous controls -->
+                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                </div>
+                <div class="portfolio_content">{{portfolio.desc}}</div>
+                <div class="portfolio_tags">
+                    {% for tag in tags %}
+                        <a href="" class="portfolio_tag tag-button">
+                            #{{ tag.tag }}
+                        </a>
+                    {% endfor %}
+                </div>
+                <div class="portfolio_date">
+                    <div class="portfolio_content">{{portfolio.created_at}}</div>
+                    <!-- <div class="portfolio_content"> {{portfolio.updated_at}}</div> -->
+                </div>
+                <div class="portfolio_info">
+                    <div class="like like-{{portfolio.id}}">
+                        {% if request_user in portfolio.like_users.all %}
+                        <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                            value="like"></i>
+                        {% else %}
+                        <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                            value="like"></i>
+                        {% endif %}
+                        <span class="like__content">{{ portfolio.like_users.count }}</span>
+                    </div>
+                    <div>{{portfolio.view_count}}</div>
+                    <div class="save save-{{portfolio.id}}">
+                        {% if request_user in portfolio.save_users.all %}
+                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                            value="save"></i>
+                        {% else %}
+                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                            value="save"></i>
+                        {% endif %}
+                        <span class="save__content">{{ portfolio.save_users.count }}</span>
+                    </div>
+                </div>
+                 <!-- 작성자만 수정 혹은 삭제 가능 -->
+                {% if request_user.username == owner.username %}
+                <div class="portfolio_button">
+                    <a class="edit_btn" href="{% url 'myApp:portfolio_update' portfolio.pk %}">게시물 수정</a> 
+                    <a class="delete_btn" href="{% url 'myApp:portfolio_delete' portfolio.pk %}">삭제</a>
+                </div>
+                {% endif %}
+            </div>               
+                
+            <div class="detail_right">
+                <div class="img_container">
+                    <!-- Thumbnail image controls -->
+                        <img class="demo" src="{{portfolio.thumbnail.url}}" onclick="currentSlide(1)" alt="img" >
+                    {% for image in images %}
+                        {% if image %}
+                            <img class="demo" src="{{image.image.url}}" onclick="currentSlide({{forloop.counter}}+1)" alt="img" >
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>                   
+
+        </div>
+
+       
     </div>
+
+
+
+       
 {% endblock content %}
 
 
@@ -480,15 +499,7 @@
     }
 
     /*********************** carousel **************************/
-    // Open the Modal
-    function openModal() {
-    document.getElementById("myModal").style.display = "block";
-    }
-
-    // Close the Modal
-    function closeModal() {
-    document.getElementById("myModal").style.display = "none";
-    }
+    
 
     var slideIndex = 1;
     showSlides(slideIndex);
@@ -523,105 +534,6 @@
 
 
 
-    /************************* carousel 예전 버전: slide btn + slide pagination  **************************/
-    // (function () {
-    //   const slideList = document.querySelector('.slide_list');  // Slide parent dom
-    //   const slideContents = document.querySelectorAll('.slide_content');  // each slide dom
-    //   const slideBtnNext = document.querySelector('.next'); // next button
-    //   const slideBtnPrev = document.querySelector('.prev'); // prev button
-    //   const pagination = document.querySelector('.slide_pagination');
-    //   const slideLen = slideContents.length;  // slide length
-    //   const slideWidth = 400; // slide width
-    //   const slideSpeed = 600; // slide speed
-    //   const startNum = 0; // initial slide index (0 ~ 4)
-      
-    //   slideList.style.width = slideWidth * (slideLen + 2) + "px";
-      
-    //   // Copy first and last slide
-    //   let firstChild = slideList.firstElementChild;
-    //   let lastChild = slideList.lastElementChild;
-    //   let clonedFirst = firstChild.cloneNode(true);
-    //   let clonedLast = lastChild.cloneNode(true);
-
-    //   // Add copied Slides
-    //   slideList.appendChild(clonedFirst);
-    //   slideList.insertBefore(clonedLast, slideList.firstElementChild);
-
-    //   // Add pagination dynamically
-    //   let pageChild = '';
-    //   for (var i = 0; i < slideLen; i++) {
-    //     pageChild += '<li class="dot';
-    //     pageChild += (i === startNum) ? ' dot_active' : '';
-    //     pageChild += '" data-index="' + i + '"><a href="#"></a></li>';
-    //   }
-    //   pagination.innerHTML = pageChild;
-    //   const pageDots = document.querySelectorAll('.dot'); // each dot from pagination
-
-    //   slideList.style.transform = "translate3d(-" + (slideWidth * (startNum + 1)) + "px, 0px, 0px)";
-
-    //   let curIndex = startNum; // current slide index (except copied slide)
-    //   let curSlide = slideContents[curIndex]; // current slide dom
-    //   curSlide.classList.add('slide_active');
-
-    //   /** Next Button Event */
-    //   slideBtnNext.addEventListener('click', function() {
-    //     if (curIndex <= slideLen - 1) {
-    //       slideList.style.transition = slideSpeed + "ms";
-    //       slideList.style.transform = "translate3d(-" + (slideWidth * (curIndex + 2)) + "px, 0px, 0px)";
-    //     }
-    //     if (curIndex === slideLen - 1) {
-    //       setTimeout(function() {
-    //         slideList.style.transition = "0ms";
-    //         slideList.style.transform = "translate3d(-" + slideWidth + "px, 0px, 0px)";
-    //       }, slideSpeed);
-    //       curIndex = -1;
-    //     }
-    //     curSlide.classList.remove('slide_active');
-    //     pageDots[(curIndex === -1) ? slideLen - 1 : curIndex].classList.remove('dot_active');
-    //     curSlide = slideContents[++curIndex];
-    //     curSlide.classList.add('slide_active');
-    //     pageDots[curIndex].classList.add('dot_active');
-    //   });
-
-    //   /** Prev Button Event */
-    //   slideBtnPrev.addEventListener('click', function() {
-    //     if (curIndex >= 0) {
-    //       slideList.style.transition = slideSpeed + "ms";
-    //       slideList.style.transform = "translate3d(-" + (slideWidth * curIndex) + "px, 0px, 0px)";
-    //     }
-    //     if (curIndex === 0) {
-    //       setTimeout(function() {
-    //         slideList.style.transition = "0ms";
-    //         slideList.style.transform = "translate3d(-" + (slideWidth * slideLen) + "px, 0px, 0px)";
-    //       }, slideSpeed);
-    //       curIndex = slideLen;
-    //     }
-    //     curSlide.classList.remove('slide_active');
-    //     pageDots[(curIndex === slideLen) ? 0 : curIndex].classList.remove('dot_active');
-    //     curSlide = slideContents[--curIndex];
-    //     curSlide.classList.add('slide_active');
-    //     pageDots[curIndex].classList.add('dot_active');
-    //   });
-
-    //   /** Pagination Button Event */
-    //   let curDot;
-    //   Array.prototype.forEach.call(pageDots, function (dot, i) {
-    //     dot.addEventListener('click', function (e) {
-    //       e.preventDefault();
-    //       curDot = document.querySelector('.dot_active');
-    //       curDot.classList.remove('dot_active');
-          
-    //       curDot = this;
-    //       this.classList.add('dot_active');
-
-    //       curSlide.classList.remove('slide_active');
-    //       curIndex = Number(this.getAttribute('data-index'));
-    //       curSlide = slideContents[curIndex];
-    //       curSlide.classList.add('slide_active');
-    //       slideList.style.transition = slideSpeed + "ms";
-    //       slideList.style.transform = "translate3d(-" + (slideWidth * (curIndex + 1)) + "px, 0px, 0px)";
-    //     });
-    //   });
-    // })();
+  
 </script>
 {% endblock script %}
