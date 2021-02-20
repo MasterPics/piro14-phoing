@@ -46,16 +46,20 @@
     <div class="infinite-container portfolio_content">
         {% for portfolio in portfolios %}
         <div>
-            <div class="portfolio_profile">
-                <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
+            <div class="portfolio_owner">
+                <a href="{% url 'myApp:profile_detail_other' portfolio.user.pk %}">
+                    {% if user.image  %}
+                    <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" width="20%">    
+                    {% else %}
+                    <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
+                    {% endif %}
                     <p>{{portfolio.user.username}}</p>
                     <p>{{portfolio.user.category}}</p>
+                </a>
+            </div>
+            <div class="portfolio_profile">
+                <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
                     <p>{{portfolio.title}}</p>
-                    <div class="portfolio_tags">
-                        {% for tag in portfolio.tags.all %}
-                        <a href="" class="portfolio_tag">#{{ tag.tag }}</a>
-                        {% endfor %}
-                    </div>
                     <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
                 </a>
             </div>

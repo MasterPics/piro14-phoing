@@ -34,13 +34,6 @@ def main_list(request):
 
 
 @login_required
-def profile_detail(request, pk):
-    user = get_object_or_404(User, pk=pk)
-    ctx = {'user': user, }
-    return render(request, 'myApp/profile/profile_detail.html', context=ctx)
-
-
-@login_required
 def profile_delete(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -97,11 +90,38 @@ def profile_create(request):
 
 
 @login_required
-def profile_portfolio(request, pk):
-    user = User.objects.get(pk=pk)
-    portfolios = Portfolio.objects.filter(user=user)
-    ctx = {'user': user, 'portfolios': portfolios}
-    return render(request, 'myApp/profile/profile_portfolio.html', context=ctx)
+def profile_detail(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    ctx = {'user': user, }
+    return render(request, 'myApp/profile/profile_detail.html', context=ctx)
+
+
+@login_required
+def profile_detail_posts(request, pk):
+    user = get_object_or_404(User, pk=pk)
+
+    category = request.GET.get('category', 'contact')  # CATEGORY
+    # sort = request.GET.get('sort', 'recent')  # SORT
+    search = request.GET.get('search', '')  # SEARCH
+
+    # CATEGORY
+    if category == 'contact':
+        posts = user.contacts.all().order_by("?")
+    elif category == 'portfolio':
+        posts = user.portfolios.all().order_by("?")
+
+    # SORT
+
+    # SEARCH
+
+    # infinite scroll
+
+    ctx = {
+        'user': user,
+        'posts': posts,
+        'category': category,
+    }
+    return render(request, 'myApp/profile/profile_detail_posts.html', context=ctx)
 
 
 def profile_detail_other(request, pk):
@@ -110,6 +130,15 @@ def profile_detail_other(request, pk):
     # portfolios = Portfolio.objects.filter(user=user)
     ctx = {'user': user, 'portfolios': portfolios}
     return render(request, 'myApp/profile/profile_detail_other.html', context=ctx)
+
+
+@login_required
+def post_create(request):
+    if request.method == 'POST':
+        messages.success(request, "create your post!")
+    else:
+        ctx = {}
+        return render(request, 'myApp/profile/post_create.html', context=ctx)
 
 ###################### portfolio section ######################
 
@@ -171,20 +200,17 @@ def portfolio_list(request):
 
 def portfolio_detail(request, pk):
     portfolio = Portfolio.objects.get(pk=pk)
-    # TODO 태그, 추가 이미지 보이도록 tags = port.tags/images = port.images
     images = portfolio.portfolio_images.all()
     num_of_imgs = images.count
 
     tags = portfolio.tags.all()
 
-    owner = portfolio.user  # 게시글 작성자
-    owner_portfolios = Portfolio.objects.filter(user=owner)
+    portfolio_owner = portfolio.user  # 게시글 작성자
     request_user = request.user  # 로그인한 유저
     ctx = {'portfolio': portfolio,
            'images': images,
            'tags': tags,
-           'owner': owner,
-           'owner_portfolios': owner_portfolios,
+           'portfolio_owner': portfolio_owner,
            'request_user': request_user,
            'num_of_imgs': num_of_imgs, }
     return render(request, 'myApp/portfolio/portfolio_detail.html', context=ctx)
@@ -208,7 +234,7 @@ def portfolio_update(request, pk):
     portfolio = get_object_or_404(Portfolio, pk=pk)
     ImageFormSet = modelformset_factory(Images, form=ImageForm, extra=10)
     if request.method == 'POST':
-        form = PortfolioForm(request.POST, request.FILES)
+        form = PortfolioForm(request.POST, request.FILES, instance=portfolio)
         formset = ImageFormSet(request.POST, request.FILES,
                                queryset=Images.objects.none())
         if form.is_valid() and formset.is_valid():
@@ -230,8 +256,9 @@ def portfolio_update(request, pk):
 
             return redirect('myApp:portfolio_detail', portfolio.id)
     else:
-        form = PortfolioForm()
-        formset = ImageFormSet(queryset=Images.objects.none())
+        form = PortfolioForm(instance=portfolio)
+        formset = ImageFormSet(
+            queryset=Images.objects.none())
         ctx = {'form': form, 'formset': formset}
         return render(request, 'myApp/portfolio/portfolio_update.html', ctx)
 
@@ -438,9 +465,15 @@ def contact_list(request):
 def contact_detail(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
     request_user = request.user
+    contact_owner = contact.user  # contact 게시글 작성자
+
+    tags = contact.tags.all()
+
     ctx = {
         'contact': contact,
+        'contact_owner': contact_owner,
         'request_user': request_user,
+        'tags': tags,
     }
     return render(request, 'myApp/contact/contact_detail.html', context=ctx)
 

@@ -10,6 +10,7 @@ import urllib
 from django.shortcuts import redirect
 from user.models import User
 import re
+from django import template
 
 
 class Tag(models.Model):
@@ -50,6 +51,11 @@ class Contact(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     is_closed = models.BooleanField(default=False)
+    tag_str = models.CharField(max_length=50, blank=True)
+    tags = models.ManyToManyField(Tag, related_name='contacts', blank=True)
+
+    def classname(self):
+        return self.__class__.__name__
 
 
 class Portfolio(models.Model):
@@ -70,6 +76,9 @@ class Portfolio(models.Model):
     view_count = models.PositiveIntegerField(default=0)
     tag_str = models.CharField(max_length=50, blank=True)
     tags = models.ManyToManyField(Tag, related_name='portfolios', blank=True)
+
+    def classname(self):
+        return self.__class__.__name__
 
 
 class Comment(models.Model):

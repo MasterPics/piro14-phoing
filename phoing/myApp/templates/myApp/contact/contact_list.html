@@ -52,9 +52,7 @@
 
             <!--contact_create-->
             <div class="contact_create">
-                {% if request_user.is_authenticated %}
                 <a class="update_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
-                {% endif %}
             </div>
         </div>
 
@@ -68,8 +66,21 @@
                 <div class="infinite-item">
                     <div class="item_top">
                         <div>
-                            <!-- user_img -->
-                            User : {{ contact.user }}
+                            <div class="contact_owner">
+                                <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
+                                    {% if user.image  %}
+                                    <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image" width="20%">    
+                                    {% else %}
+                                    <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
+                                    {% endif %}
+                                
+                                    <div class="contact_owner">{{contact.user.username}}</div>
+                                    <div class="contact_owner">{{contact.user.category}}</div>
+                                </a>
+                                <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
+                                    <button type="button">Show Profile</button>
+                                </a>
+                            </div>
                         </div>
                         <a href="{% url 'myApp:contact_detail' contact.pk %}">
                             <div>{{ contact.title }}</div>
