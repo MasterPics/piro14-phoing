@@ -448,6 +448,8 @@ def contact_update(request, pk):
         return render(request, 'myApp/contact/contact_update.html', ctx)
 
 
+
+
 @login_required
 def contact_create(request):
     # if request.user.is_authenticated:
