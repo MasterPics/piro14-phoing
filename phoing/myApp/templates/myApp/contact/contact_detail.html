@@ -11,6 +11,7 @@
     box-sizing: border-box;
     scroll-behavior: smooth;
     color:black;
+    
   }
   
   .btn {
@@ -98,14 +99,19 @@
       padding:13px;
   }
 
+
+  .contact_img_container{
+      display: flex;
+      justify-content: center;
+  }
+
   .contact_img{
-      width:300px;
-      height:300px;
-      text-align: center;
+      width:310px;
+      height:310px;
   }
 
   .contact_img img{
-    height: 100%; width: 100%; object-fit: contain
+    height: 100%; width: 100%; object-fit: contain; text-align: center;
   }
 
   .container_8 .user{
@@ -265,13 +271,15 @@
         <div class="user">
             <!-- user profile img 추가하기! -->
             <div></div> 
-            <p> User: {{contact.user}} </p>
-            <p>{{ contact.user.category }}</p>
+            <p>User: {{contact.user}} </p>
+            <p>Category: {{ contact.user.category }}</p>
         </div>
 
         <div><p style="font-weight: bolder; font-size:larger">{{ contact.title }}</p></div>
-        <div class="contact_img">
-            <img src="{{ contact.thumbnail.url }}" alt="">
+        <div class="contact_img_container">
+            <div class="contact_img">
+                <img src="{{ contact.thumbnail.url }}" alt="">
+            </div>
         </div>
 
         <div style="line-height: 1.8em;">{{contact.desc}}</div>
@@ -314,7 +322,7 @@
         <div class="comments-{{ contact.id }} comments">
             {% for comment in contact.contact_comments.all %}
             <div class="comment comment-{{ comment.id }}">
-                <span style="line-height: 1.6em;">{{ comment.content }}</span>
+                <span style="line-height: 1.7em;">{{ comment.content }}</span>
                 <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
             </div>
             {% endfor %}
@@ -325,7 +333,7 @@
         <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">게시물 수정</a>
         <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">삭제</a>
         </div>
-    {% endif %}
+        {% endif %}
     </div>
 
 
