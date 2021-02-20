@@ -21,14 +21,3 @@ class Participant(models.Model):
     is_allowed = models.BooleanField(default=False) # 채팅방에 입장 허가 시 True
     is_finished = models.BooleanField(default=False) # 채팅방에 참여중일 시 True
 
-
-    
-
-
-    
-
-
-
-
-
-
