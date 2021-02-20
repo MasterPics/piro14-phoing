@@ -2,70 +2,308 @@
 
 {% load static %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'css/contact_detail.css' %}">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
 
+<style>
+    /*show profile btn*/
+
+* {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    color:black;
+  }
+  
+  .btn {
+    width: 150px;
+    height: 50px;
+    border: 1px solid #333;
+    font-family: "Cinzel", serif;
+    font-size: 15px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 0;
+    transition: 1s;
+  }
+  
+  .btn::before,
+  .btn::after {
+    position: absolute;
+    background: #fff;
+    z-index: -1;
+    transition: 1s;
+    content: "";
+  }
+  
+  .btn::before {
+    height: 50px;
+    width: 130px;
+  }
+  
+  .btn::after {
+    width: 150px;
+    height: 30px;
+  }
+  
+  .noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  .btn:hover::before {
+    width: 0px;
+    background: #fff;
+  }
+  
+  .btn:hover::after {
+    height: 0px;
+    background: #fff;
+  }
+  
+  .btn:hover {
+    background: #fff;
+  }
+  
+  .choose a,
+  .profile_button a {
+    color: black;
+  }
+  
+  .choose{
+      display: flex;
+      justify-content: center;
+      margin:40px auto;
+      margin-top: 60px;
+  }
+
+  /*contact_detail*/
+
+  .container_8 {
+    display: grid;
+    grid-template-rows: auto;
+    justify-content: center;
+    margin: 10px auto;
+    padding: 10px;
+    max-width: 70%;
+  }
+
+  .container_8 > div{
+      padding:13px;
+  }
+
+  .contact_img{
+      width:300px;
+      height:300px;
+      text-align: center;
+  }
+
+  .contact_img img{
+    height: 100%; width: 100%; object-fit: contain
+  }
+
+  .container_8 .user{
+      display: flex;
+      align-items: center;
+      border-bottom: rgb(180, 180, 180) 1px solid;
+    }
+
+  .container_8 .user div{
+    border: #333 2px solid;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 10px;
+
+  }
+
+  .container_8 .user p{
+      margin-right: 15px;
+  }
+  
+  .container_8 .file a{
+      color:red;
+  }
+  
+
+  .pay_date{
+      display: flex;
+      justify-content: space-between;
+  }
+
+  .comment_bookmark{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    border-top: rgb(180, 180, 180) 1px solid;
+    font-size: 1.3rem;
+  }
+  .comment_bookmark i:hover{
+      cursor: pointer;
+  }
+
+  .createComment{
+      margin-top: 15px;
+      margin-bottom: 20px;
+  }
+  
+  .createComment .comment__value{
+    border: 0;
+    padding: 5px;
+    font-size: 1rem;
+    border: solid 1px rgb(70, 70, 70);
+    width: 60%;
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+
+  .createComment .comment__value:focus{
+    outline: none !important;
+    border-color: #000000;
+    box-shadow: 0 0 10px #000000;
+  }
+
+  .createComment .comment__btn {
+    padding: 6px;
+    border: solid 1px rgb(131, 131, 131);
+    border-radius: 3px;
+  }
+  .createComment .comment__btn:hover{
+      cursor: pointer;
+  }
+
+  .comment{
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+  }
+  
+  .comment .comment-btn{
+      padding: 2px;
+      margin-left:13px;
+      background-color: rgba(100, 30, 30, 0.884);
+      border:none;
+      color:white;
+      font-size: 0.65rem;
+      border-radius: 2px;
+      cursor: pointer;
+  }
+
+  
+   .contact_button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding: 2px;
+    }
+
+    .contact_button .edit_btn {
+    border: 1px solid black;
+    padding: 5px;
+    margin: 5px;
+    }
+    .contact_button .delete_btn {
+    border: 1px solid black;
+    padding: 5px;
+    margin: 5px;
+    }
+
+
+
+</style>
 {% endblock stylesheet %}
 
 {% block content %}
-<!-- 카테고리 왼쪽에 -->
 
-<div>
-    <!-- SHOW PROFILE 버튼 -->
-    <p>
-        <!--user img--> {{contact.user}}</p>
-    <p>{{ contact.user.category }}</p>
-    <p>{{ contact.title }}</p>
-    <div>
-        <img src="{{ contact.thumbnail.url }}" alt="">
+<!-- SHOW PROFILE 버튼 ''profile_detail_other''로 가게 하기-->
+    <div class="choose">
+        <a class="choose_profile" href="{% url 'myApp:profile_detail_other' request.user.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
     </div>
-    <!-- DESC -->
-    <a href="{{ contact.file_attach.url }}">시안 첨부파일</a>
-    <p>{{ contact.pay }}</p>
     <!-- 촬영날짜/마감여부 -->
     <p>{{ contact.start_date }}</p>
-    <p>{{ contact.end_date }}</p>
-    <p>{{ contact.location }}</p>
 
-    <!-- 댓글,저장수 ajax -->
-
-    <!--Comment-->
-    <div class="comments-{{ contact.id }} comments">
-        {% for comment in contact.contact_comments.all %}
-        <div class="comment comment-{{ comment.id }}">
-            <span>{{ contact.id }}</span>
-            <span>{{ comment.id }}</span>
-            <span>{{ comment.content }}</span>
-            <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
+    <div class="container_8">
+        <div class="user">
+            <!-- user profile img 추가하기! -->
+            <div></div> 
+            <p> User: {{contact.user}} </p>
+            <p>{{ contact.user.category }}</p>
         </div>
-        {% endfor %}
+
+        <div><p style="font-weight: bolder; font-size:larger">{{ contact.title }}</p></div>
+        <div class="contact_img">
+            <img src="{{ contact.thumbnail.url }}" alt="">
+        </div>
+
+        <div style="line-height: 1.8em;">{{contact.desc}}</div>
+                
+        <!-- Tags -->
+        <div>#Tags #Tags #Tags</div>
+        
+        <div class="file"><a href="{{ contact.file_attach.url }}">시안 첨부파일</a></div>
+
+        <div class="pay_date">
+            <p>pay: {{ contact.pay }}</p>
+            <!-- 촬영날짜/마감여부 -->
+            <p>{{ contact.start_date }} ~ {{ contact.end_date }}</p>
+
+        </div>
+        
+        <!-- 댓글,저장수 ajax -->
+        <div class="comment_bookmark">
+            <div class="comment"><a href="#comment">
+                <i class="far fa-comment-dots"></i>
+                <span class="comment__content">{{ contact.contact_comments.count }}</span>
+            </a></div>
+        
+            <div class="save save-{{contact.id}}">
+                {% if request_user in contact.save_users.all %}
+                <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
+                {% else %}
+                <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
+                {% endif %}
+                <span class="save__content">{{ contact.save_users.count }}</span>
+            </div>
+        </div>
+   
+    
+        <!--Comment-->
+        <div id="comment" class="createComment createComment-{{contact.id}}">
+            <input class="comment__value" type="text" placeholder="댓글 달기...">
+            <input class="comment__btn" onclick="onClickNewComment({{ contact.id }})" type="submit" value="게시">
+        </div>
+        <div class="comments-{{ contact.id }} comments">
+            {% for comment in contact.contact_comments.all %}
+            <div class="comment comment-{{ comment.id }}">
+                <span style="line-height: 1.6em;">{{ comment.content }}</span>
+                <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if request_user.pk == contact.user.pk %}
+        <div class="contact_button" >
+        <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">게시물 수정</a>
+        <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">삭제</a>
+        </div>
+    {% endif %}
     </div>
-    <div class="createComment createComment-{{contact.id}}">
-        <input class="comment__value" type="text" placeholder="댓글 달기...">
-        <input class="comment__btn" onclick="onClickNewComment({{ contact.id }})" type="submit" value="게시">
-    </div>
+
 
     <!-- 이게뭐져?? -->
-    <p>request_user: {{ request_user.username }}</p>
-    <p>contact.user: {{ contact.user.username }}</p>
-    {% if request_user.pk == contact.user.pk %}
-    <div class="profile_button">
-        <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">Contact 수정</a>
-        <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">Contact 삭제</a>
-    </div>
-    {% endif %}
+    <!-- <p>request_user: {{ request_user.username }}</p>
+    <p>contact.user: {{ contact.user.username }}</p> -->
+    
 
 
-    <div class="save">
-        {% if request_user in contact.save_users.all %}
-        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
-        {% else %}
-        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
-        {% endif %}
-        <span class="save__content">{{ contact.save_users.count }}</span>
-    </div>
 
-</div>
+
 {% endblock content%}
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

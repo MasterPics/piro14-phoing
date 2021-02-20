@@ -375,6 +375,12 @@ def contact_list(request):
     category = request.GET.get('category', 'all')  # CATEGORY
     sort = request.GET.get('sort', 'recent')  # SORT
     search = request.GET.get('search', '')  # SEARCH
+    no_pay = request.GET.get('no_pay', False)
+    print(type(no_pay), no_pay)
+    if no_pay == 'true':
+        contacts = Contact.objects.all().filter(pay=0).distinct()
+    else:
+        contacts = Contact.objects.all()
 
     # CATEGORY
     if category != 'all':
@@ -406,11 +412,13 @@ def contact_list(request):
 
     # SEARCH
     if search:
+        print(contacts)
         contacts = contacts.filter(
             Q(title__icontains=search) |  # 제목검색
             Q(desc__icontains=search) |  # 내용검색
             Q(user__username__icontains=search)  # 질문 글쓴이검색
         ).distinct()
+        print(contacts)
 
     # infinite scroll
     contacts_per_page = 3
