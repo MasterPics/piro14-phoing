@@ -3,7 +3,7 @@
 
 
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'css/contact/contact.css' %}">
+<link rel="stylesheet" href="{% static 'css/with_brand/with_brand.css' %}">
 <style>
     /* modal */
     #my_modal {
@@ -32,9 +32,14 @@
 {% block content %}
 
 
-<div class="contact_list">
+<div class="with_brand_list">
+
+    <div>
+        <a href="{% url 'myApp:with_brand_list' %}">with brand</a>
+        <a href="{% url 'myApp:with_artist_list' %}">with artist</a>
+    </div>
     <!--category-->
-    <div class="contactlist_left">
+    <div class="with_brand_list_left">
         <ul class="category">
             <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>
             <li><a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a></li>
@@ -45,7 +50,7 @@
         </ul>
     </div>
 
-    <div class="contactlist_right">
+    <div class="with_brand_list_right">
         <div class="bar">
 
             <!--search-->
@@ -77,16 +82,16 @@
             </div>
 
 
-            <!--contact_create-->
-            <div class="contact_create">
+            <!--with_brand_create-->
+            <div class="with_brand_create">
                 {% if request_user.is_authenticated %}
-                <a class="update_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
+                <a class="update_btn" href="{% url 'myApp:with_brand_create' %}"><i class="far fa-plus-square"></i></a>
                 {% endif %}
             </div>
 
 
             <!-- 모달...어렵네... 지도가 어려운건가 -->
-            <!-- <div class="contact_map"> 
+            <!-- <div class="with_brand_map"> 
                 <div id="my_modal">
                     <div id="map"></div>
                     <br />
@@ -96,44 +101,45 @@
                 <button id="popup_open_btn">위치 확인하기</button>
             </div> -->
             <button id="popup_open_btn">
-                <a href="{% url 'myApp:contact_map' %}">위치 확인하기</a>
+                <a href="{% url 'myApp:with_brand_map' %}">위치 확인하기</a>
             </button>
         </div>
 
 
 
-        <!--contact_list-->
+        <!--with_brand_list-->
         <div class="content">
             <div class="infinite-container">
-                {% for contact in contacts %}
+                {% for with_brand in with_brands %}
 
                 <div class="infinite-item">
-                    <div class="item_top contact-{{contact.pk}}">
+                    <div class="item_top with_brand-{{with_brand.pk}}">
                         <div>
-                            User : {{ contact.user }}
+                            User : {{ with_brand.user }}
 
 
 
                         </div>
-                        <a href="{% url 'myApp:contact_detail' contact.pk %}">
-                            <div style="font-weight:bolder;">{{ contact.title }}</div>
+                        <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
+                            <div style="font-weight:bolder;">{{ with_brand.title }}</div>
                         </a>
                         <div>
                             <!--user_img and category-->
 
-                            {% if contact.user.image %}
-                            <img src="{{ contact.user.image.url }}" alt="">
+
+                            {% if with_brand.user.image %}
+                            <img src="{{ with_brand.user.image.url }}" alt="">
                             {% endif %}
-                            {{ contact.user.category }}
+                            {{ with_brand.user.category }}
                         </div>
                         <div class="thumbnail_desc">
-                            <img src="{{ contact.thumbnail.url }}" alt="">
+                            <img src="{{ with_brand.thumbnail.url }}" alt="">
                         </div>
                         <div class="pay_date">
-                            {% if contact.pay == 0 %}
+                            {% if with_brand.pay == 0 %}
                             Pay : 상호 무페이
                             {% else %}
-                            Pay : {{ contact.pay }}원
+                            Pay : {{ with_brand.pay }}원
                             {% endif %}
                             <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
                         </div>
@@ -142,18 +148,18 @@
                     <div class="item_bottom">
                         <div class="comment">
                             <i class="far fa-comment-dots"></i>
-                            <span class="comment__content">{{ contact.contact_comments.count }}</span>
+                            <span class="comment__content">{{ with_brand.with_brand_comments.count }}</span>
                         </div>
 
-                        <div class="save save-{{contact.id}}">
-                            {% if request_user in contact.save_users.all %}
-                            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
-                                value="save"></i>
+                        <div class="save save-{{with_brand.id}}">
+                            {% if request_user in with_brand.save_users.all %}
+                            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})"
+                                name="type" value="save"></i>
                             {% else %}
-                            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type"
-                                value="save"></i>
+                            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})"
+                                name="type" value="save"></i>
                             {% endif %}
-                            <span class="save__content">{{ contact.save_users.count }}</span>
+                            <span class="save__content">{{ with_brand.save_users.count }}</span>
                         </div>
 
                     </div>
@@ -173,15 +179,15 @@
 
 
             <!-- 무한로딩 보류 -->
-            {% if contacts.has_next %}
-            <a class="infinite-more-link" href="?page={{ contacts.next_page_number }}">
+            {% if with_brands.has_next %}
+            <a class="infinite-more-link" href="?page={{ with_brands.next_page_number }}">
                 <div class="loading" style="display: none;">Loading...</div>
             </a>
             {% endif %}
 
             <!--filter form-->
             <div style="height: 0;">
-                <form id="searchForm" method="get" action="{% url 'myApp:contact_list' %}">
+                <form id="searchForm" method="get" action="{% url 'myApp:with_brand_list' %}">
                     <!--category-->
                     <input type="hidden" id="category" name="category" value="{{ category }}">
                     <!--sort-->
@@ -214,12 +220,12 @@
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
         <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
         <script src="{% static 'js/infinite.min.js' %}"></script>
-        <script src="{% static 'js/contact.js' %}" defer></script>
+        <script src="{% static 'js/with_brand.js' %}" defer></script>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
         <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
-        <script src="{% static 'js/contact/contact_list_map.js' %}"></script>
+        <script src="{% static 'js/with_brand/with_brand_list_map.js' %}"></script>
 
 
         <script>
@@ -234,21 +240,21 @@
             });
 
             //Save
-            const onClickSave = async (contact_id) => {
+            const onClickSave = async (with_brand_id) => {
                 try {
-                    // const url = '/contact/';
+                    // const url = '/with_brand/';
                     // const {
                     //     data
                     // } = await axios.post(url, {
-                    //     contact_id,
+                    //     with_brand_id,
                     // })
-                    // modify(data.contact_id, data.is_saved)
+                    // modify(data.with_brand_id, data.is_saved)
 
                     const options = {
-                        url: '/contact/save/',
+                        url: '/with_brand/save/',
                         method: 'POST',
                         data: {
-                            contact_id: contact_id,
+                            with_brand_id: with_brand_id,
                         }
                     }
                     const response = await axios(options)
@@ -256,17 +262,17 @@
                     if (responseOK) {
                         const data = response.data
                         //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                        modify(data.contact_id, data.is_saved)
+                        modify(data.with_brand_id, data.is_saved)
                     }
                 } catch (error) {
                     console.log(error)
                 }
             }
 
-            const modify = (contact_id, is_saved) => {
-                const save = document.querySelector(`.save-${contact_id} i`);
-                const save_content = document.querySelector(`.save-${contact_id} .save__content`)
-                const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
+            const modify = (with_brand_id, is_saved) => {
+                const save = document.querySelector(`.save-${with_brand_id} i`);
+                const save_content = document.querySelector(`.save-${with_brand_id} .save__content`)
+                const num = save_content.innerText; // [ {{ with_brand.save_users.count }} ]
                 console.log(num)
                 if (is_saved === true) {
 

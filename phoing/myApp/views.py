@@ -473,6 +473,12 @@ def contact_update(request, pk):
         if form.is_valid():
             contact.image = request.FILES.get('image')
             contact = form.save()
+
+            # save tag
+            tags = Tag.add_tags(contact.tag_str)
+            for tag in tags:
+                contact.tags.add(tag)
+
             return redirect('myApp:contact_detail', contact.pk)
     else:
         form = ContactForm(instance=contact)
@@ -499,6 +505,12 @@ def contact_create(request):
             contact.location = location
             contact.save()
             contact.image = request.FILES.get('image')
+
+            # save tag
+            tags = Tag.add_tags(contact.tag_str)
+            for tag in tags:
+                contact.tags.add(tag)
+
             return redirect('myApp:contact_detail', contact.pk)
 
     else:
@@ -506,6 +518,17 @@ def contact_create(request):
         location_form = LocationForm()
 
     return render(request, 'myApp/contact/contact_create.html', {'contact_form': contact_form, 'location_form': location_form})
+
+
+def contact_map(request):
+
+    contacts = Contact.objects.filter(is_closed=False)
+
+    ctx = {
+        'contacts_json': json.dumps([contact.to_json() for contact in contacts])
+    }
+
+    return render(request, 'myApp/contact/contact_map.html', context=ctx)
 
 
 ###################### reference section ######################
@@ -541,85 +564,410 @@ def reference_detail(request, pk):
     }
     return render(request, 'myApp/reference/reference_detail.html', context=ctx)
 
-    # ctx = {
-    #     'reference': reference,
-    #     'request_user': request.user,
-    # }
-    # return render(request, 'myApp/reference/reference_detail.html', context=ctx)
+    ###################### collabration section ######################
+    ###################### 1. with brand        ######################
+    ###################### with_brand section   ######################
+
+
+@csrf_exempt
+def with_brand_comment_create(request, pk):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        with_brand_id = data["id"]
+        comment_value = data["value"]
+        with_brand = CollaborationWithBrand.objects.get(id=with_brand_id)
+        comment = Comment.objects.create(
+            content=comment_value, with_brand=with_brand)
+        return JsonResponse({'with_brand_id': with_brand_id, 'comment_id': comment.id, 'value': comment_value})
+
+
+@csrf_exempt
+def with_brand_comment_delete(request, pk):
+    if request.method == 'POST':
+        print('data is delivered')
+        data = json.loads(request.body)
+        comment_id = data["comment_id"]
+
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
+
+        return JsonResponse({'comment_id': comment_id})
+
+
+@csrf_exempt
+def with_brand_save(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        with_brand_id = data["with_brand_id"]
+        with_brand = get_object_or_404(
+            CollaborationWithBrand, pk=with_brand_id)
+        is_saved = request.user in with_brand.save_users.all()
+        if(is_saved):
+            with_brand.save_users.remove(
+                get_object_or_404(User, pk=request.user.pk))
+        else:
+            with_brand.save_users.add(
+                get_object_or_404(User, pk=request.user.pk))
+        is_saved = not is_saved
+        with_brand.save()
+        return JsonResponse({'with_brand_id': with_brand_id, 'is_saved': is_saved})
+
+
+def with_brand_list(request):
+    with_brands = CollaborationWithBrand.objects.all()
+
+    category = request.GET.get('category', 'all')  # CATEGORY
+    sort = request.GET.get('sort', 'recent')  # SORT
+    search = request.GET.get('search', '')  # SEARCH
+    no_pay = request.GET.get('no_pay', False)
+    print(type(no_pay), no_pay)
+    if no_pay == 'true':
+        with_brands = CollaborationWithBrand.objects.all().filter(pay=0).distinct()
+    else:
+        with_brands = CollaborationWithBrand.objects.all()
+
+    # CATEGORY
+    if category != 'all':
+        if category == User.CATEGORY_PHOTOGRAPHER:
+            with_brands = with_brands.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
+                                             ).distinct().order_by("?")
+        elif category == User.CATEGORY_MODEL:
+            with_brands = with_brands.filter(Q(user__category=User.CATEGORY_MODEL)
+                                             ).distinct().order_by("?")
+        elif category == User.CATEGORY_HM:
+            with_brands = with_brands.filter(Q(user__category=User.CATEGORY_HM)
+                                             ).distinct().order_by("?")
+        elif category == User.CATEGORY_STYLIST:
+            with_brands = with_brands.filter(Q(user__category=User.CATEGORY_STYLIST)
+                                             ).distinct().order_by("?")
+        elif category == User.CATEGORY_OTHERS:
+            with_brands = with_brands.filter(Q(user__category=User.CATEGORY_OTHERS)
+                                             ).distinct().order_by("?")
+
+    # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
+    # SORT
+    if sort == 'save':
+        with_brands = with_brands.annotate(num_save=Count(
+            'save_users')).order_by('-num_save', '-created_at')
+    elif sort == 'pay':
+        with_brands = with_brands.order_by('-pay', '-created_at')
+    elif sort == 'recent':
+        with_brands = with_brands.order_by('-created_at')
+
+    # SEARCH
+    if search:
+        with_brands = with_brands.filter(
+            Q(title__icontains=search) |  # 제목검색
+            Q(desc__icontains=search) |  # 내용검색
+            Q(user__username__icontains=search)  # 질문 글쓴이검색
+        ).distinct()
+
+    # # infinite scroll
+    # with_brands_per_page = 3
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(with_brands, with_brands_per_page)
+    # try:
+    #     with_brands = paginator.page(page)
+    # except PageNotAnInteger:
+    #     with_brands = paginator.page(1)
+    # except EmptyPage:
+    #     with_brands = paginator.page(paginator.num_pages)
+
+    context = {
+        'with_brands': with_brands,
+        'sort': sort,
+        'category': category,
+        'search': search,
+        'request_user': request.user,
+    }
+    return render(request, 'myApp/with_brand/with_brand_list.html', context=context)
+
+
+def with_brand_detail(request, pk):
+    with_brand = get_object_or_404(CollaborationWithBrand, pk=pk)
+    ctx = {
+        'with_brand': with_brand,
+        'request_user': request.user,
+    }
+    return render(request, 'myApp/with_brand/with_brand_detail.html', context=ctx)
 
 
 @login_required
-def reference_delete(request, pk):
-    reference = get_object_or_404(Reference, pk=pk)
+def with_brand_delete(request, pk):
+    with_brand = get_object_or_404(CollaborationWithBrand, pk=pk)
     if request.method == 'POST':
-        reference.delete()
+        with_brand.delete()
         messages.success(request, "탈퇴되었습니다.")
-        return redirect('myApp:reference_list')
+        return redirect('myApp:with_brand_list')
     else:
-        ctx = {'reference': reference}
-        return render(request, 'myApp/reference/reference_delete.html', context=ctx)
+        ctx = {'with_brand': with_brand}
+        return render(request, 'myApp/with_brand/with_brand_delete.html', context=ctx)
 
 
 @login_required
-def reference_update(request, pk):
-    reference = get_object_or_404(Reference, pk=pk)
+def with_brand_update(request, pk):
+    with_brand = get_object_or_404(CollaborationWithBrand, pk=pk)
     if request.method == 'POST':
-        form = ReferenceForm(request.POST, request.FILES, instance=reference)
+        form = WithBrandForm(
+            request.POST, request.FILES, instance=with_brand)
         if form.is_valid():
-            reference.image = request.FILES.get('image')
-            reference = form.save()
-            return redirect('myApp:reference_detail', reference.pk)
+            with_brand.image = request.FILES.get('image')
+            with_brand = form.save()
+            # save tag
+            tags = Tag.add_tags(with_brand.tag_str)
+            for tag in tags:
+                with_brand.tags.add(tag)
+
+            return redirect('myApp:with_brand_detail', with_brand.pk)
     else:
-        form = ReferenceForm(instance=reference)
+        form = WithBrandForm(instance=with_brand)
         ctx = {'form': form}
-        return render(request, 'myApp/reference/reference_update.html', ctx)
+        return render(request, 'myApp/with_brand/with_brand_update.html', ctx)
 
 
 @login_required
-def reference_create(request):
+def with_brand_create(request):
     # if request.user.is_authenticated:
     #     return redirect('myApp:profile_detail')
 
     if request.method == 'POST':
-        reference_form = ReferenceForm(request.POST, request.FILES)
-        if reference_form.is_valid():
-            reference = reference_form.save(commit=False)
-            reference.user = request.user
-            reference.is_closed = False
-            reference.save()
-            reference.image = request.FILES.get('image')
-            return redirect('myApp:reference_detail', reference.pk)
+        with_brand_form = WithBrandForm(
+            request.POST, request.FILES)
+        location_form = LocationForm(request.POST)
+
+        if with_brand_form.is_valid() and location_form.is_valid():
+            print('here')
+            with_brand = with_brand_form.save(commit=False)
+            location = location_form.save(commit=False)
+            location.save()
+            with_brand.user = request.user
+            with_brand.is_closed = False
+            with_brand.location = location
+            with_brand.save()
+            with_brand.image = request.FILES.get('image')
+
+            # save tag
+            tags = Tag.add_tags(with_brand.tag_str)
+            for tag in tags:
+                with_brand.tags.add(tag)
+
+            return redirect('myApp:with_brand_detail', with_brand.pk)
 
     else:
-        reference_form = ReferenceForm()
+        with_brand_form = WithBrandForm()
+        location_form = LocationForm()
 
-    return render(request, 'myApp/reference/reference_create.html', {'form': reference_form})
+    return render(request, 'myApp/with_brand/with_brand_create.html', {'with_brand_form': with_brand_form, 'location_form': location_form})
+
+
+def with_brand_map(request):
+
+    with_brands = CollaborationWithBrand.objects.filter(is_closed=False)
+
+    ctx = {
+        'with_brands_json': json.dumps([with_brand.to_json() for with_brand in with_brands])
+    }
+
+    return render(request, 'myApp/with_brand/with_brand_map.html', context=ctx)
+
+    ###################### 2. with artist       ######################
 
 
 @csrf_exempt
-def reference_like(request):
+def with_artist_comment_create(request, pk):
     if request.method == 'POST':
         data = json.loads(request.body)
-        reference_id = data["reference_id"]
-        reference = get_object_or_404(Portfolio, pk=reference_id)
-        is_liked = request_user in reference.like_users.all()
-        if is_liked:
-            reference.like_users.remove(
-                get_object_or_404(User, pk=request_user.pk))
+        with_artist_id = data["id"]
+        comment_value = data["value"]
+        with_artist = CollaborationWithArtist.objects.get(id=with_artist_id)
+        comment = Comment.objects.create(
+            content=comment_value, with_artist=with_artist)
+        return JsonResponse({'with_artist_id': with_artist_id, 'comment_id': comment.id, 'value': comment_value})
+
+
+@csrf_exempt
+def with_artist_comment_delete(request, pk):
+    if request.method == 'POST':
+        print('data is delivered')
+        data = json.loads(request.body)
+        comment_id = data["comment_id"]
+
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
+
+        return JsonResponse({'comment_id': comment_id})
+
+
+@csrf_exempt
+def with_artist_save(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        with_artist_id = data["with_artist_id"]
+        with_artist = get_object_or_404(
+            CollaborationWithArtist, pk=with_artist_id)
+        is_saved = request.user in with_artist.save_users.all()
+        if(is_saved):
+            with_artist.save_users.remove(
+                get_object_or_404(User, pk=request.user.pk))
         else:
-            reference.like_users.add(
-                get_object_or_404(User, pk=request_user.pk))
-        is_liked = not is_liked
-        reference.save()
-        return JsonResponse({'reference_id': reference_id, 'is_liked': is_liked})
+            with_artist.save_users.add(
+                get_object_or_404(User, pk=request.user.pk))
+        is_saved = not is_saved
+        with_artist.save()
+        return JsonResponse({'with_artist_id': with_artist_id, 'is_saved': is_saved})
 
 
-def contact_map(request):
+def with_artist_list(request):
+    with_artists = CollaborationWithArtist.objects.all()
 
-    contacts = Contact.objects.filter(is_closed=False)
+    category = request.GET.get('category', 'all')  # CATEGORY
+    sort = request.GET.get('sort', 'recent')  # SORT
+    search = request.GET.get('search', '')  # SEARCH
+    no_pay = request.GET.get('no_pay', False)
+    print(type(no_pay), no_pay)
+    if no_pay == 'true':
+        with_artists = CollaborationWithArtist.objects.all().filter(pay=0).distinct()
+    else:
+        with_artists = CollaborationWithArtist.objects.all()
+
+    # CATEGORY
+    if category != 'all':
+        if category == User.CATEGORY_PHOTOGRAPHER:
+            with_artists = with_artists.filter(Q(user__category=User.CATEGORY_PHOTOGRAPHER)
+                                               ).distinct().order_by("?")
+        elif category == User.CATEGORY_MODEL:
+            with_artists = with_artists.filter(Q(user__category=User.CATEGORY_MODEL)
+                                               ).distinct().order_by("?")
+        elif category == User.CATEGORY_HM:
+            with_artists = with_artists.filter(Q(user__category=User.CATEGORY_HM)
+                                               ).distinct().order_by("?")
+        elif category == User.CATEGORY_STYLIST:
+            with_artists = with_artists.filter(Q(user__category=User.CATEGORY_STYLIST)
+                                               ).distinct().order_by("?")
+        elif category == User.CATEGORY_OTHERS:
+            with_artists = with_artists.filter(Q(user__category=User.CATEGORY_OTHERS)
+                                               ).distinct().order_by("?")
+
+    # 카테고리가 없는 유저들이 other use는 아님. 따로 있다!
+    # SORT
+    if sort == 'save':
+        with_artists = with_artists.annotate(num_save=Count(
+            'save_users')).order_by('-num_save', '-created_at')
+    elif sort == 'pay':
+        with_artists = with_artists.order_by('-pay', '-created_at')
+    elif sort == 'recent':
+        with_artists = with_artists.order_by('-created_at')
+
+    # SEARCH
+    if search:
+        with_artists = with_artists.filter(
+            Q(title__icontains=search) |  # 제목검색
+            Q(desc__icontains=search) |  # 내용검색
+            Q(user__username__icontains=search)  # 질문 글쓴이검색
+        ).distinct()
+
+    # # infinite scroll
+    # with_artists_per_page = 3
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(with_artists, with_artists_per_page)
+    # try:
+    #     with_artists = paginator.page(page)
+    # except PageNotAnInteger:
+    #     with_artists = paginator.page(1)
+    # except EmptyPage:
+    #     with_artists = paginator.page(paginator.num_pages)
+
+    context = {
+        'with_artists': with_artists,
+        'sort': sort,
+        'category': category,
+        'search': search,
+        'request_user': request.user,
+    }
+    return render(request, 'myApp/with_artist/with_artist_list.html', context=context)
+
+
+def with_artist_detail(request, pk):
+    with_artist = get_object_or_404(CollaborationWithArtist, pk=pk)
+    ctx = {
+        'with_artist': with_artist,
+        'request_user': request.user,
+    }
+    return render(request, 'myApp/with_artist/with_artist_detail.html', context=ctx)
+
+
+@login_required
+def with_artist_delete(request, pk):
+    with_artist = get_object_or_404(CollaborationWithArtist, pk=pk)
+    if request.method == 'POST':
+        with_artist.delete()
+        messages.success(request, "탈퇴되었습니다.")
+        return redirect('myApp:with_artist_list')
+    else:
+        ctx = {'with_artist': with_artist}
+        return render(request, 'myApp/with_artist/with_artist_delete.html', context=ctx)
+
+
+@login_required
+def with_artist_update(request, pk):
+    with_artist = get_object_or_404(CollaborationWithArtist, pk=pk)
+    if request.method == 'POST':
+        form = WithArtistForm(
+            request.POST, request.FILES, instance=with_artist)
+        if form.is_valid():
+            with_artist.image = request.FILES.get('image')
+            with_artist = form.save()
+            tags = Tag.add_tags(with_artist.tag_str)
+            for tag in tags:
+                with_artist.tags.add(tag)
+
+            return redirect('myApp:with_artist_detail', with_artist.pk)
+    else:
+        form = WithArtistForm(instance=with_artist)
+        ctx = {'form': form}
+        return render(request, 'myApp/with_artist/with_artist_update.html', ctx)
+
+
+@login_required
+def with_artist_create(request):
+    # if request.user.is_authenticated:
+    #     return redirect('myApp:profile_detail')
+
+    if request.method == 'POST':
+        with_artist_form = WithArtistForm(
+            request.POST, request.FILES)
+        location_form = LocationForm(request.POST)
+
+        if with_artist_form.is_valid() and location_form.is_valid():
+            print('here')
+            with_artist = with_artist_form.save(commit=False)
+            location = location_form.save(commit=False)
+            location.save()
+            with_artist.user = request.user
+            with_artist.is_closed = False
+            with_artist.location = location
+            with_artist.save()
+            with_artist.image = request.FILES.get('image')
+                        # save tag
+            tags = Tag.add_tags(with_artist.tag_str)
+            for tag in tags:
+                with_artist.tags.add(tag)
+
+            return redirect('myApp:with_artist_detail', with_artist.pk)
+
+    else:
+        with_artist_form = WithArtistForm()
+        location_form = LocationForm()
+
+    return render(request, 'myApp/with_artist/with_artist_create.html', {'with_artist_form': with_artist_form, 'location_form': location_form})
+
+
+def with_artist_map(request):
+
+    with_artists = CollaborationWithArtist.objects.filter(is_closed=False)
 
     ctx = {
-        'contacts_json': json.dumps([contact.to_json() for contact in contacts])
+        'with_artists_json': json.dumps([with_artist.to_json() for with_artist in with_artists])
     }
 
-    return render(request, 'myApp/contact/contact_map.html', context=ctx)
+    return render(request, 'myApp/with_artist/with_artist_map.html', context=ctx)

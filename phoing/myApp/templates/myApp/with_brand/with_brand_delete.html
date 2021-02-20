@@ -1,0 +1,19 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/with_brand_delete.css' %}">
+{% endblock stylesheet %}
+
+{% block content %}
+<div class="container">
+    <div class="with_brand_delete">
+        <h1>with_brand delete</h1><br>
+        <form action="{% url 'myApp:with_brand_delete' with_brand.pk %}" method="POST">
+            {% csrf_token %}
+            <p>정말로 삭제하시겠습니까?</p>
+            <input class="delete_btn" type="submit" value="삭제" />
+        </form>
+    </div>
+</div>
+{% endblock content%}
