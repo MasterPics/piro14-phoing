@@ -394,6 +394,11 @@ a {
                     </select>
                 </div>
 
+            <div>
+                <input type="checkbox" class="no_pay" name="no_pay" value="no_pay">
+                <label for="no_pay">상호 무페이</label><br>
+            </div>
+
 
                 <!--contact_create-->
                 <div class="contact_create">
@@ -406,6 +411,7 @@ a {
         </div>
 
 
+
         <!--contact_list-->
         <div class="content">
             <!---->
@@ -415,12 +421,19 @@ a {
                 <div class="infinite-item">
                     <div class="item_top">
                         <div>
-                            <!-- user_img -->
                             User : {{ contact.user }}
+
+
+
                         </div>
                         <a href="{% url 'myApp:contact_detail' contact.pk %}">
                             <div style="font-weight:bolder;">{{ contact.title }}</div>
                         </a>
+                        <div>
+                            <!--user_img and category-->
+                            <img src="{{ contact.user.image.url }}" alt="">
+                            {{ contact.user.category }}
+                        </div>
                         <div class="thumbnail_desc">
                             <img src="{{ contact.thumbnail.url }}" alt="">
                         </div>
@@ -483,6 +496,8 @@ a {
                     <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
                     <!--search-->
                     <input type="hidden" id="sort" name="sort" value="{{ sort }}">
+                    <!--상호무페이-->
+                    <input type="hidden" id="no_pay" name="no_pay" value="{{no_pay}}">
                 </form>
             </div>
         </div>
@@ -567,6 +582,10 @@ a {
                 const categoryIdInput = document.querySelector('#category')
                 categoryIdInput.value = category
                 const searchForm = document.querySelector('#searchForm')
+
+
+
+
                 searchForm.submit()
             }
 
@@ -577,6 +596,7 @@ a {
                 const searchIdInput = document.querySelector('#search')
                 const searchForm = document.querySelector('#searchForm')
                 searchIdInput.value = searchClassInput.value
+
                 searchForm.submit()
             })
 
@@ -587,6 +607,35 @@ a {
                 const sortIdInput = document.querySelector('#sort')
                 const searchForm = document.querySelector('#searchForm')
                 sortIdInput.value = e.target.value
+
+                searchForm.submit()
+            })
+
+            $(function () {
+                var test = localStorage.input === 'true' ? true : false;
+                $('.no_pay').prop('checked', test || false);
+            });
+            $('.no_pay').on('click', function () {
+                localStorage.input = $(this).is(':checked');
+            });
+
+            const nopayClassInput = document.querySelector('.no_pay')
+            const nopayIdInput = document.querySelector('#no_pay')
+            // const searchForm = document.querySelector('#searchForm')
+            if (localStorage.input === 'true') {
+                nopayIdInput.value = true
+            } else {
+                nopayIdInput.value = false
+            }
+
+            nopayClassInput.addEventListener('click', () => {
+                const nopayIdInput = document.querySelector('#no_pay')
+                const searchForm = document.querySelector('#searchForm')
+                if (localStorage.input === 'true') {
+                    nopayIdInput.value = true
+                } else {
+                    nopayIdInput.value = false
+                }
                 searchForm.submit()
             })
         </script>
