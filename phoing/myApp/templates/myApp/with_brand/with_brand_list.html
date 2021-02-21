@@ -185,7 +185,79 @@
 }
 
 /* with_brand List CSS */
+a {
+    text-decoration: none;
+    color: black;
+  }
+  
+.with_brand_list .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2% 4%;
+  }
 
+  
+.bar_right{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bar .input-group {
+    display: flex;
+  margin-right: 5px;
+  padding: 0;
+}
+
+.input-group .form-control.search {
+  border: 0;
+  padding: 5px;
+  font-size: 1em;
+  border: solid 1px black;
+  border-radius: 3px;
+  margin-right: 10px;
+  width:300px;
+}
+
+
+
+.bar .btn_search {
+    padding: 6px;
+    border: solid 1px #ccc;
+    border-radius: 3px;
+    margin-right:20px;
+  }
+  
+  .bar .sort {
+    margin-right: 10px;
+  }
+  
+  .bar .sort select {
+    border: 0;
+    padding: 5px;
+    border: solid 1px black;
+    border-radius: 3px;
+  }
+  
+  .bar .pay{
+      margin-right: 15px;
+  }
+  
+  .bar .with_brand_create i {
+    font-size: 2rem;
+    color: rgb(41, 41, 41);
+    margin-right: 15px;
+
+  }
+
+
+  .bar #popup_open_btn i{
+   font-size:2rem;
+   color: rgb(41, 41, 41);
+
+  }
+  
 
 
 </style>
@@ -203,7 +275,7 @@
 
 <div class="with_brand_list">
 
-     <div class="bar">
+    <div class="bar">
         <div class="bar_left">
             <!--category-->
             <div class="dropdown">
@@ -242,7 +314,7 @@
                 </select>
             </div>
 
-            <div>
+            <div class="pay">
                 <input type="checkbox" class="no_pay" name="no_pay" value="no_pay">
                 <label for="no_pay">상호 무페이</label><br>
             </div>
@@ -266,104 +338,104 @@
 
                 <button id="popup_open_btn">위치 확인하기</button>
             </div> -->
-            <button id="popup_open_btn">
-                <a href="{% url 'myApp:with_brand_map' %}">위치 확인하기</a>
-            </button>
+            <div id="popup_open_btn">
+                <a href="{% url 'myApp:with_brand_map' %}"><i class="fas fa-search-location"></i></a>
+            </div>
         </div>
+    </div>
 
 
+    <!--with_brand_list-->
+    <div class="content">
+        <div class="infinite-container">
+            {% for with_brand in with_brands %}
 
-        <!--with_brand_list-->
-        <div class="content">
-            <div class="infinite-container">
-                {% for with_brand in with_brands %}
-
-                <div class="infinite-item">
-                    <div class="item_top with_brand-{{with_brand.pk}}">
-                        <div>
-                            User : {{ with_brand.user }}
-
+            <div class="infinite-item">
+                <div class="item_top with_brand-{{with_brand.pk}}">
+                    <div>
+                        User : {{ with_brand.user }}
 
 
-                        </div>
-                        <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
-                            <div style="font-weight:bolder;">{{ with_brand.title }}</div>
-                        </a>
-                        <div>
-                            <!--user_img and category-->
-
-
-                            {% if with_brand.user.image %}
-                            <img src="{{ with_brand.user.image.url }}" alt="">
-                            {% endif %}
-                            {{ with_brand.user.category }}
-                        </div>
-                        <div class="thumbnail_desc">
-                            <img src="{{ with_brand.thumbnail.url }}" alt="">
-                        </div>
-                        <div class="pay_date">
-                            {% if with_brand.pay == 0 %}
-                            Pay : 상호 무페이
-                            {% else %}
-                            Pay : {{ with_brand.pay }}원
-                            {% endif %}
-                            <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
-                        </div>
-                    </div>
-
-                    <div class="item_bottom">
-                        <div class="comment">
-                            <i class="far fa-comment-dots"></i>
-                            <span class="comment__content">{{ with_brand.with_brand_comments.count }}</span>
-                        </div>
-
-                        <div class="save save-{{with_brand.id}}">
-                            {% if request_user in with_brand.save_users.all %}
-                            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})"
-                                name="type" value="save"></i>
-                            {% else %}
-                            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})"
-                                name="type" value="save"></i>
-                            {% endif %}
-                            <span class="save__content">{{ with_brand.save_users.count }}</span>
-                        </div>
 
                     </div>
+                    <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
+                        <div style="font-weight:bolder;">{{ with_brand.title }}</div>
+                    </a>
+                    <div>
+                        <!--user_img and category-->
 
 
-                    <!--
-                    <div class="caption">
-                        <div class="caption-content">
-                            <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
-                        </div>
+                        {% if with_brand.user.image %}
+                        <img src="{{ with_brand.user.image.url }}" alt="">
+                        {% endif %}
+                        {{ with_brand.user.category }}
                     </div>
-                    -->
+                    <div class="thumbnail_desc">
+                        <img src="{{ with_brand.thumbnail.url }}" alt="">
+                    </div>
+                    <div class="pay_date">
+                        {% if with_brand.pay == 0 %}
+                        Pay : 상호 무페이
+                        {% else %}
+                        Pay : {{ with_brand.pay }}원
+                        {% endif %}
+                        <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
+                    </div>
                 </div>
 
-                {% endfor %}
+                <div class="item_bottom">
+                    <div class="comment">
+                        <i class="far fa-comment-dots"></i>
+                        <span class="comment__content">{{ with_brand.with_brand_comments.count }}</span>
+                    </div>
+
+                    <div class="save save-{{with_brand.id}}">
+                        {% if request_user in with_brand.save_users.all %}
+                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})"
+                            name="type" value="save"></i>
+                        {% else %}
+                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})"
+                            name="type" value="save"></i>
+                        {% endif %}
+                        <span class="save__content">{{ with_brand.save_users.count }}</span>
+                    </div>
+
+                </div>
+
+
+                <!--
+                <div class="caption">
+                    <div class="caption-content">
+                        <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
+                    </div>
+                </div>
+                -->
             </div>
 
-
-            {% if with_brands.has_next %}
-            <a class="infinite-more-link" href="?page={{ with_brands.next_page_number }}">
-                <div class="loading" style="display: none;">Loading...</div>
-            </a>
-            {% endif %}
-
-            <!--filter form-->
-            <div style="height: 0;">
-                <form id="searchForm" method="get" action="{% url 'myApp:with_brand_list' %}">
-                    <!--category-->
-                    <input type="hidden" id="category" name="category" value="{{ category }}">
-                    <!--sort-->
-                    <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
-                    <!--search-->
-                    <input type="hidden" id="sort" name="sort" value="{{ sort }}">
-                    <!--상호무페이-->
-                    <input type="hidden" id="no_pay" name="no_pay" value="{{no_pay}}">
-                </form>
-            </div>
+            {% endfor %}
         </div>
+
+
+        {% if with_brands.has_next %}
+        <a class="infinite-more-link" href="?page={{ with_brands.next_page_number }}">
+            <div class="loading" style="display: none;">Loading...</div>
+        </a>
+        {% endif %}
+
+        <!--filter form-->
+        <div style="height: 0;">
+            <form id="searchForm" method="get" action="{% url 'myApp:with_brand_list' %}">
+                <!--category-->
+                <input type="hidden" id="category" name="category" value="{{ category }}">
+                <!--sort-->
+                <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
+                <!--search-->
+                <input type="hidden" id="sort" name="sort" value="{{ sort }}">
+                <!--상호무페이-->
+                <input type="hidden" id="no_pay" name="no_pay" value="{{no_pay}}">
+            </form>
+        </div>
+    </div>
 
 <div>
         {% endblock content %}
