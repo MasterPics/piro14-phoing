@@ -326,6 +326,7 @@ def portfolio_like(request):
         data = json.loads(request.body)
         portfolio_id = data["portfolio_id"]
         portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
+        request_user = request.user
         is_liked = request_user in portfolio.like_users.all()
         if is_liked:
             portfolio.like_users.remove(
