@@ -1,8 +1,12 @@
 # chat/views.py
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from .models import *
+from django.views.decorators.csrf import csrf_exempt
+from myApp.models import *
+from django.http import JsonResponse
+
 
 User = get_user_model()
 
@@ -23,3 +27,60 @@ def chat_home(request, pk):
 
     }
     return render(request, 'chat/chat_home.html', context=ctx)
+
+
+@csrf_exempt
+def chat_add_members(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        contact_pk = data["contact_pk"]
+        request_user_pk = data["request_user_pk"]
+        contact = get_object_or_404(Contact, pk=contact_pk)
+        request_user = get_object_or_404(User, pk=request_user_pk)
+        contact.group.pendings.exclude(pk=request_user_pk)
+        contact.group.members.add(request_user)
+        return JsonResponse(
+            {
+                'contact_pk' : contact_pk,
+            }
+        )
+
+    
+
+@csrf_exempt
+def chat_add_pendings(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        contact_pk = data["contact_pk"]
+        request_user_pk = data["request_pk_user"]
+        contact = get_object_or_404(Contact, pk=contact_pk)
+        request_user = get_object_or_404(User, pk=request_user_pk)
+        contact.group.pendings.add(request_user)
+        print("pending")
+        return JsonResponse(
+            {
+                'contact_pk' : contact_pk,
+            }
+        )
+
+
+@csrf_exempt
+def chat_add_rejected(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        contact_pk = data["contact_pk"]
+        request_user_pk = data["request_pk_user"]
+        contact = get_object_or_404(Contact, pk=contact_pk)
+        request_user = get_object_or_404(User, pk=request_user_pk)
+        contact.group.pendings.exclude(pk=request_user_pk)
+        contact.group.rejected.add(request_user)
+        return JsonResponse(
+            {
+                'contact_pk' : contact_pk
+            }
+        )
+
+        
+
+
+    

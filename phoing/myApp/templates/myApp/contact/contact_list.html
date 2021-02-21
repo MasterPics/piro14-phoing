@@ -108,10 +108,31 @@
                         <div>
                             <!-- user_img -->
                             User : {{ contact.user }}
-                            
+
+                            <div class="chat-btn-{{contact.pk}}">
+                                
                             {% if not contact.user == request.user %}
-                                <button onclick="onClickPending({{contact.pk}}, {{request.user.pk}})" class="chat-join chat-join-{{contact.pk}}"></button>                                
+
+                                <!-- button texxt : requested -->
+                                {% if contact.user in contact.group.pendings.all %}
+                                <button onclick="alert('호스트의 승인을 기다려주세요!'); return false;" class="chat-btn">Requested</button>
+                                <!-- button texxt : rejected -->
+                                {% elif contact.user in contact.group.rejected.all %}
+                                <button onclick="alert('호스트가 신청을 거절했습니다.'); return false;" class="chat-btn">Rejected</button>
+                                <!-- button texxt : chatroom -->
+                                {% elif contact.user in contact.group.members.all %}
+                                <button onclick="location.href='#'"class="chat-btn">Enter Chatroom</button>
+                                    
+                                <!-- button texxt : join -->
+                                {% else %}
+                                <button onclick="onClickToPendings({{contact.pk}}, {{request.user.pk}})" class="chat-btn">Join</button>
+
+                                {% endif %}
+                                
+                                
                             {% endif %}
+
+                            </div>
                                 
                         </div>
                         <a href="{% url 'myApp:contact_detail' contact.pk %}">
@@ -201,6 +222,10 @@
 
         <!--js-->
         {% block script %}
+        <script>
+            // for chat-btn
+            var csrf_token = "{{csrf_token}}";
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
@@ -211,33 +236,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
         <script src="{% static 'js/contact/contact_list_map.js' %}" ></script>
-        <script>
-
-            const onClickPending = async (contact_pk, request_user_pk) => {
-                const options = {
-                    url: '/chat/add/', 
-                    method: 'POST',
-                    data {
-                        contact_pk: contact_pk,
-                        request_user_pk: request_user_pk,
-                    }
-                }
-
-                const response = await axios(options)
-                const responseOK = response && response.status === 200 && response.statusText === 'OK'
-                    if (responseOK) {
-                        const data = response.data
-                        modify_btn(data.contact_pk, request_user_pk)
-                    }
-
-            }
-
-            const modify_btn(contact_pk, request_user_pk){
-                const btn = document.querySelector(`.chat-join-${contact_pk} .chat-join-${request_user_pk}`);
-                
-            }
-
-        </script>
+        <script src="{% static 'js/contact/chat_button.js' %}"></script>
 
         <script>
             var infinite = new Waypoint.Infinite({
@@ -385,6 +384,7 @@
 
 
         </script>
+        
 
         {% endblock script %}
 
