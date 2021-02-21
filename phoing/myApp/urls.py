@@ -9,13 +9,14 @@ urlpatterns = [
     path('profile/<int:pk>/', view=views.profile_detail, name='profile_detail'),
     path('profile/<int:pk>/other', view=views.profile_detail_other,
          name='profile_detail_other'),
+    path('profile/<int:pk>/posts/',
+         view=views.profile_detail_posts, name='profile_detail_posts'),
     path('profile/<int:pk>/delete/',
          view=views.profile_delete, name='profile_delete'),
-    path('profile/<int:pk>/portfolio/',
-         view=views.profile_portfolio, name='profile_portfolio'),
     path('profile/<int:pk>/update/',
          view=views.profile_update, name='profile_update'),
     path('profile/create/', view=views.profile_create, name='profile_create'),
+    path('profile/post/create/', view=views.post_create, name='post_create'),
 
     #####################contact#######################
     path('contact/', view=views.contact_list, name='contact_list'),
@@ -54,4 +55,45 @@ urlpatterns = [
 
     path('reference/detail/<int:pk>/',
          view=views.reference_detail, name='reference_detail'),
+
+    #####################collaborations#######################
+
+    #1. with brand #
+    path('with_brand/', view=views.with_brand_list, name='with_brand_list'),
+    #path('with_brand/<string:category>', view=views.with_brand_category, name='with_brand_category'),
+    path('with_brand/map/', view=views.with_brand_map, name='with_brand_map'),
+    path('with_brand/detail/<int:pk>/',
+         view=views.with_brand_detail, name='with_brand_detail'),
+    path('with_brand/<int:pk>/comment_create/',
+         view=views.with_brand_comment_create, name='with_brand_comment_create'),
+    path('with_brand/<int:pk>/comment_delete/',
+         view=views.with_brand_comment_delete, name='with_brand_comment_delete'),
+    path('with_brand/<int:pk>/delete/',
+         view=views.with_brand_delete, name='with_brand_delete'),
+    path('with_brand/<int:pk>/update/',
+         view=views.with_brand_update, name='with_brand_update'),
+    path('with_brand/create/', view=views.with_brand_create,
+         name='with_brand_create'),
+    path('with_brand/save/', view=views.with_brand_save, name='with_brand_save'),
+
+    #2. with artist #
+    path('with_artist/', view=views.with_artist_list, name='with_artist_list'),
+    #path('with_artist/<str2aing:category>', view=views.with_artist_category, name='with_artist_category'),
+    path('with_artist/map/', view=views.with_artist_map,
+         name='with_artist_map'),
+    path('with_artist/detail/<int:pk>/',
+         view=views.with_artist_detail, name='with_artist_detail'),
+    path('with_artist/<int:pk>/comment_create/',
+         view=views.with_artist_comment_create, name='with_artist_comment_create'),
+    path('with_artist/<int:pk>/comment_delete/',
+         view=views.with_artist_comment_delete, name='with_artist_comment_delete'),
+    path('with_artist/<int:pk>/delete/',
+         view=views.with_artist_delete, name='with_artist_delete'),
+    path('with_artist/<int:pk>/update/',
+         view=views.with_artist_update, name='with_artist_update'),
+    path('with_artist/create/', view=views.with_artist_create,
+         name='with_artist_create'),
+    path('with_artist/save/', view=views.with_artist_save,
+         name='with_artist_save'),
+
 ]

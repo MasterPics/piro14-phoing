@@ -21,7 +21,7 @@ class Tag(models.Model):
     tag = models.CharField(max_length=30)
 
     @classmethod
-    def add_tags(self, tag_str):
+    def add_tags(selt, tag_str):
         # NOTE: self.desc 말고 TAG FIELD 따로 만들까?
         tags = re.findall(r'#(\w+)\b', tag_str)
         tag_lst = []
@@ -47,27 +47,105 @@ class Contact(models.Model):
     save_users = models.ManyToManyField(
         to=User, related_name='contact_save_users', blank=True)
     desc = models.TextField()
+    tag_str = models.CharField(max_length=50, blank=True)
+    tags = models.ManyToManyField(Tag, related_name='contacts', blank=True)
 
     # specific field
     file_attach = models.FileField()
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, default=None, blank=True)
+    location = models.ForeignKey(
+        Location, on_delete=models.CASCADE, default=None, blank=True)
+    pay = models.PositiveIntegerField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    is_closed = models.BooleanField(default=False)
+    tag_str = models.CharField(max_length=50, blank=True)
+    tags = models.ManyToManyField(Tag, related_name='contacts', blank=True)
+
+    def to_json(self):
+        return {
+            "pk": self.pk,
+            "title": self.title,
+            "pay": self.pay,
+            "start_date": self.start_date.strftime('%Y-%m-%d'),
+            "end_date": self.end_date.strftime('%Y-%m-%d'),
+            "address": self.location.address,
+            "lat": self.location.lat,
+            "lon": self.location.lon,
+        }
+    def classname(self):
+        return self.__class__.__name__
+
+
+class CollaborationWithBrand(models.Model):
+    # common field
+    user = models.ForeignKey(
+        to=User, related_name="with_brands", on_delete=models.CASCADE)
+    thumbnail = models.ImageField(upload_to=uuid_name_upload_to)
+    title = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    save_users = models.ManyToManyField(
+        to=User, related_name='with_brand_save_users', blank=True)
+    desc = models.TextField()
+    tag_str = models.CharField(max_length=50, blank=True)
+    tags = models.ManyToManyField(Tag, related_name='with_brand', blank=True)
+
+    # specific field
+    file_attach = models.FileField()
+    location = models.ForeignKey(
+        Location, on_delete=models.CASCADE, default=None, blank=True)
     pay = models.PositiveIntegerField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     is_closed = models.BooleanField(default=False)
 
     def to_json(self):
-    	return {
-            "pk" : self.pk,
-            "title" : self.title,
-            "pay" : self.pay,
-            "start_date" : self.start_date.strftime('%Y-%m-%d'), 
-            "end_date" : self.end_date.strftime('%Y-%m-%d'),
-            "address" : self.location.address,
-            "lat" : self.location.lat,
-            "lon" : self.location.lon,
+        return {
+            "pk": self.pk,
+            "title": self.title,
+            "pay": self.pay,
+            "start_date": self.start_date.strftime('%Y-%m-%d'),
+            "end_date": self.end_date.strftime('%Y-%m-%d'),
+            "address": self.location.address,
+            "lat": self.location.lat,
+            "lon": self.location.lon,
         }
 
+
+class CollaborationWithArtist(models.Model):
+    # common field
+    user = models.ForeignKey(
+        to=User, related_name="with_artists", on_delete=models.CASCADE)
+    thumbnail = models.ImageField(upload_to=uuid_name_upload_to)
+    title = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    save_users = models.ManyToManyField(
+        to=User, related_name='with_artist_save_users', blank=True)
+    desc = models.TextField()
+    tag_str = models.CharField(max_length=50, blank=True)
+    tags = models.ManyToManyField(Tag, related_name='with_artists', blank=True)
+
+    # specific field
+    file_attach = models.FileField()
+    location = models.ForeignKey(
+        Location, on_delete=models.CASCADE, default=None, blank=True)
+    pay = models.PositiveIntegerField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    is_closed = models.BooleanField(default=False)
+
+    def to_json(self):
+        return {
+            "pk": self.pk,
+            "title": self.title,
+            "pay": self.pay,
+            "start_date": self.start_date.strftime('%Y-%m-%d'),
+            "end_date": self.end_date.strftime('%Y-%m-%d'),
+            "address": self.location.address,
+            "lat": self.location.lat,
+            "lon": self.location.lon,
+        }
 
 
 class Portfolio(models.Model):
@@ -89,11 +167,12 @@ class Portfolio(models.Model):
     tag_str = models.CharField(max_length=50, blank=True)
     tags = models.ManyToManyField(Tag, related_name='portfolios', blank=True)
 
+    def classname(self):
+        return self.__class__.__name__
+
 
 class Reference(models.Model):
     thumbnail = models.ImageField(upload_to=uuid_name_upload_to)
-    tag = models.OneToOneField(
-        to=Tag, related_name='reference', on_delete=models.CASCADE)
     save_users = models.ManyToManyField(
         to=User, related_name='reference_save_users', blank=True)
     like_users = models.ManyToManyField(
@@ -101,6 +180,8 @@ class Reference(models.Model):
     desc = models.TextField()
     image_url = ListCharField(base_field=models.CharField(
         max_length=100), max_length=60000)
+    tag_str = models.CharField(max_length=50, blank=True)
+    tags = models.ManyToManyField(Tag, related_name='references', blank=True)
 
 
 class Comment(models.Model):
@@ -108,6 +189,10 @@ class Comment(models.Model):
         to=Contact, null=True, blank=True, related_name='contact_comments', on_delete=models.CASCADE)
     portfolio = models.ForeignKey(
         to=Portfolio, null=True, blank=True, related_name='portfolio_comments', on_delete=models.CASCADE)
+    with_brand = models.ForeignKey(
+        to=CollaborationWithBrand, null=True, blank=True, related_name='with_brand_comments', on_delete=models.CASCADE)
+    with_artist = models.ForeignKey(
+        to=CollaborationWithBrand, null=True, blank=True, related_name='with_artist_comments', on_delete=models.CASCADE)
 
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -119,6 +204,10 @@ class Images(models.Model):
         to=Contact, null=True, blank=True, related_name='contact_images', on_delete=models.CASCADE)
     portfolio = models.ForeignKey(
         to=Portfolio, null=True, blank=True, related_name='portfolio_images', on_delete=models.CASCADE)
+    with_brand = models.ForeignKey(
+        to=CollaborationWithBrand, null=True, blank=True, related_name='with_brand_images', on_delete=models.CASCADE)
+    with_artist = models.ForeignKey(
+        to=CollaborationWithBrand, null=True, blank=True, related_name='with_artist_images', on_delete=models.CASCADE)
     reference = models.ForeignKey(
         to=Reference, null=True, blank=True, related_name='reference_images', on_delete=models.CASCADE)
 
@@ -162,8 +251,6 @@ class Images(models.Model):
 #     pay = models.PositiveIntegerField()
 
 
-
-
 class Place(models.Model):
     # common field
     user = models.ForeignKey(
@@ -184,18 +271,15 @@ class Place(models.Model):
     pay = models.PositiveIntegerField()
     tag_str = models.CharField(max_length=50, blank=True)
     tags = models.ManyToManyField(Tag, related_name='places', blank=True)
-    
 
     def to_json(self):
-         return {
-             'user' : self.user,
-             'thumbnail' : self.thumbnail.url,
-             'title' : self.title,
-             'location' : self.location,
-             'lat' : self.location.lat,
-             'lon' : self.location.lon,
-             'pay' : self.location.pay,
-             'tag_str' : ' '.join([tag.tag for tag in tags.all()])
-         }
-
-
+        return {
+            'user': self.user,
+            'thumbnail': self.thumbnail.url,
+            'title': self.title,
+            'location': self.location,
+            'lat': self.location.lat,
+            'lon': self.location.lon,
+            'pay': self.location.pay,
+            'tag_str': ' '.join([tag.tag for tag in tags.all()])
+        }
