@@ -372,6 +372,12 @@ def contact_save(request):
         return JsonResponse({'contact_id': contact_id, 'is_saved': is_saved})
 
 
+
+DEFAULT = 0
+PENDING = 1
+MEMBER = 2
+REJECTED = 3
+
 def contact_list(request):
     contacts = Contact.objects.all()
 
@@ -428,6 +434,7 @@ def contact_list(request):
         contacts = paginator.page(paginator.num_pages)
 
     print(contacts)
+    
 
     context = {
         'contacts': contacts,

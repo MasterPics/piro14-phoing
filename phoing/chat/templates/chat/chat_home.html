@@ -34,14 +34,16 @@
     
     <div class="pending-list">
         {% for pending in group.pendings.all  %}
-        <span>pending.username</span> <br />
+        Pendings: 
+        <span>{{ pending.username }}</span> <br />
         {% endfor %}
     </div>
     {% endfor %}
 
     <div class="rejected">
+        Rejected: 
         {% for rejected in group.rejected.all %}
-        <span>rejected.username</span> <br />
+        <span>{{ rejected.username }}</span> <br />
         {% endfor %}
     </div>
 

@@ -74,8 +74,3 @@ class Message(models.Model):
 
     # def get_absolute_url(self):
     #     return reverse("home:group", kwargs={"grp_name": self.parent_group})
-
-    
-
-
-

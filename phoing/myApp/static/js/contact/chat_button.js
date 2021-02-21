@@ -46,7 +46,7 @@ const onClickToPendings = async (contact_pk, request_user_pk) => {
 const modifyJoinToPending = async (contact_pk) => {
     console.log("here4")
     const btn = document.querySelector(`.chat-btn-${contact_pk} button`);
-    btn.innerText = 'Pending'
+    btn.innerText = 'Requested'
 }
 
 

@@ -7,6 +7,10 @@ from django.views.decorators.csrf import csrf_exempt
 from myApp.models import *
 from django.http import JsonResponse
 
+DEFAULT = 0
+PENDING = 1
+MEMBER = 2
+REJECTED = 3
 
 User = get_user_model()
 
@@ -22,7 +26,7 @@ def room(request, room_name):
 def chat_home(request, pk):
 
     user = User.objects.get(pk=pk)
-    print(Group.objects.get(pk=1))
+
     ctx = {
 
     }
@@ -52,11 +56,10 @@ def chat_add_pendings(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         contact_pk = data["contact_pk"]
-        request_user_pk = data["request_pk_user"]
+        request_user_pk = data["request_user_pk"]
         contact = get_object_or_404(Contact, pk=contact_pk)
         request_user = get_object_or_404(User, pk=request_user_pk)
         contact.group.pendings.add(request_user)
-        print("pending")
         return JsonResponse(
             {
                 'contact_pk' : contact_pk,
