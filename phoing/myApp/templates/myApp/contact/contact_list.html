@@ -231,7 +231,7 @@
     }
 
     .contactlist .content {
-        /* center로 정렬*/
+        justify-content: center;
     }
     
    
@@ -455,23 +455,23 @@
 <script src="{% static 'js/infinite.min.js' %}"></script>
 
 <script>
-    // let infinite = new Waypoint.Infinite({
+    let infinite = new Waypoint.Infinite({
 
-    //     element: $('.grid')[0],
-    //     items: '.grid-item',
-    //     onBeforePageLoad: function () {
-    //         console.log("here here")
-    //         $('.loading').show();
-    //     },
-    //     onAfterPageLoad: function () {
-    //         console.log("here here2")
-    //         $('.loading').hide();
-    //         let msnry = new Masonry('.grid', {
-    //             itemSelector: '.grid-item',
-    //             gutter: 10,
-    //         })
-    //     }
-    // });
+        element: $('.grid')[0],
+        items: '.grid-item',
+        onBeforePageLoad: function () {
+            console.log("here here")
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            console.log("here here2")
+            $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
+            })
+        }
+    });
     let msnry = new Masonry('.grid', {
         // optionsW
         itemSelector: '.grid-item',
