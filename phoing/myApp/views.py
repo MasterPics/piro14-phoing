@@ -26,6 +26,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # for multiple images
 from django.forms import modelformset_factory
 
+# web chat
+from chat.models import *
+
 
 def main_list(request):
     ctx = {}
@@ -484,13 +487,27 @@ def contact_create(request):
         if contact_form.is_valid() and location_form.is_valid():
             print('here')
             contact = contact_form.save(commit=False)
+
+            # create location
             location = location_form.save(commit=False)
             location.save()
+
+            # create contact
             contact.user = request.user
             contact.is_closed = False
             contact.location = location
             contact.save()
             contact.image = request.FILES.get('image')
+            
+            print("up")
+            # create group object
+            Group.objects.create(
+                name=contact.title,
+                contact=contact,
+                host=request.user,
+            )
+            print("down")
+
             return redirect('myApp:contact_detail', contact.pk)
 
     else:

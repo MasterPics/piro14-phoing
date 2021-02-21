@@ -108,6 +108,11 @@
                         <div>
                             <!-- user_img -->
                             User : {{ contact.user }}
+                            
+                            {% if not contact.user == request.user %}
+                                <button onclick="onClickPending({{contact.pk}}, {{request.user.pk}})" class="chat-join chat-join-{{contact.pk}}"></button>                                
+                            {% endif %}
+                                
                         </div>
                         <a href="{% url 'myApp:contact_detail' contact.pk %}">
                             <div>{{ contact.title }}</div>
@@ -206,7 +211,33 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
         <script src="{% static 'js/contact/contact_list_map.js' %}" ></script>
-        
+        <script>
+
+            const onClickPending = async (contact_pk, request_user_pk) => {
+                const options = {
+                    url: '/chat/add/', 
+                    method: 'POST',
+                    data {
+                        contact_pk: contact_pk,
+                        request_user_pk: request_user_pk,
+                    }
+                }
+
+                const response = await axios(options)
+                const responseOK = response && response.status === 200 && response.statusText === 'OK'
+                    if (responseOK) {
+                        const data = response.data
+                        modify_btn(data.contact_pk, request_user_pk)
+                    }
+
+            }
+
+            const modify_btn(contact_pk, request_user_pk){
+                const btn = document.querySelector(`.chat-join-${contact_pk} .chat-join-${request_user_pk}`);
+                
+            }
+
+        </script>
 
         <script>
             var infinite = new Waypoint.Infinite({

@@ -1,0 +1,51 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+{% block stylesheet %}
+<link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+
+<style>
+
+</style>
+{% endblock stylesheet %}
+
+{% block content %}
+
+<div class="group-wrapper">
+
+    {% for group in request.user.user_groups.all %}
+    <div class="group">
+        <div class="group-profile">
+            <img src="{{ group.contact.thumbnail.url }}" alt="">
+        </div>
+        <div class="group-name">
+            {{ group.name }}
+        </div>
+        <div class="group-host">
+            {{ group.host }}
+        </div>
+        <div class="group-members">
+            {% for member in group.members.all  %}
+            <span> member.username </span> <br /> 
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="pending-list">
+        {% for pending in group.pendings.all  %}
+        <span>pending.username</span> <br />
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <div class="rejected">
+        {% for rejected in group.rejected.all %}
+        <span>rejected.username</span> <br />
+        {% endfor %}
+    </div>
+
+    
+</div>
+
+{% endblock content%}
