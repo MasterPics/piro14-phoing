@@ -448,7 +448,7 @@ def contact_list(request):
         print(contacts)
 
     # infinite scroll
-    contacts_per_page = 3
+    contacts_per_page = 1
     page = request.GET.get('page', 1)
     paginator = Paginator(contacts, contacts_per_page)
     print(contacts)
@@ -982,7 +982,7 @@ def with_artist_create(request):
             with_artist.location = location
             with_artist.save()
             with_artist.image = request.FILES.get('image')
-                        # save tag
+            # save tag
             tags = Tag.add_tags(with_artist.tag_str)
             for tag in tags:
                 with_artist.tags.add(tag)
