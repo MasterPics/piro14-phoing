@@ -2,7 +2,10 @@
 <head>
     <title>ShareMe</title>
 </head>
-<div><button id="btn">PostingW</button></div>
+<body>
+    <div><button id="btn">PostingW</button></div>
+</body>
+
 <script>
     var btn=document.getElementById('btn');
     var xhr=new XMLHttpRequest();
@@ -15,7 +18,7 @@
         xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({
-            'message': username+"님이"+event+"게시물을 공유했습니다."
+            'message': username + "님이"+event+"게시물을 공유했습니다."
         }));
     };
 </script>

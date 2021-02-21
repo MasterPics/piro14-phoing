@@ -1,3 +1,4 @@
+<!-- chat/templates/chat/room.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,6 +7,12 @@
 </head>
 <body>
     <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
+    
+    {% for alarm in alarms %}
+        <div>{{alarm.message}}</div>
+    {% endfor %}    
+    {{request_user}}
+
 </body>
 <script>
     username='{{ username }}';

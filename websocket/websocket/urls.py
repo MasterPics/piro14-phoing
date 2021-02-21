@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.urls import path
-from alarms import views
+from django.conf.urls import include
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('ShareMe', views.ShareMe.as_view()),
-    path('Alarm', views.Alarm.as_view()),
+    path('', include('alarms.urls')),
 ]
