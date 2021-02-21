@@ -568,7 +568,29 @@ def contact_map(request):
 
 ###################### reference section ######################
 ###################### 1. from phoing    ######################
+def local_list(request):
+
+    tags = Tag.objects.all()
+
+    context = {
+        'tags': tags,
+        'request_user': request.user,
+    }
+    return render(request, 'myApp/local/local_list.html', context=context)
+
+
+def local_detail(request, tag):
+    portfolios_taged = Portfolio.objects.filter(tags__tag=tag)
+    print(portfolios_taged)
+
+    context = {
+        'portfolios_taged': portfolios_taged,
+    }
+    return render(request, 'myApp/local/local_detail.html', context=context)
+
 ###################### 2. from pinterest ######################
+
+
 def reference_list(request):
     references = Reference.objects.all()
 

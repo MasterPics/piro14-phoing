@@ -6,11 +6,11 @@
 {% endblock stylesheet %}
 {% block content %}
 
-<div class="infinite-container reference_content">
-    {% for reference in references %}
-
-    {% endfor %}
+<div>
+    <a href="{% url 'myApp:reference_list' %}">from pinterest</a>
+    <a href="{% url 'myApp:local_list' %}">from phoing</a>
 </div>
+
 
 {% endblock content %}
 <!--js-->
@@ -20,7 +20,7 @@
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
-asdf
+
 <script type='text/javascript'>
     // like
     const onClickLike = async (reference_id) => {

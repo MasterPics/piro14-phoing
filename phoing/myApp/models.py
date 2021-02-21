@@ -19,6 +19,10 @@ from django_mysql.models import ListCharField
 
 class Tag(models.Model):
     tag = models.CharField(max_length=30)
+    save_users = models.ManyToManyField(
+        to=User, related_name='tag_save_users', blank=True)
+    like_users = models.ManyToManyField(
+        to=User, related_name='tag_like_users', blank=True)
 
     @classmethod
     def add_tags(selt, tag_str):
@@ -72,6 +76,7 @@ class Contact(models.Model):
             "lat": self.location.lat,
             "lon": self.location.lon,
         }
+
     def classname(self):
         return self.__class__.__name__
 
