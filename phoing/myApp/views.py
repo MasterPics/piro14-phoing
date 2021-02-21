@@ -567,6 +567,8 @@ def contact_map(request):
 
 
 ###################### reference section ######################
+###################### 1. from phoing    ######################
+###################### 2. from pinterest ######################
 def reference_list(request):
     references = Reference.objects.all()
 
@@ -1006,3 +1008,5 @@ def with_artist_map(request):
     }
 
     return render(request, 'myApp/with_artist/with_artist_map.html', context=ctx)
+
+

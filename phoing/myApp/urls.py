@@ -51,6 +51,10 @@ urlpatterns = [
          name='portfolio_save'),
 
     #####################reference#######################
+    #1. from phoging(local) #
+    path()
+
+    #2. from reference(pinterest) #
     path('reference/', view=views.reference_list, name='reference_list'),
 
     path('reference/detail/<int:pk>/',
