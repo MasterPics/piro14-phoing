@@ -108,7 +108,7 @@
                 <div class="grid-item">
                     <img src="{{ contact.thumbnail.url }}" alt="">
 
-                    <!-- <div class="item_top contact-{{contact.pk}}">
+                    <div class="item_top contact-{{contact.pk}}">
                         <div>
                             <div class="contact_owner">
                                 <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
@@ -167,16 +167,8 @@
                             <span class="save__content">{{ contact.save_users.count }}</span>
                         </div>
 
-                    </div> -->
-
-
-                    <!--
-                    <div class="caption">
-                        <div class="caption-content">
-                            <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
-                        </div>
                     </div>
-                    -->
+
                 </div>
 
                 {% endfor %}
@@ -237,20 +229,20 @@
 
 
         <script>
-            // let infinite = new Waypoint.Infinite({
-            //     element: $('.grid')[0],
-            //     items: '.grid-item',
-            //     onBeforePageLoad: function () {
-            //         $('.loading').show();
-            //     },
-            //     onAfterPageLoad: function () {
-            //         $('.loading').hide();
-            //         let msnry = new Masonry('.grid', {
-            //             itemSelector: '.grid-item',
-            //             gutter: 10,
-            //         })
-            //     }
-            // });
+            let infinite = new Waypoint.Infinite({
+                element: $('.grid')[0],
+                items: '.grid-item',
+                onBeforePageLoad: function () {
+                    $('.loading').show();
+                },
+                onAfterPageLoad: function () {
+                    $('.loading').hide();
+                    let msnry = new Masonry('.grid', {
+                        itemSelector: '.grid-item',
+                        gutter: 10,
+                    })
+                }
+            });
             let msnry = new Masonry('.grid', {
                 // optionsW
                 itemSelector: '.grid-item',

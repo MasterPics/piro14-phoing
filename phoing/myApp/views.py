@@ -224,7 +224,7 @@ def portfolio_delete(request, pk):
     if request.method == 'POST':
         portfolio.delete()
         messages.success(request, "삭제되었습니다.")
-        return redirect('myApp:profile_portfolio', owner.id)
+        return redirect('myApp:profile_detail_posts', owner.id)
     else:
         ctx = {'portfolio': portfolio}
         return render(request, 'myApp/portfolio/portfolio_delete.html', context=ctx)
@@ -326,6 +326,7 @@ def portfolio_like(request):
         data = json.loads(request.body)
         portfolio_id = data["portfolio_id"]
         portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
+        request_user = request.user
         is_liked = request_user in portfolio.like_users.all()
         if is_liked:
             portfolio.like_users.remove(
@@ -448,7 +449,7 @@ def contact_list(request):
         print(contacts)
 
     # infinite scroll
-    contacts_per_page = 3
+    contacts_per_page = 1
     page = request.GET.get('page', 1)
     paginator = Paginator(contacts, contacts_per_page)
     print(contacts)
@@ -566,6 +567,30 @@ def contact_map(request):
 
 
 ###################### reference section ######################
+###################### 1. from phoing    ######################
+def local_list(request):
+
+    tags = Tag.objects.all()
+
+    context = {
+        'tags': tags,
+        'request_user': request.user,
+    }
+    return render(request, 'myApp/local/local_list.html', context=context)
+
+
+def local_detail(request, tag):
+    portfolios_taged = Portfolio.objects.filter(tags__tag=tag)
+    print(portfolios_taged)
+
+    context = {
+        'portfolios_taged': portfolios_taged,
+    }
+    return render(request, 'myApp/local/local_detail.html', context=context)
+
+###################### 2. from pinterest ######################
+
+
 def reference_list(request):
     references = Reference.objects.all()
 
@@ -982,7 +1007,7 @@ def with_artist_create(request):
             with_artist.location = location
             with_artist.save()
             with_artist.image = request.FILES.get('image')
-                        # save tag
+            # save tag
             tags = Tag.add_tags(with_artist.tag_str)
             for tag in tags:
                 with_artist.tags.add(tag)

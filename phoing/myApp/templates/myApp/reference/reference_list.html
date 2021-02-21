@@ -6,11 +6,11 @@
 {% endblock stylesheet %}
 {% block content %}
 
-<div class="infinite-container reference_content">
-    {% for reference in references %}
-
-    {% endfor %}
+<div>
+    <a href="{% url 'myApp:reference_list' %}">from pinterest</a>
+    <a href="{% url 'myApp:local_list' %}">from phoing</a>
 </div>
+
 
 {% endblock content %}
 <!--js-->
