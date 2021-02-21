@@ -109,30 +109,36 @@
                             <!-- user_img -->
                             User : {{ contact.user }}
 
+                            
+                            {% if request_user.is_authenticated %}
+
                             <div class="chat-btn-{{contact.pk}}">
                                 
-                            {% if not contact.user == request.user %}
-
-                                <!-- button texxt : requested -->
-                                {% if contact.user in contact.group.pendings.all %}
-                                <button onclick="alert('호스트의 승인을 기다려주세요!'); return false;" class="chat-btn">Requested</button>
-                                <!-- button texxt : rejected -->
-                                {% elif contact.user in contact.group.rejected.all %}
-                                <button onclick="alert('호스트가 신청을 거절했습니다.'); return false;" class="chat-btn">Rejected</button>
-                                <!-- button texxt : chatroom -->
-                                {% elif contact.user in contact.group.members.all %}
-                                <button onclick="location.href='#'"class="chat-btn">Enter Chatroom</button>
+                                {% if not contact.user == request.user %}
+    
+                                    <!-- button texxt : requested -->
+                                    {% if contact.user in contact.group.pendings.all %}
+                                    <button onclick="alert('호스트의 승인을 기다려주세요!'); return false;" class="chat-btn">Requested</button>
+                                    <!-- button texxt : rejected -->
+                                    {% elif contact.user in contact.group.rejected.all %}
+                                    <button onclick="alert('호스트가 신청을 거절했습니다.'); return false;" class="chat-btn">Rejected</button>
+                                    <!-- button texxt : chatroom -->
+                                    {% elif contact.user in contact.group.members.all %}
+                                    <button onclick="location.href='#'"class="chat-btn">Enter Chatroom</button>
+                                        
+                                    <!-- button texxt : join -->
+                                    {% else %}
+                                    <button onclick="onClickToPendings({{contact.pk}}, {{request.user.pk}})" class="chat-btn">Join</button>
+    
+                                    {% endif %}
                                     
-                                <!-- button texxt : join -->
-                                {% else %}
-                                <button onclick="onClickToPendings({{contact.pk}}, {{request.user.pk}})" class="chat-btn">Join</button>
-
+                                    
                                 {% endif %}
-                                
+    
+                            </div>
                                 
                             {% endif %}
-
-                            </div>
+                            
                                 
                         </div>
                         <a href="{% url 'myApp:contact_detail' contact.pk %}">
@@ -227,6 +233,7 @@
             var csrf_token = "{{csrf_token}}";
         </script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
         <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
