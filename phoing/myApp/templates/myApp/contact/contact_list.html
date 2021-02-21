@@ -252,9 +252,10 @@
     }
 
     .contactlist .content {
-        display: flex;
+        /* display: flex;
         justify-content: center;
-        margin: auto 3%;
+        margin: auto 3%; */
+        margin-left: 5%;
     }
 
     .contact_owner {
@@ -471,23 +472,23 @@
 <script src="{% static 'js/infinite.min.js' %}"></script>
 
 <script>
-    // let infinite = new Waypoint.Infinite({
+    let infinite = new Waypoint.Infinite({
 
-    //     element: $('.grid')[0],
-    //     items: '.grid-item',
-    //     onBeforePageLoad: function () {
-    //         console.log("here here")
-    //         $('.loading').show();
-    //     },
-    //     onAfterPageLoad: function () {
-    //         console.log("here here2")
-    //         $('.loading').hide();
-    //         let msnry = new Masonry('.grid', {
-    //             itemSelector: '.grid-item',
-    //             gutter: 10,
-    //         })
-    //     }
-    // });
+        element: $('.grid')[0],
+        items: '.grid-item',
+        onBeforePageLoad: function () {
+            console.log("here here")
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            console.log("here here2")
+            $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
+            })
+        }
+    });
     let msnry = new Masonry('.grid', {
         // optionsW
         itemSelector: '.grid-item',
