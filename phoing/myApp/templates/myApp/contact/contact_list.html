@@ -102,20 +102,25 @@
 
         <!--contact_list-->
         <div class="content">
-            <div class="infinite-container">
+            <div class="grid">
                 {% for contact in contacts %}
 
-                <div class="infinite-item">
-                    <div class="item_top contact-{{contact.pk}}">
+                <div class="grid-item">
+                    <img src="{{ contact.thumbnail.url }}" alt="">
+
+                    <!-- <div class="item_top contact-{{contact.pk}}">
                         <div>
                             <div class="contact_owner">
                                 <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
                                     {% if user.image  %}
-                                    <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image" width="20%">    
+                                    <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image"
+                                        width="20%">
                                     {% else %}
-                                    <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
+                                    <img class="profile_image"
+                                        src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                                        alt="profile_image" width="20%">
                                     {% endif %}
-                                
+
                                     <div class="contact_owner">{{contact.user.username}}</div>
                                     <div class="contact_owner">{{contact.user.category}}</div>
                                 </a>
@@ -128,8 +133,6 @@
                             <div style="font-weight:bolder;">{{ contact.title }}</div>
                         </a>
                         <div>
-                            <!--user_img and category-->
-
                             {% if contact.user.image %}
                             <img src="{{ contact.user.image.url }}" alt="">
                             {% endif %}
@@ -144,7 +147,6 @@
                             {% else %}
                             Pay : {{ contact.pay }}원
                             {% endif %}
-                            <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
                         </div>
                     </div>
 
@@ -165,7 +167,7 @@
                             <span class="save__content">{{ contact.save_users.count }}</span>
                         </div>
 
-                    </div>
+                    </div> -->
 
 
                     <!--
@@ -219,6 +221,9 @@
         <!--js-->
         {% block script %}
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+        <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
         <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
@@ -232,16 +237,26 @@
 
 
         <script>
-            var infinite = new Waypoint.Infinite({
-                element: $('.infinite-container')[0],
-                onBeforePageLoad: function () {
-                    $('.loading').show();
-                },
-                onAfterPageLoad: function ($items) {
-                    $('.loading').hide();
-                }
+            // let infinite = new Waypoint.Infinite({
+            //     element: $('.grid')[0],
+            //     items: '.grid-item',
+            //     onBeforePageLoad: function () {
+            //         $('.loading').show();
+            //     },
+            //     onAfterPageLoad: function () {
+            //         $('.loading').hide();
+            //         let msnry = new Masonry('.grid', {
+            //             itemSelector: '.grid-item',
+            //             gutter: 10,
+            //         })
+            //     }
+            // });
+            let msnry = new Masonry('.grid', {
+                // optionsW
+                itemSelector: '.grid-item',
+                gutter: 10,
+                // columnWidth: 200
             });
-
             //Save
             const onClickSave = async (contact_id) => {
                 try {
