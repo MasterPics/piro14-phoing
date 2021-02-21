@@ -111,12 +111,16 @@
    }
 
    .container_4 .user .user_img{
-    border: #333 2px solid;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 100%;
     margin-right: 10px;
+   }
 
+  .user_img .profile_image{
+    width:100%;
+    height: 100%;
+    object-fit:contain;
   }
 
   .portfolio_title{
@@ -183,6 +187,10 @@
 
     .portfolio_content{
         line-height: 1.8em;
+    }
+
+    .portfolio_tags{
+        line-height: 1.75em;
     }
 
   .portfolio_date{
@@ -294,14 +302,20 @@
 {% block content %}
 
 <div class="choose">
-    <a class="choose_profile" href="{% url 'myApp:profile_detail_other' owner.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
+    <a class="choose_profile" href="{% url 'myApp:profile_detail_other' portfolio_owner.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
 </div>
 
     <div class="container_4">
         <div class="user">
-            <div class="user_img"></div>
-            <div class="portfolio_owner">User: {{owner.username}}</div>
-            <div class="portfolio_owner">Category: {{owner.category}}</div>
+            <div class="user_img">
+                {% if portfolio_owner.image  %}
+                <img class="profile_image" src="{{portfolio_owner.image.url}}" alt="profile_image" >    
+                {% else %}
+                <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image">
+                {% endif %}
+            </div>
+            <div class="portfolio_owner">User: {{portfolio_owner.username}}</div>
+            <div class="portfolio_owner">Category: {{portfolio_owner.category}}</div>
         </div>
         <div class="portfolio_title">{{portfolio.title}}</div>
         <div class="portfolio_detail">
@@ -359,7 +373,7 @@
                     </div>
                 </div>
                  <!-- 작성자만 수정 혹은 삭제 가능 -->
-                {% if request_user.username == owner.username %}
+                {% if request_user.username == portfolio_owner.username %}
                 <div class="portfolio_button">
                     <a class="edit_btn" href="{% url 'myApp:portfolio_update' portfolio.pk %}">게시물 수정</a> 
                     <a class="delete_btn" href="{% url 'myApp:portfolio_delete' portfolio.pk %}">삭제</a>

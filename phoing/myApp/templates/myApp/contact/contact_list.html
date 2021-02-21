@@ -240,6 +240,10 @@ a {
   border-radius: 3px;
 }
 
+.bar .pay{
+    margin-right: 15px;
+}
+
 .bar .contact_create i {
   font-size: 2rem;
   font-weight: lighter;
@@ -247,108 +251,50 @@ a {
 }
 
 .contactlist .content{
-    display:grid;
+    display:flex;
     justify-content: center;
-    margin:auto 5%;
+    margin:auto 3%;
 }
 
-.infinite-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+.contact_owner{
+    display:flex;
+    align-items:center;
+    border-bottom: rgb(180, 180, 180) 1px solid;
 }
 
-.infinite-item {
-  height: 400px;
-  width: 300px;
-  border: rgb(117, 117, 117) 1px solid;
-  margin-right: 20px;
-  padding: 10px;
-  margin-bottom: 20px;
-  display: grid;
-  grid-template-rows: 1fr 35px;
+.contact_owner div{
+    margin-right:8px;
+}
+.contact_owner .user_img{
+ width: 40px;
+ height: 40px;
+ border-radius: 100%;
+ margin-right: 10px;
 }
 
-.infinite-item .item_top {
-  display: grid;
-  grid-template-rows: 30px 30px 250px 30px;
-  padding-bottom: 10px;
+.user_img .profile_image{
+ width:100%;
+ height: 100%;
+ object-fit:contain;
 }
 
-.item_top img {
-  /* display: flex;
-  justify-content: center; */
-  width: 80%;
-  align-content: center;
+.thumbnail_desc img{
+   width:20rem;
 }
 
-.item_bottom {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 5px 10px;
-  border-top: #ccc 1px solid;
+.pay_date{
+    display: flex;
+    align-items: center;
 }
 
-/* hover */
-
-.infinite-item {
-  /*cursor: pointer;*/
-  position: relative;
-  overflow: hidden;
+.item_bottom{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.caption {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  background-color: rgba(0, 0, 0, 0.9);
-  transition: all 0.2s ease-in-out;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-}
 
-.caption-content {
-  position: absolute;
-  top: 50%;
-  width: 100%;
-  text-align: center;
-  transform: scale(1.1);
-}
-
-/*
-.infinite-item:hover .caption-content i {
-  transform: scale(1.8);
-  -webkit-transform: scale(1.8);
-  -ms-transform: scale(1.8);
-}
-
-.infinite-item:hover .caption {
-  opacity: 0.85;
-}
-
-.infinite-item:hover .caption i {
-  opacity: 1;
-  color: white;
-  padding-left: 8px;
-}
-*/
-
-.caption-content i {
-  -webkit-transition: all 300ms ease-in-out;
-  transition: all 300ms ease-in-out;
-}
-
-.caption-content {
-  color: white;
-}
-
-    </style>
+</style>
 {% endblock stylesheet %}
 
 
@@ -394,16 +340,16 @@ a {
                     </select>
                 </div>
 
-            <div>
-                <input type="checkbox" class="no_pay" name="no_pay" value="no_pay">
-                <label for="no_pay">상호 무페이</label><br>
-            </div>
+                <div class="pay">
+                    <input type="checkbox" class="no_pay" name="no_pay" value="no_pay">
+                    <label for="no_pay">상호 무페이</label><br>
+                </div>
 
 
                 <!--contact_create-->
                 <div class="contact_create">
                     {% if request_user.is_authenticated %}
-                    <a class="update_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
+                    <a class="create_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
                     {% endif %}
                 </div>
             </div>
@@ -414,39 +360,31 @@ a {
 
         <!--contact_list-->
         <div class="content">
-            <div class="infinite-container">
+            <div class="grid">
                 {% for contact in contacts %}
-
-                <div class="infinite-item">
-                    <div class="item_top contact-{{contact.pk}}">
+                <div class="grid-item">
+                    <img src="{% url " " %} alt="">
+                    <!-- <div class="item_top contact-{{contact.pk}}">
                         <div>
+                            <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
                             <div class="contact_owner">
-                                <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
-                                    {% if user.image  %}
-                                    <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image" width="20%">    
-                                    {% else %}
-                                    <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
-                                    {% endif %}
+                                    <div class="user_img">
+                                        {% if contact.user.image  %}
+                                        <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image">    
+                                        {% else %}
+                                        <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image">
+                                        {% endif %}
+                                    </div>
                                 
-                                    <div class="contact_owner">{{contact.user.username}}</div>
-                                    <div class="contact_owner">{{contact.user.category}}</div>
-                                </a>
-                                <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
-                                    <button type="button">Show Profile</button>
-                                </a>
+                                    <div>User: {{contact.user.username}}</div>
+                                    <div>Category: {{contact.user.category}}</div>
                             </div>
+                            </a>
                         </div>
                         <a href="{% url 'myApp:contact_detail' contact.pk %}">
                             <div style="font-weight:bolder;">{{ contact.title }}</div>
                         </a>
-                        <div>
-                            <!--user_img and category-->
-
-                            {% if contact.user.image %}
-                            <img src="{{ contact.user.image.url }}" alt="">
-                            {% endif %}
-                            {{ contact.user.category }}
-                        </div>
+                       
                         <div class="thumbnail_desc">
                             <img src="{{ contact.thumbnail.url }}" alt="">
                         </div>
@@ -455,9 +393,9 @@ a {
                             Pay : 상호 무페이
                             {% else %}
                             Pay : {{ contact.pay }}원
-                            {% endif %}
+                            {% endif %} -->
                             <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
-                        </div>
+                        <!-- </div>
                     </div>
 
                     <div class="item_bottom">
@@ -477,23 +415,12 @@ a {
                             <span class="save__content">{{ contact.save_users.count }}</span>
                         </div>
 
-                    </div>
-
-
-                    <!--
-                    <div class="caption">
-                        <div class="caption-content">
-                            <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
-                        </div>
-                    </div>
-                    -->
+                    </div> -->
                 </div>
-
                 {% endfor %}
             </div>
 
 
-            <!-- 무한로딩 보류 -->
             {% if contacts.has_next %}
             <a class="infinite-more-link" href="?page={{ contacts.next_page_number }}">
                 <div class="loading" style="display: none;">Loading...</div>
@@ -518,199 +445,192 @@ a {
 
     <div>
 {% endblock content %}
+<!--js-->
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="{% static 'js/contact.js' %}" defer></script>
+<script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+<script src="{% static 'js/contact/contact_list_map.js' %}"></script>
 
 
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
 
-        <!--js-->
-        {% block script %}
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-        <script src="{% static 'js/infinite.min.js' %}"></script>
-        <script src="{% static 'js/contact.js' %}" defer></script>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script type="text/javascript"
-            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
-        <script src="{% static 'js/contact/contact_list_map.js' %}"></script>
-
-
-        <script>
-            var infinite = new Waypoint.Infinite({
-                element: $('.infinite-container')[0],
-                onBeforePageLoad: function () {
-                    $('.loading').show();
-                },
-                onAfterPageLoad: function ($items) {
-                    $('.loading').hide();
-                }
-            });
-
-            //Save
-            const onClickSave = async (contact_id) => {
-                try {
-                    // const url = '/contact/';
-                    // const {
-                    //     data
-                    // } = await axios.post(url, {
-                    //     contact_id,
-                    // })
-                    // modify(data.contact_id, data.is_saved)
-
-                    const options = {
-                        url: '/contact/save/',
-                        method: 'POST',
-                        data: {
-                            contact_id: contact_id,
-                        }
-                    }
-                    const response = await axios(options)
-                    const responseOK = response && response.status === 200 && response.statusText === 'OK'
-                    if (responseOK) {
-                        const data = response.data
-                        //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                        modify(data.contact_id, data.is_saved)
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-
-            const modify = (contact_id, is_saved) => {
-                const save = document.querySelector(`.save-${contact_id} i`);
-                const save_content = document.querySelector(`.save-${contact_id} .save__content`)
-                const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
-                console.log(num)
-                if (is_saved === true) {
-
-                    save.className = "fas fa-bookmark";
-
-                    const count = Number(num) + 1;
-                    save_content.innerHTML = count
-                } else {
-                    save.className = "far fa-bookmark";
-
-                    const count = Number(num) - 1;
-                    save_content.innerHTML = count
-                }
-
-            }
-            //category
-            const onClickLink = (category) => {
-                const categoryIdInput = document.querySelector('#category')
-                categoryIdInput.value = category
-                const searchForm = document.querySelector('#searchForm')
-
-
-
-
-                searchForm.submit()
-            }
-
-            //search
-            const searchButton = document.querySelector('.btn_search')
-            searchButton.addEventListener('click', () => {
-                const searchClassInput = document.querySelector('.search')
-                const searchIdInput = document.querySelector('#search')
-                const searchForm = document.querySelector('#searchForm')
-                searchIdInput.value = searchClassInput.value
-
-                searchForm.submit()
+<script>
+    let infinite = new Waypoint.Infinite({
+        element: $('.grid')[0],
+        items: '.grid-item',
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
             })
-
-
-            //sort
-            const sortClassInput = document.querySelector('.sort')
-            sortClassInput.addEventListener('input', (e) => {
-                const sortIdInput = document.querySelector('#sort')
-                const searchForm = document.querySelector('#searchForm')
-                sortIdInput.value = e.target.value
-
-                searchForm.submit()
-            })
-
-            $(function () {
-                var test = localStorage.input === 'true' ? true : false;
-                $('.no_pay').prop('checked', test || false);
-            });
-            $('.no_pay').on('click', function () {
-                localStorage.input = $(this).is(':checked');
-            });
-
-            const nopayClassInput = document.querySelector('.no_pay')
-            const nopayIdInput = document.querySelector('#no_pay')
-            // const searchForm = document.querySelector('#searchForm')
-            if (localStorage.input === 'true') {
-                nopayIdInput.value = true
-            } else {
-                nopayIdInput.value = false
-            }
-
-            nopayClassInput.addEventListener('click', () => {
-                const nopayIdInput = document.querySelector('#no_pay')
-                const searchForm = document.querySelector('#searchForm')
-                if (localStorage.input === 'true') {
-                    nopayIdInput.value = true
-                } else {
-                    nopayIdInput.value = false
+        }
+    });
+    let msnry = new Masonry('.grid', {
+        // optionsW
+        itemSelector: '.grid-item',
+        gutter: 10,
+        // columnWidth: 200
+    });
+    
+    //
+    
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function ($items) {
+            $('.loading').hide();
+        }
+    });
+    //Save
+    const onClickSave = async (contact_id) => {
+        try {
+            // const url = '/contact/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     contact_id,
+            // })
+            // modify(data.contact_id, data.is_saved)
+            const options = {
+                url: '/contact/save/',
+                method: 'POST',
+                data: {
+                    contact_id: contact_id,
                 }
-                searchForm.submit()
-            })
-
-
-            function modal(id) {
-                var zIndex = 9999;
-                var modal = document.getElementById(id);
-
-                // 모달 div 뒤에 희끄무레한 레이어
-                var bg = document.createElement('div');
-                bg.setStyle({
-                    position: 'fixed',
-                    zIndex: zIndex,
-                    left: '0px',
-                    top: '0px',
-                    width: '100%',
-                    height: '100%',
-                    overflow: 'auto',
-                    // 레이어 색갈은 여기서 바꾸면 됨
-                    backgroundColor: 'rgba(0,0,0,0.4)'
-                });
-                document.body.append(bg);
-
-                // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
-                modal.querySelector('.modal_close_btn').addEventListener('click', function () {
-                    bg.remove();
-                    modal.style.display = 'none';
-                });
-
-                modal.setStyle({
-                    position: 'fixed',
-                    display: 'block',
-                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-
-                    // 시꺼먼 레이어 보다 한칸 위에 보이기
-                    zIndex: zIndex + 1,
-
-                    // div center 정렬
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    msTransform: 'translate(-50%, -50%)',
-                    webkitTransform: 'translate(-50%, -50%)'
-                });
             }
-
-            // Element 에 style 한번에 오브젝트로 설정하는 함수 추가
-            Element.prototype.setStyle = function (styles) {
-                for (var k in styles) this.style[k] = styles[k];
-                return this;
-            };
-
-            document.getElementById('popup_open_btn').addEventListener('click', function () {
-                // 모달창 띄우기
-                modal('my_modal');
-            });
-        </script>
-
-        {% endblock script %}
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modify(data.contact_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const modify = (contact_id, is_saved) => {
+        const save = document.querySelector(`.save-${contact_id} i`);
+        const save_content = document.querySelector(`.save-${contact_id} .save__content`)
+        const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+            save.className = "fas fa-bookmark";
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+    }
+    //category
+    const onClickLink = (category) => {
+        const categoryIdInput = document.querySelector('#category')
+        categoryIdInput.value = category
+        const searchForm = document.querySelector('#searchForm')
+        searchForm.submit()
+    }
+    //search
+    const searchButton = document.querySelector('.btn_search')
+    searchButton.addEventListener('click', () => {
+        const searchClassInput = document.querySelector('.search')
+        const searchIdInput = document.querySelector('#search')
+        const searchForm = document.querySelector('#searchForm')
+        searchIdInput.value = searchClassInput.value
+        searchForm.submit()
+    })
+    //sort
+    const sortClassInput = document.querySelector('.sort')
+    sortClassInput.addEventListener('input', (e) => {
+        const sortIdInput = document.querySelector('#sort')
+        const searchForm = document.querySelector('#searchForm')
+        sortIdInput.value = e.target.value
+        searchForm.submit()
+    })
+    $(function () {
+        var test = localStorage.input === 'true' ? true : false;
+        $('.no_pay').prop('checked', test || false);
+    });
+    $('.no_pay').on('click', function () {
+        localStorage.input = $(this).is(':checked');
+    });
+    const nopayClassInput = document.querySelector('.no_pay')
+    const nopayIdInput = document.querySelector('#no_pay')
+    // const searchForm = document.querySelector('#searchForm')
+    if (localStorage.input === 'true') {
+        nopayIdInput.value = true
+    } else {
+        nopayIdInput.value = false
+    }
+    nopayClassInput.addEventListener('click', () => {
+        const nopayIdInput = document.querySelector('#no_pay')
+        const searchForm = document.querySelector('#searchForm')
+        if (localStorage.input === 'true') {
+            nopayIdInput.value = true
+        } else {
+            nopayIdInput.value = false
+        }
+        searchForm.submit()
+    })
+    function modal(id) {
+        var zIndex = 9999;
+        var modal = document.getElementById(id);
+        // 모달 div 뒤에 희끄무레한 레이어
+        var bg = document.createElement('div');
+        bg.setStyle({
+            position: 'fixed',
+            zIndex: zIndex,
+            left: '0px',
+            top: '0px',
+            width: '100%',
+            height: '100%',
+            overflow: 'auto',
+            // 레이어 색갈은 여기서 바꾸면 됨
+            backgroundColor: 'rgba(0,0,0,0.4)'
+        });
+        document.body.append(bg);
+        // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
+        modal.querySelector('.modal_close_btn').addEventListener('click', function () {
+            bg.remove();
+            modal.style.display = 'none';
+        });
+        modal.setStyle({
+            position: 'fixed',
+            display: 'block',
+            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+            // 시꺼먼 레이어 보다 한칸 위에 보이기
+            zIndex: zIndex + 1,
+            // div center 정렬
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            msTransform: 'translate(-50%, -50%)',
+            webkitTransform: 'translate(-50%, -50%)'
+        });
+    }
+    // Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+    Element.prototype.setStyle = function (styles) {
+        for (var k in styles) this.style[k] = styles[k];
+        return this;
+    };
+    document.getElementById('popup_open_btn').addEventListener('click', function () {
+        // 모달창 띄우기
+        modal('my_modal');
+    });
+</script>
+{% endblock script %}

@@ -224,7 +224,7 @@ def portfolio_delete(request, pk):
     if request.method == 'POST':
         portfolio.delete()
         messages.success(request, "삭제되었습니다.")
-        return redirect('myApp:profile_portfolio', owner.id)
+        return redirect('myApp:profile_detail_posts', owner.id)
     else:
         ctx = {'portfolio': portfolio}
         return render(request, 'myApp/portfolio/portfolio_delete.html', context=ctx)
