@@ -11,6 +11,7 @@
     box-sizing: border-box;
     scroll-behavior: smooth;
     color:black;
+    
   }
   
   .btn {
@@ -98,14 +99,19 @@
       padding:13px;
   }
 
+
+  .contact_img_container{
+      display: flex;
+      justify-content: center;
+  }
+
   .contact_img{
-      width:300px;
-      height:300px;
-      text-align: center;
+      width:310px;
+      height:310px;
   }
 
   .contact_img img{
-    height: 100%; width: 100%; object-fit: contain
+    height: 100%; width: 100%; object-fit: contain; text-align: center;
   }
 
   .container_8 .user{
@@ -114,13 +120,17 @@
       border-bottom: rgb(180, 180, 180) 1px solid;
     }
 
-  .container_8 .user div{
-    border: #333 2px solid;
-    width: 40px;
-    height: 40px;
+  .container_8 .user .user_img{
+    width: 60px;
+    height: 60px;
     border-radius: 100%;
     margin-right: 10px;
+  }
 
+  .user_img .profile_image{
+      width:100%;
+      height: 100%;
+      object-fit:contain;
   }
 
   .container_8 .user p{
@@ -221,63 +231,42 @@
 
 {% block content %}
 
-<div>
-    <div class="contact_owner">
-        <a href="{% url 'myApp:profile_detail_other' contact_owner.pk %}">
-            {% if contact_owner.image  %}
-            <img class="profile_image" src="{{contact_owner.image.url}}" alt="profile_image" width="20%">    
-            {% else %}
-            <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
-            {% endif %}
-        
-            <div class="contact_owner">{{contact_owner.username}}</div>
-            <div class="contact_owner">{{contact_owner.category}}</div>
-        </a>
-        <a href="{% url 'myApp:profile_detail_other' contact_owner.pk %}">
-            <button type="button">Show Profile</button>
-        </a>
-    </div>
-    <p>{{ contact.title }}</p>
-    <div>
-        <img src="{{ contact.thumbnail.url }}" alt="">
 <!-- SHOW PROFILE 버튼 ''profile_detail_other''로 가게 하기-->
     <div class="choose">
-        <a class="choose_profile" href="{% url 'myApp:profile_detail_other' request.user.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
+        <a class="choose_profile" href="{% url 'myApp:profile_detail_other'  contact_owner.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
     </div>
     
-    <div class="contact_content">{{contact.desc}}</div>
-
-    <div class="contact_tags">
-        {% for tag in tags %}
-            <a href="" class="contact_tag tag-button">
-                #{{ tag.tag }}
-            </a>
-        {% endfor %}
-    </div>
-
-
-    <a href="{{ contact.file_attach.url }}">시안 첨부파일</a>
-    <p>{{ contact.pay }}</p>
-    <!-- 촬영날짜/마감여부 -->
-    <p>{{ contact.start_date }}</p>
-
     <div class="container_8">
         <div class="user">
             <!-- user profile img 추가하기! -->
-            <div></div> 
-            <p> User: {{contact.user}} </p>
-            <p>{{ contact.user.category }}</p>
+            <div class="user_img">
+                {% if contact_owner.image  %}
+                <img class="profile_image" src="{{contact_owner.image.url}}" alt="profile_image" >    
+                {% else %}
+                <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image">
+                {% endif %}
+            </div> 
+            <p>User: {{contact_owner.username}} </p>
+            <p>Category: {{contact_owner.category}}</p>
         </div>
 
-        <div><p style="font-weight: bolder; font-size:larger">{{ contact.title }}</p></div>
-        <div class="contact_img">
-            <img src="{{ contact.thumbnail.url }}" alt="">
+        <div><p style="font-weight: bolder; font-size:larger; margin-top:10px;">{{ contact.title }}</p></div>
+        <div class="contact_img_container">
+            <div class="contact_img">
+                <img src="{{ contact.thumbnail.url }}" alt="">
+            </div>
         </div>
 
-        <div style="line-height: 1.8em;">{{contact.desc}}</div>
+        <div style="line-height: 1.73em;">{{contact.desc}}</div>
                 
         <!-- Tags -->
-        <div>#Tags #Tags #Tags</div>
+        <div class="contact_tags">
+            {% for tag in tags %}
+                <a href="" class="contact_tag tag-button">
+                    #{{ tag.tag }}
+                </a>
+            {% endfor %}
+        </div>
         
         <div class="file"><a href="{{ contact.file_attach.url }}">시안 첨부파일</a></div>
 
@@ -314,7 +303,7 @@
         <div class="comments-{{ contact.id }} comments">
             {% for comment in contact.contact_comments.all %}
             <div class="comment comment-{{ comment.id }}">
-                <span style="line-height: 1.6em;">{{ comment.content }}</span>
+                <span style="line-height: 1.8em;">{{ comment.content }}</span>
                 <input class="comment-btn" onclick="onClickDeleteComment({{ comment.id }})" type="submit" value="삭제">
             </div>
             {% endfor %}
@@ -325,7 +314,7 @@
         <a class="edit_btn" href="{% url 'myApp:contact_update' contact.pk %}">게시물 수정</a>
         <a class="delete_btn" href="{% url 'myApp:contact_delete' contact.pk %}">삭제</a>
         </div>
-    {% endif %}
+        {% endif %}
     </div>
 
 

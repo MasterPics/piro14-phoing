@@ -2,6 +2,7 @@
 
 {% load static %}
 {% block stylesheet %}
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
 <style>
   .carousel__photo p:hover {
     cursor: pointer;
@@ -93,6 +94,31 @@
       width: 30vw;
     }
   }
+
+
+/* random magazine */  
+
+#magazine{
+  position: relative;
+}
+
+#magazine .title {
+  position:absolute;
+  top:0;
+  right:0;
+  text-align: end;
+  font-size: 4rem;
+}
+#magazine .title p{
+  font-family: 'Abril Fatface', cursive;
+}
+
+.magazine_content{
+  writing-mode:vertical-rl; 
+  font-size:smaller;
+}
+
+
 </style>
 {% endblock stylesheet %}
 
@@ -194,16 +220,23 @@
 
 <!-- random template -->
 <div id="magazine">
-
-  <div style="margin: 5%; ">
-    <img style="width:20%" src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+  <div class="title">
+    <P>PH</P>
+    <P>OI</P>
+    <P>NG</P>
+    <p>{{month}}.</p>
   </div>
-
-  <div style="position:absolute; top:200vh; left:10px; writing-mode:vertical-rl; font-size:smaller">
-    recommendation
-    collage
+  <div class="magazine_content">
+    <div>
+      <img src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+    </div>
+  
+    <div class="text1">
+      recommendation
+      collage
+    </div>
   </div>
-
+</div>
 
   <script>
     //CAROUSEL
