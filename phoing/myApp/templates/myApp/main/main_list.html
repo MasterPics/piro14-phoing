@@ -2,7 +2,9 @@
 
 {% load static %}
 {% block stylesheet %}
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Akaya+Telivigala&family=Cormorant:ital,wght@0,300;1,300&family=Dancing+Script&family=Poiret+One&family=Prata&display=swap" rel="stylesheet">
+
 <style>
   .carousel__photo p:hover {
     cursor: pointer;
@@ -100,24 +102,94 @@
 
 #magazine{
   position: relative;
+  margin-top:10px;
+  padding:20px;
 }
 
 #magazine .title {
   position:absolute;
   top:0;
-  right:0;
+  right: 10px;
   text-align: end;
-  font-size: 4.5rem;
+  font-size: 6rem;
 }
 #magazine .title p{
   font-family: 'Abril Fatface', cursive;
   letter-spacing :0.06em; 
+  line-height: 1.15em;
 }
+
+
+.magazine_content .img_grid{
+  display:grid;
+  grid-template-columns: 1.2fr 1fr 1.6fr;
+}
+
+
+
+.magazine_content .img1{
+  width:260px;
+  height: 360px;
+  margin: 10px;
+  float:left;
+  margin-bottom: 20px;
+}
+
+.magazine_content .img2{
+  width:260px;
+  height:360px;
+  margin: 10px;
+  float:right;
+}
+
+
+.magazine_content .img3{
+  width:260px;
+  height: 360px;
+  margin: 10px;
+  margin-top:50%;
+}
+
+
+.magazine_content .img4{
+  width:260px;
+  height: 360px;
+  margin: 10px;
+  float:left;
+  margin-bottom: 20px;
+}
+
+.magazine_content .img5{
+  width:580px;
+  height: 360px;
+  margin: 10px;
+  float:left;
+
+}
+
+
+
+.img_grid img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+
+
 
 .magazine_content .text1{
   writing-mode:vertical-rl; 
   font-size:smaller;
+  position:absolute;
+  top:240px;
+  left:300px;
+  text-align: end;
+  font-family: 'Dancing Script', cursive;
 }
+
+
 
 
 </style>
@@ -225,17 +297,50 @@
     <P>PH</P>
     <P>OI</P>
     <P>NG</P>
-    <p>{{month}}.</p>
+    <p>2{{month}}.</p>
   </div>
   <div class="magazine_content">
-    <div class="img1">
-      <img src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+    <div class="img_grid">
+      <div class="first_grid">
+        <div class="img1">
+          <img src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+        </div>
+        <div class="img2">
+          <img src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+        </div>
+      </div>
+
+      <div class="img3">
+        <img  src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+      </div>
+
+      <div>
+        <div class="img4">
+          <img src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+        </div>
+        <div class="img5">
+          <img src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+        </div>
+      </div>
     </div>
-  
-    <div class="text1">
-      recommendation
-      collage
+
+    <div class="texts">
+      <div class="text1">
+        recommendation
+        collage
+      </div>
+
+      <div class="text2">
+        recommendation
+        collage
+      </div>
+
+      <div class="text1">
+        recommendation
+        collage
+      </div>
     </div>
+   
   </div>
 </div>
 
