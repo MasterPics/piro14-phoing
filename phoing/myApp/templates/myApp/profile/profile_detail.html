@@ -165,7 +165,7 @@
 <div class="container">
     <div class="choose">
         <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
-        <a class="choose_portfolio" href="{% url 'myApp:profile_portfolio' user.pk %}"><div class="btn"><span class="noselect">My Portfolio</span></div></a>
+        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
     </div>
     <div class="profile_container">
             <div>
@@ -210,9 +210,6 @@
                     </li>
                 </ul>
             </div>
-        </div>
-        <div class="profile_saved">
-            저장목록
         </div>
         <div class="profile_button">
             <a class="edit_btn" href="{% url 'myApp:profile_update' user.pk %}">프로필 수정</a> 

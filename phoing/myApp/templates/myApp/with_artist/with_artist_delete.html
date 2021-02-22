@@ -1,0 +1,19 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/with_artist_delete.css' %}">
+{% endblock stylesheet %}
+
+{% block content %}
+<div class="container">
+    <div class="with_artist_delete">
+        <h1>With Artist delete</h1><br>
+        <form action="{% url 'myApp:with_artist_delete' with_artist.pk %}" method="POST">
+            {% csrf_token %}
+            <p>정말로 삭제하시겠습니까?</p>
+            <input class="delete_btn" type="submit" value="삭제" />
+        </form>
+    </div>
+</div>
+{% endblock content%}

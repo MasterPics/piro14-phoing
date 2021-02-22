@@ -1,0 +1,348 @@
+<div class=" item_top contact-{{contact.pk}}">
+    <div>
+        <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
+            <div class="contact_owner">
+                <div class="user_img">
+                    {% if contact.user.image  %}
+                    <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image">
+                    {% else %}
+                    <img class="profile_image"
+                        src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                        alt="profile_image">
+                    {% endif %}
+                </div>
+
+                <div>User: {{contact.user.username}}</div>
+                <div>Category: {{contact.user.category}}</div>
+            </div>
+        </a>
+    </div>
+    <a href="{% url 'myApp:contact_detail' contact.pk %}">
+        <div style="font-weight:bolder;">{{ contact.title }}</div>
+    </a>
+
+    <div class="thumbnail_desc">
+        <img src="{{ contact.thumbnail.url }}" alt="">
+    </div>
+    <div class="pay_date">
+        {% if contact.pay == 0 %}
+        Pay : 상호 무페이
+        {% else %}
+        Pay : {{ contact.pay }}원
+        {% endif %}
+        <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
+    </div>
+</div>
+
+<div class="item_bottom">
+    <div class="comment">
+        <i class="far fa-comment-dots"></i>
+        <span class="comment__content">{{ contact.contact_comments.count }}</span>
+    </div>
+
+    <div class="save save-{{contact.id}}">
+        {% if request_user in contact.save_users.all %}
+        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
+        {% else %}
+        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ contact.id }})" name="type" value="save"></i>
+        {% endif %}
+        <span class="save__content">{{ contact.save_users.count }}</span>
+    </div>
+
+</div>
+
+
+
+
+<style>
+    /*category btn*/
+
+    * {
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        color: black;
+
+    }
+
+    .dropdown .btn {
+        width: 150px;
+        height: 50px;
+        border: 1px solid #333;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 0;
+        transition: 1s;
+    }
+
+    .dropdown .btn::before,
+    .dropdown .btn::after {
+        position: absolute;
+        background: #fff;
+        z-index: -1;
+        transition: 1s;
+        content: "";
+    }
+
+    .dropdown .btn::before {
+        height: 50px;
+        width: 130px;
+    }
+
+    .dropdown .btn::after {
+        width: 150px;
+        height: 30px;
+    }
+
+    .dropdown .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .dropdown .btn:hover::before {
+        width: 0px;
+        background: #fff;
+    }
+
+    .dropdown .btn:hover::after {
+        height: 0px;
+        background: #fff;
+    }
+
+    .dropdown .btn:hover {
+        background: #fff;
+    }
+
+    /* Dropdown Button */
+    .dropbtn {
+        padding: 16px;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        min-width: 160px;
+        z-index: 1;
+        margin-left: 11px;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        background-color: white;
+        border: #ddd solid 1px;
+    }
+
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {
+        background-color: #ddd;
+    }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+
+    /* 무한스크롤 */
+
+    .loading,
+    .loading:after {
+        border-radius: 50%;
+        width: 2em;
+        height: 2em;
+    }
+
+    .loading {
+        display: none;
+        margin: 60px auto;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+        border-top: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-right: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-left: 0.3em solid rgb(0, 0, 0);
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation: load8 0.6s infinite linear;
+        animation: load8 0.6s infinite linear;
+    }
+
+    .loading.show {
+        opacity: 1;
+    }
+
+    @-webkit-keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Contact List CSS */
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .contactlist .bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 3% 5%;
+    }
+
+    .bar_right {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .bar .input-group {
+        display: flex;
+        margin-right: 5px;
+        padding: 0;
+    }
+
+    .input-group .form-control.search {
+        border: 0;
+        padding: 5px;
+        font-size: 1em;
+        border: solid 1px black;
+        border-radius: 3px;
+        margin-right: 10px;
+        width: 300px;
+    }
+
+    /*
+.bar .search {
+  display: flex;
+  justify-content: center;
+  margin-right: 5px;
+  width: 40%;
+  padding: 0;
+}
+
+
+.bar .search .form-control {
+  border: 0;
+  padding: 5px;
+  font-size: 1em;
+  border: solid 1px black;
+  width: 60%;
+  height: 50%;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+*/
+
+    .bar .btn_search {
+        padding: 6px;
+        border: solid 1px #ccc;
+        border-radius: 3px;
+        margin-right: 20px;
+    }
+
+    .bar .sort {
+        margin-right: 10px;
+    }
+
+    .bar .sort select {
+        border: 0;
+        padding: 5px;
+        border: solid 1px black;
+        border-radius: 3px;
+    }
+
+    .bar .pay {
+        margin-right: 15px;
+    }
+
+    .bar .contact_create i {
+        font-size: 2rem;
+        font-weight: lighter;
+        color: rgb(75, 75, 75);
+    }
+
+    .contactlist .content {
+        display: flex;
+        justify-content: center;
+        margin: auto 3%;
+    }
+
+    .contact_owner {
+        display: flex;
+        align-items: center;
+        border-bottom: rgb(180, 180, 180) 1px solid;
+    }
+
+    .contact_owner div {
+        margin-right: 8px;
+    }
+
+    .contact_owner .user_img {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        margin-right: 10px;
+    }
+
+    .user_img .profile_image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .thumbnail_desc img {
+        width: 20rem;
+    }
+
+    .pay_date {
+        display: flex;
+        align-items: center;
+    }
+
+    .item_bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+</style>

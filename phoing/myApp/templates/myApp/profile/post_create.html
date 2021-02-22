@@ -1,0 +1,13 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="post_create">
+        <h1>Create Your Post</h1><br>
+        <a href="{% url 'myApp:contact_create'%}">Contact</a>
+        <a href="{% url 'myApp:portfolio_create'%}">Portfolio</a>
+    </div>
+</div>
+{% endblock content%}

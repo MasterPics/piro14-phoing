@@ -6,10 +6,9 @@
         padding: 0;
         text-decoration: none;
         list-style-type: none;
-        font-family: "Noto Serif", serif;
     }
     label{
-        font-size:1.3rem;
+        font-size:1.1rem;
     }
 
     .form-group{
@@ -30,7 +29,7 @@
    .password2 input {
     border:0; 
     padding:1px; 
-    font-size:1.3em; 
+    font-size:1.1em; 
     border:solid 1px #ccc; 
     margin-top:4px; 
     width:80%;
@@ -45,14 +44,14 @@
    .password1 input:focus,
    .password2 input:focus { 
     outline: none !important;
-    border-color: #719ECE;
-    box-shadow: 0 0 10px #719ECE;
+    border-color: #000000;
+    box-shadow: 0 0 10px #000000;
    }
 
    select{
     border:0; 
     padding:1px; 
-    font-size:1.1rem; 
+    font-size:1.0rem; 
     border:solid 1px #ccc; 
     margin-top:5px; 
     width:50%;
@@ -60,11 +59,13 @@
    }
 
    input.btn {
+    position: absolute;
+    left:72%;
     background-color: rgb(224, 224, 224);
     border: none;
     border-radius: 8px;
     margin-top: 20px;
-    padding: 5px 10px;
+    padding: 8px 10px;
     margin-left:60px;
    }
 
@@ -82,7 +83,7 @@
 <div class='container'>
     <div class='row'>
         <div class='col-md-12'>
-            <h1 style="margin-top: 80px; margin-left: 60px; margin-bottom: 40px; font-size:36px;">Create Profile</h1>
+            <h1 style="margin-top: 80px; margin-left: 60px; margin-bottom: 40px; font-size:30px;">Create Profile</h1>
             <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data">    
                 {% csrf_token %}
                 {% for field in form.visible_fields %}
