@@ -93,13 +93,15 @@ def profile_create(request):
 @login_required
 def profile_detail(request, pk):
     user = get_object_or_404(User, pk=pk)
-    ctx = {'user': user, }
+    request_user=request.user
+    ctx = {'user': user,'request_user':request_user, }
     return render(request, 'myApp/profile/profile_detail.html', context=ctx)
 
 
 @login_required
 def profile_detail_posts(request, pk):
     user = get_object_or_404(User, pk=pk)
+    request_user=request.user
 
     category = request.GET.get('category', 'contact')  # CATEGORY
     # sort = request.GET.get('sort', 'recent')  # SORT
@@ -107,9 +109,9 @@ def profile_detail_posts(request, pk):
 
     # CATEGORY
     if category == 'contact':
-        posts = user.contacts.all().order_by("?")
+        posts = user.contacts.all()
     elif category == 'portfolio':
-        posts = user.portfolios.all().order_by("?")
+        posts = user.portfolios.all()
 
     # SORT
 
@@ -125,12 +127,28 @@ def profile_detail_posts(request, pk):
     return render(request, 'myApp/profile/profile_detail_posts.html', context=ctx)
 
 
-def profile_detail_other(request, pk):
-    user = User.objects.get(pk=pk)
-    portfolios = user.portfolios.all()
-    # portfolios = Portfolio.objects.filter(user=user)
-    ctx = {'user': user, 'portfolios': portfolios}
-    return render(request, 'myApp/profile/profile_detail_other.html', context=ctx)
+@login_required
+def profile_detail_saves(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    request_user=request.user
+
+    category = request.GET.get('category', 'contact')  # CATEGORY
+    # sort = request.GET.get('sort', 'recent')  # SORT
+    search = request.GET.get('search', '')  # SEARCH
+
+    # CATEGORY
+    if category == 'contact':
+        posts = Contact.objects.all()
+    elif category == 'portfolio':
+        posts = Portfolio.objects.all()
+
+    ctx = {
+        'user': user,
+        'posts': posts,
+        'category': category,
+        'request_user':request_user,
+    }
+    return render(request, 'myApp/profile/profile_detail_saves.html', context=ctx)
 
 
 @login_required
@@ -147,6 +165,23 @@ def post_create(request):
 def portfolio_list(request):
     portfolios = Portfolio.objects.all().order_by("?")
     request_user = request.user
+
+    # 조회수
+
+    try: 
+        view_counts=ViewCount.objects.get(ip=ip, post=post)
+    except Exception as e:
+        print(e)
+        view_counts=ViewCount(ip=ip, post=post)
+        Portfolio.objects.filter(pk=pk).update(view_counts=post.view_counts+1)
+        view_counts.save()
+    else:
+        if not view_counts.date=timezone.now().date():
+            Portfolio.objects.filter(pk=pk).update(view_counts=post.view_counts+1)
+            view_counts.date=timezone.now()
+            view_counts.save()
+            else:
+                print(str()+'has already hit his post.\n\n')
 
     # category 분류 # order_by("?"): random 으로 선택
     category = request.GET.get('category', 'all')
@@ -233,22 +268,15 @@ def portfolio_delete(request, pk):
 @login_required
 def portfolio_update(request, pk):
     portfolio = get_object_or_404(Portfolio, pk=pk)
-    ImageFormSet = modelformset_factory(Images, form=ImageForm, extra=10)
     if request.method == 'POST':
         form = PortfolioForm(request.POST, request.FILES, instance=portfolio)
-        formset = ImageFormSet(request.POST, request.FILES,
-                               queryset=Images.objects.none())
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid():
             portfolio = form.save(commit=False)
             portfolio.user = request.user
             portfolio.save()
             portfolio.image = request.FILES.get('image')
-            for form in formset.cleaned_data:
-                if form:
-                    image = form['image']
-                    photo = Images(portfolio=portfolio, image=image)
-                    photo.save()
-            messages.success(request, "posted!")
+
+            portfolio.tags.all().delete()
 
             # save tag
             tags = Tag.add_tags(portfolio.tag_str)
@@ -258,9 +286,7 @@ def portfolio_update(request, pk):
             return redirect('myApp:portfolio_detail', portfolio.id)
     else:
         form = PortfolioForm(instance=portfolio)
-        formset = ImageFormSet(
-            queryset=Images.objects.none())
-        ctx = {'form': form, 'formset': formset}
+        ctx = {'form': form,}
         return render(request, 'myApp/portfolio/portfolio_update.html', ctx)
 
 
@@ -509,6 +535,8 @@ def contact_update(request, pk):
             contact.image = request.FILES.get('image')
             contact = form.save()
 
+
+            contact.tags.all().delete()
             # save tag
             tags = Tag.add_tags(contact.tag_str)
             for tag in tags:
@@ -748,6 +776,8 @@ def with_brand_update(request, pk):
         if form.is_valid():
             with_brand.image = request.FILES.get('image')
             with_brand = form.save()
+
+            with_brand.tags.all().delete()
             # save tag
             tags = Tag.add_tags(with_brand.tag_str)
             for tag in tags:
@@ -952,6 +982,8 @@ def with_artist_update(request, pk):
         if form.is_valid():
             with_artist.image = request.FILES.get('image')
             with_artist = form.save()
+
+            with_artist.tags.all().delete()
             tags = Tag.add_tags(with_artist.tag_str)
             for tag in tags:
                 with_artist.tags.add(tag)

@@ -302,7 +302,7 @@
 {% block content %}
 
 <div class="choose">
-    <a class="choose_profile" href="{% url 'myApp:profile_detail_other' portfolio_owner.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
+    <a class="choose_profile" href="{% url 'myApp:profile_detail' portfolio_owner.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
 </div>
 
     <div class="container_4">
@@ -360,7 +360,11 @@
                         {% endif %}
                         <span class="like__content">{{ portfolio.like_users.count }}</span>
                     </div>
-                    <div>{{portfolio.view_count}}</div>
+                    <div >
+                        <i class="far fa-eye"></i>
+                        <span class="view__content">{{portfolio.view_count}}</span>
+                    </div>
+
                     <div class="save save-{{portfolio.id}}">
                         {% if request_user in portfolio.save_users.all %}
                         <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"

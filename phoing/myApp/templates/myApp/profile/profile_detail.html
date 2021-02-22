@@ -166,6 +166,9 @@
     <div class="choose">
         <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
         <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
+        {% if request_user.username == user.username %}
+        <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}"><div class="btn"><span class="noselect">My Saves</span></div></a>
+        {% endif %}
     </div>
     <div class="profile_container">
             <div>
@@ -211,10 +214,12 @@
                 </ul>
             </div>
         </div>
+        {% if request_user.username == user.username %}
         <div class="profile_button">
             <a class="edit_btn" href="{% url 'myApp:profile_update' user.pk %}">프로필 수정</a> 
             <a class="delete_btn" href="{% url 'myApp:profile_delete' user.pk %}">탈퇴</a>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock content%}

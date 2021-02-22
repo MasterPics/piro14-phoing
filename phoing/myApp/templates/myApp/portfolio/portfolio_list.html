@@ -260,7 +260,7 @@
         {% for portfolio in portfolios %}
         <div>
             <div class="portfolio_owner">
-                <a href="{% url 'myApp:profile_detail_other' portfolio.user.pk %}">
+                <a href="{% url 'myApp:profile_detail' portfolio.user.pk %}">
                     {% if user.image  %}
                     <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" width="20%">    
                     {% else %}

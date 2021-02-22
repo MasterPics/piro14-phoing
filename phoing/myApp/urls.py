@@ -7,10 +7,10 @@ urlpatterns = [
     #####################profile#######################
     path('', view=views.main_list, name='main_list'),
     path('profile/<int:pk>/', view=views.profile_detail, name='profile_detail'),
-    path('profile/<int:pk>/other', view=views.profile_detail_other,
-         name='profile_detail_other'),
     path('profile/<int:pk>/posts/',
          view=views.profile_detail_posts, name='profile_detail_posts'),
+     path('profile/<int:pk>/saves/',
+         view=views.profile_detail_saves, name='profile_detail_saves'),
     path('profile/<int:pk>/delete/',
          view=views.profile_delete, name='profile_delete'),
     path('profile/<int:pk>/update/',
