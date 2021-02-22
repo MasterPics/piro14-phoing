@@ -98,15 +98,15 @@
         padding: 13px;
     }
 
-    
-  .with_brand_img_container{
-    display: flex;
-    justify-content: center;
-}
+
+    .with_brand_img_container {
+        display: flex;
+        justify-content: center;
+    }
 
     .with_brand_img {
-        width:310px;
-        height:310px;
+        width: 310px;
+        height: 310px;
     }
 
     .with_brand_img img {
@@ -121,18 +121,18 @@
         border-bottom: rgb(180, 180, 180) 1px solid;
     }
 
-    .container_8 .user .user_img{
+    .container_8 .user .user_img {
         width: 60px;
         height: 60px;
         border-radius: 100%;
         margin-right: 10px;
-      }
-    
-      .user_img .profile_image{
-          width:100%;
-          height: 100%;
-          object-fit:cover;
-      }
+    }
+
+    .user_img .profile_image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
     .container_8 .user p {
         margin-right: 15px;
@@ -232,23 +232,30 @@
 
 {% block content %}
 
+
+{% comment %}
 <!-- SHOW PROFILE 버튼 ''profile_detail_other''로 가게 하기-->
 <div class="choose">
     <a class="choose_profile" href="{% url 'myApp:profile_detail_other' request.user.pk %}">
         <div class="btn"><span class="noselect">Show Profile</span></div>
     </a>
 </div>
+{% endcomment %}
+
+
 
 <div class="container_8">
     <div class="user">
         <!-- user profile img 추가하기! -->
         <div class="user_img">
             {% if contact.user.image  %}
-            <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image" >    
+            <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image">
             {% else %}
-            <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image">
+            <img class="profile_image"
+                src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                alt="profile_image">
             {% endif %}
-        </div> 
+        </div>
         <p> User: {{with_brand.user}} </p>
         <p>{{ with_brand.user.category }}</p>
     </div>

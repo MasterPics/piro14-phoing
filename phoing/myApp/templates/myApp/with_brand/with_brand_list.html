@@ -413,14 +413,11 @@
     <div class="">
         <div class="grid">
             {% for with_brand in with_brands %}
-
+            {% for i in "x"|rjust:"10" %}
             <div class="grid-item">
                 <div class="item_top with_brand-{{with_brand.pk}}">
                     <div>
                         User : {{ with_brand.user }}
-
-
-
                     </div>
                     <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
                         <div style="font-weight:bolder;">{{ with_brand.title }}</div>
@@ -475,13 +472,11 @@
                 </div>
                 -->
             </div>
-
+            {% endfor %}
             {% endfor %}
         </div>
 
         <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
-
-
 
         {% if with_brands.has_next %}
         <a class="infinite-more-link" href="?page={{ with_brands.next_page_number }}">
@@ -489,255 +484,258 @@
         </a>
         {% endif %}
 
-        <!--filter form-->
-        <div style="height: 0;">
-            <form id="searchForm" method="get" action="{% url 'myApp:with_brand_list' %}">
-                <!--category-->
-                <input type="hidden" id="category" name="category" value="{{ category }}">
-                <!--sort-->
-                <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
-                <!--search-->
-                <input type="hidden" id="sort" name="sort" value="{{ sort }}">
-                <!--상호무페이-->
-                <input type="hidden" id="no_pay" name="no_pay" value="{{no_pay}}">
-            </form>
-        </div>
+
+    </div>
+    <!--filter form-->
+    <div style="height: 0;">
+        <form id="searchForm" method="get" action="{% url 'myApp:with_brand_list' %}">
+            <!--category-->
+            <input type="hidden" id="category" name="category" value="{{ category }}">
+            <!--sort-->
+            <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
+            <!--search-->
+            <input type="hidden" id="sort" name="sort" value="{{ sort }}">
+            <!--상호무페이-->
+            <input type="hidden" id="no_pay" name="no_pay" value="{{no_pay}}">
+        </form>
     </div>
 
-    <div>
-        {% endblock content %}
+</div>
+{% endblock content %}
 
 
 
-        <!--js-->
-        {% block script %}
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-        <script src="{% static 'js/infinite.min.js' %}"></script>
-        <script src="{% static 'js/with_brand.js' %}" defer></script>
+<!--js-->
+{% block script %}
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+<script src="{% static 'js/with_brand.js' %}" defer></script>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script type="text/javascript"
-            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
-        <script src="{% static 'js/with_brand/with_brand_list_map.js' %}"></script>
-
-
-        <script>
-            //top_button
-            //Get the button:
-            mybutton = document.getElementById("myBtn");
-
-            // When the user scrolls down 20px from the top of the document, show the button
-            window.onscroll = function () {
-                scrollFunction()
-            };
-
-            function scrollFunction() {
-                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                    mybutton.style.display = "block";
-                } else {
-                    mybutton.style.display = "none";
-                }
-            }
-
-            // When the user clicks on the button, scroll to the top of the document
-            function topFunction() {
-                document.body.scrollTop = 0; // For Safari
-                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-            }
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+<script src="{% static 'js/with_brand/with_brand_list_map.js' %}"></script>
 
 
-            let infinite = new Waypoint.Infinite({
+<script>
+    //top_button
+    //Get the button:
+    mybutton = document.getElementById("myBtn");
 
-                element: $('.grid')[0],
-                items: '.grid-item',
-                onBeforePageLoad: function () {
-                    console.log("here here")
-                    $('.loading').show();
-                },
-                onAfterPageLoad: function () {
-                    console.log("here here2")
-                    $('.loading').hide();
-                    let msnry = new Masonry('.grid', {
-                        itemSelector: '.grid-item',
-                        gutter: 10,
-                    })
-                }
-            });
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunction()
+    };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+
+
+    let infinite = new Waypoint.Infinite({
+
+        element: $('.grid')[0],
+        items: '.grid-item',
+        onBeforePageLoad: function () {
+            console.log("here here")
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            console.log("here here2")
+            $('.loading').hide();
             let msnry = new Masonry('.grid', {
-                // optionsW
                 itemSelector: '.grid-item',
                 gutter: 10,
-                // columnWidth: 200
-            });
+            })
+        }
+    });
+    let msnry = new Masonry('.grid', {
+        // optionsW
+        itemSelector: '.grid-item',
+        gutter: 10,
+        // columnWidth: 200
+    });
 
-            //
-            //Save
-            const onClickSave = async (with_brand_id) => {
-                try {
-                    // const url = '/with_brand/';
-                    // const {
-                    //     data
-                    // } = await axios.post(url, {
-                    //     with_brand_id,
-                    // })
-                    // modify(data.with_brand_id, data.is_saved)
+    //
+    //Save
+    const onClickSave = async (with_brand_id) => {
+        try {
+            // const url = '/with_brand/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     with_brand_id,
+            // })
+            // modify(data.with_brand_id, data.is_saved)
 
-                    const options = {
-                        url: '/with_brand/save/',
-                        method: 'POST',
-                        data: {
-                            with_brand_id: with_brand_id,
-                        }
-                    }
-                    const response = await axios(options)
-                    const responseOK = response && response.status === 200 && response.statusText === 'OK'
-                    if (responseOK) {
-                        const data = response.data
-                        //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                        modify(data.with_brand_id, data.is_saved)
-                    }
-                } catch (error) {
-                    console.log(error)
+            const options = {
+                url: '/with_brand/save/',
+                method: 'POST',
+                data: {
+                    with_brand_id: with_brand_id,
                 }
             }
-
-            const modify = (with_brand_id, is_saved) => {
-                const save = document.querySelector(`.save-${with_brand_id} i`);
-                const save_content = document.querySelector(`.save-${with_brand_id} .save__content`)
-                const num = save_content.innerText; // [ {{ with_brand.save_users.count }} ]
-                console.log(num)
-                if (is_saved === true) {
-
-                    save.className = "fas fa-bookmark";
-
-                    const count = Number(num) + 1;
-                    save_content.innerHTML = count
-                } else {
-                    save.className = "far fa-bookmark";
-
-                    const count = Number(num) - 1;
-                    save_content.innerHTML = count
-                }
-
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modify(data.with_brand_id, data.is_saved)
             }
-            //category
-            const onClickLink = (category) => {
-                const categoryIdInput = document.querySelector('#category')
-                categoryIdInput.value = category
-                const searchForm = document.querySelector('#searchForm')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modify = (with_brand_id, is_saved) => {
+        const save = document.querySelector(`.save-${with_brand_id} i`);
+        const save_content = document.querySelector(`.save-${with_brand_id} .save__content`)
+        const num = save_content.innerText; // [ {{ with_brand.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+    //category
+    const onClickLink = (category) => {
+        const categoryIdInput = document.querySelector('#category')
+        categoryIdInput.value = category
+        const searchForm = document.querySelector('#searchForm')
 
 
 
 
-                searchForm.submit()
-            }
+        searchForm.submit()
+    }
 
-            //search
-            const searchButton = document.querySelector('.btn_search')
-            searchButton.addEventListener('click', () => {
-                const searchClassInput = document.querySelector('.search')
-                const searchIdInput = document.querySelector('#search')
-                const searchForm = document.querySelector('#searchForm')
-                searchIdInput.value = searchClassInput.value
+    //search
+    const searchButton = document.querySelector('.btn_search')
+    searchButton.addEventListener('click', () => {
+        const searchClassInput = document.querySelector('.search')
+        const searchIdInput = document.querySelector('#search')
+        const searchForm = document.querySelector('#searchForm')
+        searchIdInput.value = searchClassInput.value
 
-                searchForm.submit()
-            })
-
-
-            //sort
-            const sortClassInput = document.querySelector('.sort')
-            sortClassInput.addEventListener('input', (e) => {
-                const sortIdInput = document.querySelector('#sort')
-                const searchForm = document.querySelector('#searchForm')
-                sortIdInput.value = e.target.value
-
-                searchForm.submit()
-            })
-
-            $(function () {
-                var test = localStorage.input === 'true' ? true : false;
-                $('.no_pay').prop('checked', test || false);
-            });
-            $('.no_pay').on('click', function () {
-                localStorage.input = $(this).is(':checked');
-            });
-
-            const nopayClassInput = document.querySelector('.no_pay')
-            const nopayIdInput = document.querySelector('#no_pay')
-            // const searchForm = document.querySelector('#searchForm')
-            if (localStorage.input === 'true') {
-                nopayIdInput.value = true
-            } else {
-                nopayIdInput.value = false
-            }
-
-            nopayClassInput.addEventListener('click', () => {
-                const nopayIdInput = document.querySelector('#no_pay')
-                const searchForm = document.querySelector('#searchForm')
-                if (localStorage.input === 'true') {
-                    nopayIdInput.value = true
-                } else {
-                    nopayIdInput.value = false
-                }
-                searchForm.submit()
-            })
+        searchForm.submit()
+    })
 
 
-            function modal(id) {
-                var zIndex = 9999;
-                var modal = document.getElementById(id);
+    //sort
+    const sortClassInput = document.querySelector('.sort')
+    sortClassInput.addEventListener('input', (e) => {
+        const sortIdInput = document.querySelector('#sort')
+        const searchForm = document.querySelector('#searchForm')
+        sortIdInput.value = e.target.value
 
-                // 모달 div 뒤에 희끄무레한 레이어
-                var bg = document.createElement('div');
-                bg.setStyle({
-                    position: 'fixed',
-                    zIndex: zIndex,
-                    left: '0px',
-                    top: '0px',
-                    width: '100%',
-                    height: '100%',
-                    overflow: 'auto',
-                    // 레이어 색갈은 여기서 바꾸면 됨
-                    backgroundColor: 'rgba(0,0,0,0.4)'
-                });
-                document.body.append(bg);
+        searchForm.submit()
+    })
 
-                // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
-                modal.querySelector('.modal_close_btn').addEventListener('click', function () {
-                    bg.remove();
-                    modal.style.display = 'none';
-                });
+    $(function () {
+        var test = localStorage.input === 'true' ? true : false;
+        $('.no_pay').prop('checked', test || false);
+    });
+    $('.no_pay').on('click', function () {
+        localStorage.input = $(this).is(':checked');
+    });
 
-                modal.setStyle({
-                    position: 'fixed',
-                    display: 'block',
-                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    const nopayClassInput = document.querySelector('.no_pay')
+    const nopayIdInput = document.querySelector('#no_pay')
+    // const searchForm = document.querySelector('#searchForm')
+    if (localStorage.input === 'true') {
+        nopayIdInput.value = true
+    } else {
+        nopayIdInput.value = false
+    }
 
-                    // 시꺼먼 레이어 보다 한칸 위에 보이기
-                    zIndex: zIndex + 1,
+    nopayClassInput.addEventListener('click', () => {
+        const nopayIdInput = document.querySelector('#no_pay')
+        const searchForm = document.querySelector('#searchForm')
+        if (localStorage.input === 'true') {
+            nopayIdInput.value = true
+        } else {
+            nopayIdInput.value = false
+        }
+        searchForm.submit()
+    })
 
-                    // div center 정렬
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    msTransform: 'translate(-50%, -50%)',
-                    webkitTransform: 'translate(-50%, -50%)'
-                });
-            }
 
-            // Element 에 style 한번에 오브젝트로 설정하는 함수 추가
-            Element.prototype.setStyle = function (styles) {
-                for (var k in styles) this.style[k] = styles[k];
-                return this;
-            };
+    function modal(id) {
+        var zIndex = 9999;
+        var modal = document.getElementById(id);
 
-            document.getElementById('popup_open_btn').addEventListener('click', function () {
-                // 모달창 띄우기
-                modal('my_modal');
-            });
-        </script>
+        // 모달 div 뒤에 희끄무레한 레이어
+        var bg = document.createElement('div');
+        bg.setStyle({
+            position: 'fixed',
+            zIndex: zIndex,
+            left: '0px',
+            top: '0px',
+            width: '100%',
+            height: '100%',
+            overflow: 'auto',
+            // 레이어 색갈은 여기서 바꾸면 됨
+            backgroundColor: 'rgba(0,0,0,0.4)'
+        });
+        document.body.append(bg);
 
-        {% endblock script %}
+        // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
+        modal.querySelector('.modal_close_btn').addEventListener('click', function () {
+            bg.remove();
+            modal.style.display = 'none';
+        });
+
+        modal.setStyle({
+            position: 'fixed',
+            display: 'block',
+            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+
+            // 시꺼먼 레이어 보다 한칸 위에 보이기
+            zIndex: zIndex + 1,
+
+            // div center 정렬
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            msTransform: 'translate(-50%, -50%)',
+            webkitTransform: 'translate(-50%, -50%)'
+        });
+    }
+
+    // Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+    Element.prototype.setStyle = function (styles) {
+        for (var k in styles) this.style[k] = styles[k];
+        return this;
+    };
+
+    document.getElementById('popup_open_btn').addEventListener('click', function () {
+        // 모달창 띄우기
+        modal('my_modal');
+    });
+</script>
+
+{% endblock script %}

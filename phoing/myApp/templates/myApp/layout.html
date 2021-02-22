@@ -289,40 +289,39 @@
     </div> -->
 
 
-    <head>
-        <nav id="nav">
-            <div class="nav__logo">
-                <a href="{% url 'myApp:main_list' %}"><i class="fas fa-camera"></i> PHOING</a>
-            </div>
-            <ul class="nav__menu">
-                <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
-                <li><a href="{% url 'myApp:portfolio_list' %}">Portfolio</a></li>
-                <li><a href="{% url 'myApp:reference_list' %}">Reference</a></li>
-                <li><a href="#">Place</a></li>
-                <li><a href="#">Collaboration</a></li>
-                <h1>{{ request.user.username }}</h1>
-            </ul>
-            <ul class="nav__profile">
-                {% if not user.is_authenticated %}
-                <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
-                <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
-                {% else %}
-                {% url 'myApp:profile_detail' user.id as profile_path %}
-               
-                {% if request.path ==  profile_path %}
-                <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
-                <li><a href="{% url 'account_logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
-                {% else %}
-                <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
-                <li><a href="{% url 'account_logout' %}?next={{ request.path }}"
-                        onclick="return confirm('Are you sure?');">Log
-                        Out</a></li>
-                {% endif %}
+  <head>
+    <nav id="nav">
+      <div class="nav__logo">
+        <a href="{% url 'myApp:main_list' %}"><i class="fas fa-camera"></i> PHOING</a>
+      </div>
+      <ul class="nav__menu">
+        <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
+        <li><a href="{% url 'myApp:portfolio_list' %}">Portfolio</a></li>
+        <li><a href="{% url 'myApp:reference_list' %}">Reference</a></li>
+        <li><a href="#">Place</a></li>
+        <li><a href="{% url 'myApp:with_brand_list' %}">Collaboration</a></li>
+        <h1>{{ request.user.username }}</h1>
+      </ul>
+      <ul class="nav__profile">
+        {% if not user.is_authenticated %}
+        <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
+        <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+        {% else %}
+        {% url 'myApp:profile_detail' user.id as profile_path %}
+
+        {% if request.path ==  profile_path %}
+        <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
+        <li><a href="{% url 'account_logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
+        {% else %}
+        <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
+        <li><a href="{% url 'account_logout' %}?next={{ request.path }}" onclick="return confirm('Are you sure?');">Log
+            Out</a></li>
+        {% endif %}
 
 
-                <li><a href="{% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i
-                            class="far fa-user-circle"></i></a></li>
-                {% endif %}
+        <li><a href="{% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i class="far fa-user-circle"></i></a>
+        </li>
+        {% endif %}
 
       </ul>
       <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>
