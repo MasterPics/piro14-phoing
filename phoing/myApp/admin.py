@@ -65,6 +65,10 @@ class TagAdmin(admin.ModelAdmin):
 class ImagesAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(ViewCount)
+class ViewCountAdmin(admin.ModelAdmin):
+    pass
+
 
 '''
 @admin.register(User)

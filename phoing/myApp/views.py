@@ -26,6 +26,15 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # for multiple images
 from django.forms import modelformset_factory
 
+# for change password
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
+# get ip
+# from ipware.ip import get_ip
+
+
 
 def main_list(request):
     ctx = {}
@@ -52,20 +61,40 @@ def profile_update(request, pk):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            # print("form.is_valid")
+            print("form.is_valid")
 
             # user = form.save()
             # if user.image:
             #     user.image = request.FILES.get('image')
             # return redirect('myApp:profile_detail', user.id)
-            user.image = request.FILES.get('image')
             user = form.save()
+            user.image = request.FILES.get('image')
+
             return redirect('myApp:profile_detail', user.id)
 
     else:
         form = ProfileForm(instance=user)
         ctx = {'form': form}
         return render(request, 'myApp/profile/profile_update.html', ctx)
+
+
+@login_required
+def profile_update_password(request, pk):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(
+                request, 'Your password was successfully updated!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'myApp/profile/profile_update_password.html', {
+        'form': form
+    })
 
 
 def profile_create(request):
@@ -93,13 +122,15 @@ def profile_create(request):
 @login_required
 def profile_detail(request, pk):
     user = get_object_or_404(User, pk=pk)
-    ctx = {'user': user, }
+    request_user=request.user
+    ctx = {'user': user,'request_user':request_user, }
     return render(request, 'myApp/profile/profile_detail.html', context=ctx)
 
 
 @login_required
 def profile_detail_posts(request, pk):
     user = get_object_or_404(User, pk=pk)
+    request_user=request.user
 
     category = request.GET.get('category', 'contact')  # CATEGORY
     # sort = request.GET.get('sort', 'recent')  # SORT
@@ -107,9 +138,10 @@ def profile_detail_posts(request, pk):
 
     # CATEGORY
     if category == 'contact':
-        posts = user.contacts.all().order_by("?")
+        posts = user.contacts.all()
+
     elif category == 'portfolio':
-        posts = user.portfolios.all().order_by("?")
+        posts = user.portfolios.all()
 
     # SORT
 
@@ -125,12 +157,28 @@ def profile_detail_posts(request, pk):
     return render(request, 'myApp/profile/profile_detail_posts.html', context=ctx)
 
 
-def profile_detail_other(request, pk):
-    user = User.objects.get(pk=pk)
-    portfolios = user.portfolios.all()
-    # portfolios = Portfolio.objects.filter(user=user)
-    ctx = {'user': user, 'portfolios': portfolios}
-    return render(request, 'myApp/profile/profile_detail_other.html', context=ctx)
+@login_required
+def profile_detail_saves(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    request_user=request.user
+
+    category = request.GET.get('category', 'contact')  # CATEGORY
+    # sort = request.GET.get('sort', 'recent')  # SORT
+    search = request.GET.get('search', '')  # SEARCH
+
+    # CATEGORY
+    if category == 'contact':
+        posts = Contact.objects.all()
+    elif category == 'portfolio':
+        posts = Portfolio.objects.all()
+
+    ctx = {
+        'user': user,
+        'posts': posts,
+        'category': category,
+        'request_user':request_user,
+    }
+    return render(request, 'myApp/profile/profile_detail_saves.html', context=ctx)
 
 
 @login_required
@@ -143,7 +191,7 @@ def post_create(request):
 
 ###################### portfolio section ######################
 
-
+# @api_view(['GET'])
 def portfolio_list(request):
     portfolios = Portfolio.objects.all().order_by("?")
     request_user = request.user
@@ -208,6 +256,33 @@ def portfolio_detail(request, pk):
 
     portfolio_owner = portfolio.user  # 게시글 작성자
     request_user = request.user  # 로그인한 유저
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    print(ip)
+
+    # 조회수
+
+    try: 
+        view_counts=ViewCount.objects.get(ip=ip, post=portfolio)
+    except Exception as e:
+        print(e)
+        view_counts=ViewCount(ip=ip, post=portfolio)
+        Portfolio.objects.filter(pk=pk).update(view_count=portfolio.view_count+1)
+        view_counts.save()
+    else:
+        if not view_counts.date == timezone.now().date():
+            Portfolio.objects.filter(pk=pk).update(view_count=portfolio.view_count+1)
+            view_counts.date=timezone.now()
+            view_counts.save()
+        else:
+            print(str()+'has already hit his post.\n\n')
+
+
+
     ctx = {'portfolio': portfolio,
            'images': images,
            'tags': tags,
@@ -233,22 +308,15 @@ def portfolio_delete(request, pk):
 @login_required
 def portfolio_update(request, pk):
     portfolio = get_object_or_404(Portfolio, pk=pk)
-    ImageFormSet = modelformset_factory(Images, form=ImageForm, extra=10)
     if request.method == 'POST':
         form = PortfolioForm(request.POST, request.FILES, instance=portfolio)
-        formset = ImageFormSet(request.POST, request.FILES,
-                               queryset=Images.objects.none())
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid():
             portfolio = form.save(commit=False)
             portfolio.user = request.user
             portfolio.save()
             portfolio.image = request.FILES.get('image')
-            for form in formset.cleaned_data:
-                if form:
-                    image = form['image']
-                    photo = Images(portfolio=portfolio, image=image)
-                    photo.save()
-            messages.success(request, "posted!")
+
+            portfolio.tags.all().delete()
 
             # save tag
             tags = Tag.add_tags(portfolio.tag_str)
@@ -258,9 +326,7 @@ def portfolio_update(request, pk):
             return redirect('myApp:portfolio_detail', portfolio.id)
     else:
         form = PortfolioForm(instance=portfolio)
-        formset = ImageFormSet(
-            queryset=Images.objects.none())
-        ctx = {'form': form, 'formset': formset}
+        ctx = {'form': form,}
         return render(request, 'myApp/portfolio/portfolio_update.html', ctx)
 
 
@@ -285,14 +351,23 @@ def portfolio_create(request):
                     photo.save()
             messages.success(request, "posted!")
 
+            # # prev_tag
+            # prev_tags = Tag.objects.all()
             # save tag
-            tags = Tag.add_tags(portfolio.tag_str)
-            for tag in tags:
+            tags_portfolio = Tag.add_tags(portfolio.tag_str)
+            for tag in tags_portfolio:
                 portfolio.tags.add(tag)
+
+            # # tag compare
+            # # tags_portfolio의 tag가 tag_all에 있는지 확인하고
+            # # 이미 있으면 do nothing
+            # # 없으면 tag 게시물 create
+            # local_create(request, prev_tags)
 
             return redirect('myApp:portfolio_detail', portfolio.pk)
         else:
             print(form.errors, formset.errors)
+
     else:
         form = PortfolioForm()
         formset = ImageFormSet(queryset=Images.objects.none())
@@ -509,6 +584,8 @@ def contact_update(request, pk):
             contact.image = request.FILES.get('image')
             contact = form.save()
 
+
+            contact.tags.all().delete()
             # save tag
             tags = Tag.add_tags(contact.tag_str)
             for tag in tags:
@@ -519,6 +596,8 @@ def contact_update(request, pk):
         form = ContactForm(instance=contact)
         ctx = {'form': form}
         return render(request, 'myApp/contact/contact_update.html', ctx)
+
+
 
 
 @login_required
@@ -567,6 +646,39 @@ def contact_map(request):
 
 
 ###################### reference section ######################
+###################### 1. from phoing    ######################
+def local_list(request):
+
+    tags = Tag.objects.all()
+
+    context = {
+        'tags': tags,
+        'request_user': request.user,
+    }
+    return render(request, 'myApp/local/local_list.html', context=context)
+
+
+def local_detail(request, tag):
+    portfolios_taged = Portfolio.objects.filter(tags__tag=tag)
+    print(portfolios_taged)
+
+    context = {
+        'portfolios_taged': portfolios_taged,
+    }
+    return render(request, 'myApp/local/local_detail.html', context=context)
+
+
+# def local_create(request, prev_tags):
+#     prev_tags_pk = prev_tags.values_list('pk', flat=True)
+#     tags_pk = Tag.objects.all().values_list('pk', flat=True)
+#     tags_pk_list = list(set(tags_pk) - set(prev_tags_pk))
+#     tags = Tag.objects.filter(pk__in=tags_pk_list)
+#     if tags:
+#         for tag in tags:
+
+    ###################### 2. from pinterest ######################
+
+
 def reference_list(request):
     references = Reference.objects.all()
 
@@ -748,6 +860,8 @@ def with_brand_update(request, pk):
         if form.is_valid():
             with_brand.image = request.FILES.get('image')
             with_brand = form.save()
+
+            with_brand.tags.all().delete()
             # save tag
             tags = Tag.add_tags(with_brand.tag_str)
             for tag in tags:
@@ -952,6 +1066,8 @@ def with_artist_update(request, pk):
         if form.is_valid():
             with_artist.image = request.FILES.get('image')
             with_artist = form.save()
+
+            with_artist.tags.all().delete()
             tags = Tag.add_tags(with_artist.tag_str)
             for tag in tags:
                 with_artist.tags.add(tag)

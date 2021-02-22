@@ -335,9 +335,7 @@
 
             <!--contact_create-->
             <div class="contact_create">
-                {% if request_user.is_authenticated %}
                 <a class="create_btn" href="{% url 'myApp:contact_create' %}"><i class="far fa-plus-square"></i></a>
-                {% endif %}
             </div>
         </div>
 
@@ -354,7 +352,7 @@
             <div class="grid-item">
                 <div class=" item_top contact-{{contact.pk}}">
                     <div>
-                        <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
+                        <a href="{% url 'myApp:profile_detail' contact.user.pk %}">
                             <div class="contact_owner">
                                 <div class="user_img">
                                     {% if contact.user.image  %}
