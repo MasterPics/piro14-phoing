@@ -413,7 +413,9 @@
                                     {% endif %}
                                 </div>
 
-                                <div>User: {{contact.user.username}}</div>
+                            </div>
+                        </a>
+                        <div>User: {{contact.user.username}}</div>
                                 <div>Category: {{contact.user.category}}</div>
                                 {% if request_user.is_authenticated %}
 
@@ -444,8 +446,6 @@
                                 </div>
 
                                 {% endif %}
-                            </div>
-                        </a>
                     </div>
                     <div class="title">
                         <a href="{% url 'myApp:contact_detail' contact.pk %}">
@@ -538,30 +538,29 @@
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-        <!--js-->
-        {% block script %}
-        <script>
-            // for chat-btn
-            var csrf_token = "{{csrf_token}}";
-            
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-        <script src="{% static 'js/infinite.min.js' %}"></script>
-        <script src="{% static 'js/contact.js' %}" defer></script>
-        
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
-        <script src="{% static 'js/contact/contact_list_map.js' %}" ></script>
-        <script>
-            axios.defaults.xsrfCookieName = 'csrftoken'
-            axios.defaults.xsrfHeaderName = "X-CSRFToken"
-            axios.defaults.headers.common['X-CSRFToken'] = getCookie("csrftoken");
-        </script>
-        <script src="{% static 'js/contact/chat_button.js' %}"></script>
+<!--js-->
+<script>
+    // for chat-btn
+    var csrf_token = "{{csrf_token}}";
+    
+</script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+<script src="{% static 'js/contact.js' %}" defer></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+<script src="{% static 'js/contact/contact_list_map.js' %}" ></script>
+<script>
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = "X-CSRFToken"
+    axios.defaults.headers.common['X-CSRFToken'] = getCookie("csrftoken");
+</script>
+<script src="{% static 'js/contact/chat_button.js' %}"></script>
 <script src="{% static 'js/contact.js' %}" defer></script>
 <script type="text/javascript"
     src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services">
@@ -770,3 +769,5 @@
         modal('my_modal');
     });
 </script>
+
+{% endblock script %}

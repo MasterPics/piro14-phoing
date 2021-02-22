@@ -77,7 +77,7 @@
             <i class="fa fa-chevron-left"></i>
           </button>
         </div>
-        <div class="list">
+        <div class="list">ㅇ
           {% for member in group.members.all  %}
 
           
@@ -85,7 +85,14 @@
 
               <div class="contact unread host">
                 <div class="icon">
-                  <img src="{{ member.image.url }}" alt="kitten-image">
+                  
+                  {% if  member.image.url %}
+                  <img src="{{ member.image.url }}" alt="kitten-image">  
+                  {% else %}
+                  <img src="https://placekitten.com/700/700?image=16" alt="kitten-image">  
+                  {% endif %}
+                    
+                  
                 </div>
                 <div class="blurb">
                   <h2 class="name">
@@ -96,7 +103,7 @@
                   </span>
                 </div>
                 <div class="profile-detail icon">
-                  <a href="{% url 'myApp:profile_detail_other' member.pk %}"><i class="fas fa-search"></i></a>
+                  <a href="{% url 'myApp:profile_detail' member.pk %}"><i class="fas fa-search"></i></a>
                 </div>
             </div>
             {% else %}
@@ -114,7 +121,14 @@
                 </span>
               </div>
               <div class="profile-detail icon">
-                <a href="{% url 'myApp:profile_detail_other' member.pk %}"><i class="fas fa-search"></i></a>
+                
+                {% if member.image %}
+                <a href="{% url 'myApp:profile_detail' member.pk %}"><i class="fas fa-search"></i></a>
+                {% else %}
+                <a href="#"><i class="fas fa-search"></i></a>  
+                {% endif %}
+                  
+                
               </div>
             </div>
               

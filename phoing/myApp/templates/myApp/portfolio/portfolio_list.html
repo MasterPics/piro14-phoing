@@ -5,7 +5,7 @@
 <script src="https://kit.fontawesome.com/9ada8679dc.js" crossorigin="anonymous"></script>
 <style>
     /*category btn*/
-     
+
     * {
         box-sizing: border-box;
         scroll-behavior: smooth;
@@ -198,7 +198,7 @@
         border-radius: 3px;
     }
 
-    
+
     .bar .pay {
         margin-right: 15px;
     }
@@ -209,12 +209,12 @@
         color: rgb(75, 75, 75);
     }
 
-    .portfolio_owner{
+    .portfolio_owner {
         display: flex;
         align-items: center;
         border-bottom: rgb(221, 221, 221) 1px solid;
-        padding-top:10px;
-        padding-bottom:10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 
     .portfolio_owner div {
@@ -234,30 +234,30 @@
         object-fit: contain;
     }
 
-    .item-top > div{
-        padding:10px;
+    .item-top>div {
+        padding: 10px;
     }
 
-    
+
     .thumbnail_desc img {
         width: 20rem;
     }
 
-    .grid-item{
+    .grid-item {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        margin-bottom:20px;
+        margin-bottom: 20px;
     }
 
-    .portfolio_info{
+    .portfolio_info {
         display: flex;
         align-items: center;
         justify-content: space-between;
         border-top: rgb(221, 221, 221) solid 1px;
-        padding:15px;
+        padding: 15px;
     }
-    
-    .portfolio_info > div{
-        cursor:pointer;
+
+    .portfolio_info>div {
+        cursor: pointer;
     }
 
 
@@ -353,17 +353,17 @@
                     <div>
                         <a href="{% url 'myApp:profile_detail' portfolio.user.pk %}">
                             <div class="portfolio_owner">
-                                    <div class="user_img">
-                                        {% if user.image  %}
-                                        <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" >
-                                        {% else %}
-                                        <img class="profile_image"
-                                            src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
-                                            alt="profile_image" >
-                                        {% endif %}
-                                    </div>
-                                    <div>user: {{portfolio.user.username}}</div>
-                                    <div>category: {{portfolio.user.category}}</div>
+                                <div class="user_img">
+                                    {% if user.image  %}
+                                    <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image">
+                                    {% else %}
+                                    <img class="profile_image"
+                                        src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                                        alt="profile_image">
+                                    {% endif %}
+                                </div>
+                                <div>user: {{portfolio.user.username}}</div>
+                                <div>category: {{portfolio.user.category}}</div>
                             </div>
                         </a>
                     </div>
@@ -378,7 +378,7 @@
                             <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
                         </a>
                     </div>
-                </div>    
+                </div>
                 <div class="portfolio_info">
                     <div class="like like-{{portfolio.id}}">
                         {% if request_user in portfolio.like_users.all %}
