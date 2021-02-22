@@ -2,7 +2,9 @@
 
 {% load static %}
 {% block stylesheet %}
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Akaya+Telivigala&family=Cormorant:ital,wght@0,300;1,300&family=Dancing+Script&family=Poiret+One&family=Prata&display=swap" rel="stylesheet">
+
 <style>
   .carousel__photo p:hover {
     cursor: pointer;
@@ -17,6 +19,155 @@
     scroll-behavior: smooth;
   }
 
+  
+  /*carousel*/
+  
+  .carousel__photo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .carousel__photo div {
+    padding: 5%;
+  }
+  
+  .carousel__photo p {
+    text-align: center;
+    padding-bottom: 5%;
+  }
+  
+  .about_left {
+    height: 50vh;
+  }
+  
+  .about_left .first {
+    padding-bottom: 0;
+    margin-top: 20%;
+  }
+  
+  .about_right .first {
+    margin-top: 20%;
+  }
+  
+  /**/
+  
+  .jb {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    margin-left: 43%;
+  }
+  
+  .jb i {
+    transition: all ease 0.8s;
+    color: black;
+    font-size: 1.2rem;
+  }
+  .jb i:hover {
+    transform: rotate(45deg);
+    cursor: pointer;
+  }
+  
+  /* Parent wrapper to carousel. Width can be changed as needed. */
+  .carousel-wrapper {
+    overflow: hidden;
+    width: 98%;
+    height:80%;
+    margin: auto;
+  }
+  
+  /* Apply 'border-box' to 'box-sizing' so border and padding is included in the width and height. */
+  .carousel-wrapper * {
+    box-sizing: border-box;
+  }
+  
+  /* We'll be using the 'transform' property to move the carousel's items, so setting the 'transform-style' to 'preserve-3d' will make sure our nested elements are rendered properly in the 3D space. */
+  .carousel {
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+  
+  /* By default we're hiding items (except the initial one) until the JS initiates. Elements are absolutely positioned with a width of 100% (as we're styling for mobile first), letting the content's height dictate the height of the carousel. Our magic property here for all our animation needs is 'transition', taking the properties we wish to animate 'transform' and 'opacity', along with the length of time in seconds. */
+  .carousel__photo {
+    opacity: 0;
+    position: absolute;
+    top:50;
+    width: 100%;
+    margin: auto;
+    padding: 1rem 4rem;
+    z-index: 100;
+    transition: transform 0.5s, opacity 0.5s, z-index 0.5s;
+  }
+  
+  /* Display the initial item and bring it to the front using 'z-index'. These styles also apply to the 'active' item. */
+  .carousel__photo.initial,
+  .carousel__photo.active {
+    opacity: 1;
+    position: relative;
+    z-index: 900;
+  }
+  
+  /* Set 'z-index' to sit behind our '.active' item. */
+  .carousel__photo.prev,
+  .carousel__photo.next {
+    z-index: 800;
+  }
+  
+  /* Translate previous item to the left */
+  .carousel__photo.prev {
+    transform: translateX(-100%);
+  }
+  
+  /* Translate next item to the right */
+  .carousel__photo.next {
+    transform: translateX(100%);
+  }
+  
+  /* Style navigation buttons to sit in the middle, either side of the carousel. */
+  .carousel__button--prev,
+  .carousel__button--next {
+    position: absolute;
+    top: 50%;
+    width: 3rem;
+    height: 3rem;
+  
+    transform: translateY(-50%);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1001; /* Sit on top of everything */
+  
+    /*  opacity: 0;  Hide buttons until carousel is initialised 
+      transition:opacity 1s;*/
+  }
+  
+  .carousel__button--prev {
+    left: 0;
+  }
+  
+  .carousel__button--next {
+    right: 0;
+  }
+  
+  /* Use pseudo elements to insert arrows inside of navigation buttons */
+  .carousel__button--prev::after,
+  .carousel__button--next::after {
+    content: " ";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top:90;
+    left: 54%;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+    transform: translate(-50%, -50%) rotate(135deg);
+  }
+  
+  .carousel__button--next::after {
+    left: 47%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
 
   /**TITLE**/
 
@@ -26,7 +177,7 @@
     background: url("https://images.unsplash.com/photo-1465146633011-14f8e0781093?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3450&q=80");
     color: #eee;
     width: 100%;
-    height: 60vh;
+    height: 90%;
     margin: 0;
     perspective: 1000px;
     perspective-origin: 50% 50%;
@@ -96,27 +247,135 @@
   }
 
 
+/*carousel*/
+.carousel-wrapper{
+  border-bottom: rgb(212, 212, 212) solid 1px;
+}
+
 /* random magazine */  
 
 #magazine{
   position: relative;
+  margin-top:80px;
+  padding:20px;
 }
 
 #magazine .title {
   position:absolute;
-  top:0;
-  right:0;
+  top:-80px;
+  right: 10px;
   text-align: end;
-  font-size: 4.5rem;
+  font-size: 6rem;
 }
 #magazine .title p{
   font-family: 'Abril Fatface', cursive;
   letter-spacing :0.06em; 
+  line-height: 1.15em;
 }
+
+
+.magazine_content .img_grid{
+  display:grid;
+  grid-template-columns: 1.2fr 1fr 1.6fr;
+}
+
+
+
+.magazine_content .img1{
+  width:260px;
+  height: 360px;
+  margin: 10px;
+  float:left;
+  margin-bottom: 20px;
+}
+
+.magazine_content .img2{
+  width:260px;
+  height:360px;
+  margin: 10px;
+  float:right;
+}
+
+
+.magazine_content .img3{
+  width:260px;
+  height: 360px;
+  margin: 0 auto;
+  margin-top:50%;
+}
+
+
+.magazine_content .img4{
+  width:260px;
+  height: 360px;
+  margin: 10px;
+  float:left;
+  margin-bottom: 20px;
+}
+
+.magazine_content .img5{
+  width:580px;
+  height: 360px;
+  margin: 10px;
+  float:left;
+
+}
+
+
+
+.img_grid img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
 
 .magazine_content .text1{
   writing-mode:vertical-rl; 
-  font-size:smaller;
+  font-size:1.2rem;
+  position:absolute;
+  top:230px;
+  left:300px;
+  font-family: 'Dancing Script', cursive;
+}
+
+
+.magazine_content .text2{
+  writing-mode:vertical-rl; 
+  font-size:1.2rem;
+  position:absolute;
+  top:30px;
+  right:310px;
+  font-family: 'Dancing Script', cursive;
+}
+
+
+.magazine_content .text3{
+  font-size:3rem;
+  position:absolute;
+  top:80px;
+  left:400px;
+  font-family: 'Akaya Telivigala', cursive;
+  font-weight: bolder;
+}
+
+
+.magazine_content .text4{
+  font-size:1.2rem;
+  position:absolute;
+  top:140px;
+  left:485px;
+  font-family:'Akaya Telivigala', cursive;
+}
+
+
+.magazine_content .text5{
+  font-size:1.2rem;
+  position:absolute;
+  bottom:130px;
+  left:480px;
+  font-family: 'Cormorant', serif; 
 }
 
 
@@ -225,17 +484,58 @@
     <P>PH</P>
     <P>OI</P>
     <P>NG</P>
-    <p>{{month}}.</p>
+    <p>2{{month}}.</p>
   </div>
   <div class="magazine_content">
-    <div class="img1">
-      <img src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+    <div class="img_grid">
+      <div class="first_grid">
+        <div class="img1">
+          <img src="https://i.pinimg.com/474x/01/d4/a5/01d4a5c579c583db98c77169d49affbe.jpg">
+        </div>
+        <div class="img2">
+          <img src="https://i.pinimg.com/564x/a1/45/8c/a1458c364cd567e01a31740d3304d5a7.jpg">
+        </div>
+      </div>
+
+      <div class="img3">
+        <img  src="https://i.pinimg.com/564x/f4/03/32/f40332a662861585a92fe44b7fb6c852.jpg">
+      </div>
+
+      <div>
+        <div class="img4">
+          <img src="https://i.pinimg.com/564x/fc/64/78/fc647868f663fc2df55c8a13846c458b.jpg">
+        </div>
+        <div class="img5">
+          <img src="https://i.pinimg.com/474x/8f/6f/12/8f6f12ec8ca1afb0404a879738af7f0a.jpg">
+        </div>
+      </div>
     </div>
-  
-    <div class="text1">
-      recommendation
-      collage
+
+    <div class="texts">
+      <div class="text1">
+        recommendation collage
+      </div>
+
+      <div class="text2">
+        recommendation random collage
+      </div>
+
+      <div class="text3">
+        Random Collage
+      </div>
+
+      <div class="text4">
+          with passionate artists
+      </div>
+
+      <div class="text5">
+        contact and portfolio website <br> for passionate artists.
+        <br> phoing provides <br> web services for <br> personal photo work.
+      </div>
+
+      
     </div>
+   
   </div>
 </div>
 
