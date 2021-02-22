@@ -14,14 +14,22 @@
 
     }
 
-  .container_8 {
-    display: grid;
-    justify-content: center;
-    margin: 10px auto;
-    padding: 10px;
-    width: 800px;
-    max-width: 70%;
-  }
+    
+    .btn {
+        width: 150px;
+        height: 50px;
+        border: 1px solid #333;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 0;
+        transition: 1s;
+    }
 
     .btn::before,
     .btn::after {
@@ -82,11 +90,9 @@
     .container_8 {
         display: grid;
         grid-template-rows: auto;
-        justify-content: center;
         margin: 10px auto;
         padding: 10px;
-        width: 800px;
-        max-width: 70%;
+        max-width: 65%;
     }
 
     .container_8>div {
@@ -229,23 +235,10 @@
 {% block content %}
 
 <!-- SHOW PROFILE 버튼 ''profile_detail_other''로 가게 하기-->
-    <div class="choose">
-        <a class="choose_profile" href="{% url 'myApp:profile_detail'  contact.user.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
-    </div>
+<div class="choose">
+    <a class="choose_profile" href="{% url 'myApp:profile_detail'  contact.user.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
+</div>
     
-    <div class="container_8">
-        <div class="user">
-            <!-- user profile img 추가하기! -->
-            <div class="user_img">
-                {% if contact.user.image  %}
-                <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image" >    
-                {% else %}
-                <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image">
-                {% endif %}
-            </div> 
-            <p>User: {{contact.user.username}} </p>
-            <p>Category: {{contact.user.category}}</p>
-        </div>
 
 <div class="container_8">
     <div class="user">
