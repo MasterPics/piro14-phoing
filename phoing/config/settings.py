@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 from django.urls import reverse_lazy  # reverse url을 초기화 이후로 미뤄주는 함수!
 import os
-from os.path import normpath
+from os.path import normpath, join
 import sys
 import json
 from pathlib import Path
