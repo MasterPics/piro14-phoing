@@ -139,6 +139,7 @@ def profile_detail_posts(request, pk):
     # CATEGORY
     if category == 'contact':
         posts = user.contacts.all()
+
     elif category == 'portfolio':
         posts = user.portfolios.all()
 

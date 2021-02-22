@@ -294,4 +294,4 @@ class Place(models.Model):
 class ViewCount(models.Model):
     ip=models.CharField(max_length=15, default=None, null=True)
     post=models.ForeignKey(Portfolio, default=None, null=True, related_name='view_counts', on_delete=models.CASCADE)
-    date=models.DateField(default=timezone.now(), null=True, blank=True)
+    date=models.DateField(default=timezone.now, null=True, blank=True)
