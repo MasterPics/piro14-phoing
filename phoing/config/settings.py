@@ -102,6 +102,8 @@ ROOT_URLCONF = 'config.urls'
 # ]
 # '''
 
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'http://15.164.11.168/'] # ALLOWED_HOST = [*]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
