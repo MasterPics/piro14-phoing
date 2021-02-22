@@ -30,11 +30,8 @@ from django.forms import modelformset_factory
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-
-# get ip
-# from ipware.ip import get_ip
-
-
+# web chat
+from chat.models import *
 
 def main_list(request):
     ctx = {}
@@ -471,6 +468,12 @@ def contact_save(request):
         return JsonResponse({'contact_id': contact_id, 'is_saved': is_saved})
 
 
+
+DEFAULT = 0
+PENDING = 1
+MEMBER = 2
+REJECTED = 3
+
 def contact_list(request):
     contacts = Contact.objects.all()
 
@@ -535,6 +538,7 @@ def contact_list(request):
         contacts = paginator.page(paginator.num_pages)
 
     print(contacts)
+    
 
     context = {
         'contacts': contacts,
@@ -611,8 +615,12 @@ def contact_create(request):
         if contact_form.is_valid() and location_form.is_valid():
             print('here')
             contact = contact_form.save(commit=False)
+
+            # create location
             location = location_form.save(commit=False)
             location.save()
+
+            # create contact
             contact.user = request.user
             contact.is_closed = False
             contact.location = location
@@ -624,6 +632,7 @@ def contact_create(request):
             for tag in tags:
                 contact.tags.add(tag)
 
+                contact=contact,
             return redirect('myApp:contact_detail', contact.pk)
 
     else:

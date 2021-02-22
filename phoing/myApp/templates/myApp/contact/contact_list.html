@@ -1,5 +1,6 @@
 {% extends 'myApp/layout.html' %}
 {% load static %}
+{% load custom_tags %}
 
 
 {% block stylesheet %}
@@ -386,6 +387,43 @@
                                 <div>User: {{contact.user.username}}</div>
                                 <div>Category: {{contact.user.category}}</div>
                             </div>
+                <div class="infinite-item">
+                    <div class="item_top contact-{{contact.pk}}">
+                        <div>
+                            <!-- user_img -->
+                            User : {{ contact.user }}
+
+                            
+                            {% if request_user.is_authenticated %}
+
+                            <div class="chat-btn-{{contact.pk}}">
+                                
+
+                                {% if not contact.user == request.user %}
+
+                                
+                                {% if request.user in contact.group.pendings.all %}
+                                <button onclick="alert('호스트의 승인을 기다려주세요!'); return false;" class="chat-btn">Requested</button>
+                                {% elif request.user in contact.group.members.all %}
+                                <button onclick="onClickToChatRoom({{contact.pk}})" class="chat-btn">Enter Chatroom</button>
+                                {% elif request.user in contact.group.rejected.all %}
+                                <button onclick="alert('호스트가 신청을 거절했습니다.'); return false;" class="chat-btn">Rejected</button>    
+                                {% else %}
+                                <button onclick="onClickToPendings({{contact.pk}}, {{request.user.pk}})" class="chat-btn">Join</button>
+                                {% endif %}
+
+                                    
+                                    
+                                {% endif %}
+    
+                            </div>
+                                
+                            {% endif %}
+                            
+                                
+                        </div>
+                        <a href="{% url 'myApp:contact_detail' contact.pk %}">
+                            <div>{{ contact.title }}</div>
                         </a>
                     </div>
                     <a href="{% url 'myApp:contact_detail' contact.pk %}">
@@ -471,6 +509,28 @@
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 
+        <script>
+            // for chat-btn
+            var csrf_token = "{{csrf_token}}";
+            
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+        <script src="{% static 'js/infinite.min.js' %}"></script>
+        <script src="{% static 'js/contact.js' %}" defer></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+        <script src="{% static 'js/contact/contact_list_map.js' %}" ></script>
+        <script>
+            axios.defaults.xsrfCookieName = 'csrftoken'
+            axios.defaults.xsrfHeaderName = "X-CSRFToken"
+            axios.defaults.headers.common['X-CSRFToken'] = getCookie("csrftoken");
+        </script>
+        <script src="{% static 'js/contact/chat_button.js' %}"></script>
 <script>
     let infinite = new Waypoint.Infinite({
 
@@ -590,6 +650,90 @@
         }
         searchForm.submit()
     })
+
+            //search
+            const searchButton = document.querySelector('.btn_search')
+            searchButton.addEventListener('click', () => {
+                const searchClassInput = document.querySelector('.search')
+                const searchIdInput = document.querySelector('#search')
+                const searchForm = document.querySelector('#searchForm')
+                searchIdInput.value = searchClassInput.value
+                searchForm.submit()
+            })
+
+
+            //sort
+            const sortClassInput = document.querySelector('.sort')
+            sortClassInput.addEventListener('input', (e) => {
+                const sortIdInput = document.querySelector('#sort')
+                const searchForm = document.querySelector('#searchForm')
+                sortIdInput.value = e.target.value
+                searchForm.submit()
+            })
+
+
+            function modal(id) {
+                var zIndex = 9999;
+                var modal = document.getElementById(id);
+
+                // 모달 div 뒤에 희끄무레한 레이어
+                var bg = document.createElement('div');
+                bg.setStyle({
+                    position: 'fixed',
+                    zIndex: zIndex,
+                    left: '0px',
+                    top: '0px',
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'auto',
+                    // 레이어 색갈은 여기서 바꾸면 됨
+                    backgroundColor: 'rgba(0,0,0,0.4)'
+                });
+                document.body.append(bg);
+
+                // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
+                modal.querySelector('.modal_close_btn').addEventListener('click', function() {
+                    bg.remove();
+                    modal.style.display = 'none';
+                });
+
+                modal.setStyle({
+                    position: 'fixed',
+                    display: 'block',
+                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+
+                    // 시꺼먼 레이어 보다 한칸 위에 보이기
+                    zIndex: zIndex + 1,
+
+                    // div center 정렬
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    msTransform: 'translate(-50%, -50%)',
+                    webkitTransform: 'translate(-50%, -50%)'
+                });
+            }
+
+            // Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+            Element.prototype.setStyle = function(styles) {
+                for (var k in styles) this.style[k] = styles[k];
+                return this;
+            };
+
+            document.getElementById('popup_open_btn').addEventListener('click', function() {
+                // 모달창 띄우기
+                modal('my_modal');
+            });
+
+           
+
+
+        </script>
+        
+
+        {% endblock script %}
+
+        
 
     function modal(id) {
         var zIndex = 9999;

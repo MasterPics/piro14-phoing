@@ -77,16 +77,18 @@
                 <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
                 {% else %}
                 {% url 'myApp:profile_detail' user.id as profile_path %}
+               
                 {% if request.path ==  profile_path %}
-
+                <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
                 <li><a href="{% url 'account_logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
                 {% else %}
+                <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
                 <li><a href="{% url 'account_logout' %}?next={{ request.path }}"
                         onclick="return confirm('Are you sure?');">Log
                         Out</a></li>
                 {% endif %}
 
-
+                
                 <li><a href="{% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i
                             class="far fa-user-circle"></i></a></li>
                 {% endif %}

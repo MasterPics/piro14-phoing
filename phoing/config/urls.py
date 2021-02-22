@@ -8,6 +8,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls'), ),
     path('', include('myApp.urls')),
     path('place/', include('place.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL,
