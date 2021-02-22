@@ -3,13 +3,6 @@
 
 
 {% block stylesheet %}
-<<<<<<< HEAD
-<link rel="stylesheet" href="{% static 'css/contact/contact.css' %}">
-<style>
-
-</style>
-
-=======
 <!-- <link rel="stylesheet" href="{% static 'css/contact/contact.css' %}"> -->
 <style>
     * {
@@ -261,7 +254,6 @@
         color: rgb(58, 58, 58); /* Add a dark-grey background on hover */
       }
 </style>
->>>>>>> sy4
 {% endblock stylesheet %}
 
 {% block content %}
@@ -322,18 +314,7 @@
                             </div>
                             <div>{{post.created_at}}</div>
                     </div>
-                    <div class="item_bottom">
-                        <div class="save save-{{post.id}}">
-                            {% if request_user in post.save_users.all %}
-                            <i class="fas fa-bookmark"  type="submit"
-                                onclick="onClickContactSave({{ post.pk }})" name="type" value="save"></i>
-                            {% else %}
-                            <i class="far fa-bookmark" type="submit"
-                                onclick="onClickContactSave({{ post.pk }})" name="type" value="save"></i>
-                            {% endif %}
-                            <span class="save__content">{{ post.save_users.count }}</span>
-                        </div>
-                    </div>
+            
                     {% elif post.classname == "Portfolio" %}
                     <div class="infinite-item">
                         <div class="item_top">
@@ -356,18 +337,7 @@
                             </div>
                             <div>{{post.created_at}}</div>
                     </div>
-                    <div class="item_bottom">
-                        <div class="save save-{{post.id}}">
-                            {% if request_user in post.save_users.all %}
-                            <i class="fas fa-bookmark"  type="submit"
-                                onclick="onClickContactSave({{ post.pk }})" name="type" value="save"></i>
-                            {% else %}
-                            <i class="far fa-bookmark" type="submit"
-                                onclick="onClickContactSave({{ post.pk }})" name="type" value="save"></i>
-                            {% endif %}
-                            <span class="save__content">{{ post.save_users.count }}</span>
-                        </div>
-                    </div>
+
                     {% endif %}
                 
                 {% endfor %}
