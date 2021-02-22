@@ -626,6 +626,23 @@ def contact_create(request):
             for tag in tags:
                 contact.tags.add(tag)
 
+            
+            print("up")
+            # create group object
+            group = Group.objects.create(
+                name=contact.title,
+                contact=contact,
+                host=request.user,
+            )
+            group.members.add(request.user)
+            group.save()
+            print("down")
+
+            # save tag
+            tags = Tag.add_tags(contact.tag_str)
+            for tag in tags:
+                contact.tags.add(tag)
+
                 contact=contact,
             return redirect('myApp:contact_detail', contact.pk)
 

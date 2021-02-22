@@ -23,7 +23,7 @@
 
             <img src="{{ group.contact.thumbnail.url }}" alt="">
             <h1 class="profile-group-name">{{ group.name }}</h1>
-            <a href="{% url 'myApp:profile_detail_other' group.host.pk %}" class="profile-host">{{group.host.username}}</a>
+            <a href="{% url 'myApp:profile_detail' group.host.pk %}" class="profile-host">{{group.host.username}}</a>
             <a href="{% url 'myApp:contact_detail' group.contact.pk %}" class="btn profile-to-btn">Contact</a>
 
         </div>
