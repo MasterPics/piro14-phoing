@@ -74,3 +74,10 @@ class MyCustomSocialSignupForm(SignupForm):
 
         # You must return the original result.
         return user
+
+class PortfolioForm(forms.Form):
+    
+    title = forms.CharField(max_length=20, required=False)
+    thumbnail = forms.ImageField(required=False)
+    desc = forms.CharField(widget=forms.Textarea, required=False)
+    tag = forms.CharField(max_length=20, required=False)
