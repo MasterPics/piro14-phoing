@@ -48,57 +48,49 @@
                 {% for post in posts %}
 
                     {% if post.classname == "Contact" %}
-                        {% if not user.contact %}
-                        <a href="{% url 'myApp:contact_create' %}"><div>Create a contact.</div> </a>
-                        {% else %}
-                        <div class="infinite-item">
-                            <div class="item_top">
-                                <a href="{% url 'myApp:contact_detail' post.pk %}">
-                                    <div>{{ post.title }}</div>
-                                    <img src="{{ post.thumbnail.url }}" alt="">
-                                    <div>{{post.created_at}}</div>
-                                </a>
-                                <div class="item_bottom">
-                                    <div class="save save-{{post.id}}">
-                                        {% if request_user in post.save_users.all %}
-                                        <i class="fas fa-bookmark" style="color:red" type="submit" onclick="onClickContactSave({{ post.id }})" name="type"
-                                            value="save"></i>
-                                        {% else %}
-                                        <i class="far fa-bookmark" style="color:red" type="submit" onclick="onClickContactSave({{ post.id }})" name="type"
-                                            value="save"></i>
-                                        {% endif %}
-                                        <span class="save__content">{{ post.save_users.count }}</span>
-                                    </div>
+                    <div class="infinite-item">
+                        <div class="item_top">
+                            <a href="{% url 'myApp:contact_detail' post.pk %}">
+                                <div>{{ post.title }}</div>
+                                <img src="{{ post.thumbnail.url }}" alt="">
+                                <div>{{post.created_at}}</div>
+                            </a>
+                            <div class="item_bottom">
+                                <div class="save save-{{post.id}}">
+                                    {% if request_user in post.save_users.all %}
+                                    <i class="fas fa-bookmark" style="color:red" type="submit" onclick="onClickContactSave({{ post.id }})" name="type"
+                                        value="save"></i>
+                                    {% else %}
+                                    <i class="far fa-bookmark" style="color:red" type="submit" onclick="onClickContactSave({{ post.id }})" name="type"
+                                        value="save"></i>
+                                    {% endif %}
+                                    <span class="save__content">{{ post.save_users.count }}</span>
                                 </div>
                             </div>
                         </div>
-                        {% endif %}
+                    </div>
                     {% elif post.classname == "Portfolio" %}
-                        {% if not user.portfolio %}
-                        <a href="{% url 'myApp:portfolio_create' %}"><div>Create a portfolio.</div> </a>
-                        {% else %}
-                        <div class="infinite-item">
-                            <div class="item_top">
-                                <a href="{% url 'myApp:portfolio_detail' post.pk %}">
-                                    <div>{{ post.title }}</div>
-                                    <img src="{{ post.thumbnail.url }}" alt="">
-                                    <div>{{post.created_at}}</div>
-                                </a>
-                                <div class="item_bottom">
-                                    <div class="save save-{{post.id}}">
-                                        {% if request_user in post.save_users.all %}
-                                        <i class="fas fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
-                                            value="save"></i>
-                                        {% else %}
-                                        <i class="far fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
-                                            value="save"></i>
-                                        {% endif %}
-                                        <span class="save__content">{{ post.save_users.count }}</span>
-                                    </div>
+                    <div class="infinite-item">
+                        <div class="item_top">
+                            <a href="{% url 'myApp:portfolio_detail' post.pk %}">
+                                <div>{{ post.title }}</div>
+                                <img src="{{ post.thumbnail.url }}" alt="">
+                                <div>{{post.created_at}}</div>
+                            </a>
+                            <div class="item_bottom">
+                                <div class="save save-{{post.id}}">
+                                    {% if request_user in post.save_users.all %}
+                                    <i class="fas fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
+                                        value="save"></i>
+                                    {% else %}
+                                    <i class="far fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
+                                        value="save"></i>
+                                    {% endif %}
+                                    <span class="save__content">{{ post.save_users.count }}</span>
                                 </div>
                             </div>
                         </div>
-                        {% endif %}
+                    </div>
                     {% endif %}
                 
                 {% endfor %}
