@@ -1,0 +1,518 @@
+:root {
+  --grey-1: #2a2a2b;
+  --grey-2: #494848;
+  --grey-3: #131312;
+  --grey-4: #333334;
+  --grey-5: #bbb;
+  --color-1: #64af50; /*#1F09AC*/
+  --font-1: "Roboto", sans-serif;
+}
+
+
+.container {
+  display: grid;
+  grid-template-columns: 80px calc(100vw - 80px);
+  grid-template-rows: 100vh;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+/*======= Side Nav ==========*/
+
+.side-nav {
+  background: var(--grey-3);
+  color: white;
+  font-size: 25px;
+  text-align: center;
+  height: 100%;
+  z-index: 2;
+}
+
+.side-nav .profile img {
+  margin-top: 15px;
+  width: auto;
+  height: 60px;
+  filter: grayscale(1);
+  border-radius: 50%;
+}
+
+.icon-container {
+  line-height: 60px;
+  height: 60px;
+}
+
+.icon-container:hover {
+  background: var(--grey-2);
+}
+
+.icon-container + .active {
+  border-left: 8px solid var(--color-1);
+}
+
+.top-nav {
+  border-bottom: 1px solid grey;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-nav .logo {
+  text-align: center;
+  font-size: 150%;
+  font-weight: bold;
+  font-family: "Roboto", sans-serif;
+  color: var(--color-1);
+}
+
+.main-veiw {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 8vh 92vh;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 40% auto;
+  grid-template-rows: 100%;
+}
+
+@media screen and (min-width: 800px) {
+  .content {
+    grid-template-columns: 30% auto;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .content {
+    grid-template-columns: auto;
+  }
+}
+
+/*=========Message List======*/
+
+.message-list {
+  background: var(--grey-2);
+  height: 100%;
+}
+
+@media screen and (max-width: 640px) {
+  .message-list {
+    position: absolute;
+    display: none;
+    z-index: 1;
+  }
+}
+
+.message-list .list-top {
+  display: grid;
+  grid-template-columns: 60% 22% 18%;
+  padding: 5px;
+}
+
+.message-list .list-top .close-list {
+  display: none;
+}
+
+@media screen and (max-width: 640px) {
+  .message-list .list-top {
+    grid-template-columns: 60% 20% 10% 10%;
+  }
+  .message-list .list-top .close-list {
+    display: block;
+    position: absolute;
+    background: transparent;
+    border: none;
+    content: "\2039";
+    font-size: 20px;
+    font-family: var(--font-1);
+    color: white;
+    top: 15px;
+    right: 15px;
+  }
+}
+
+.message-list input {
+  display: inline;
+  font-size: 20px;
+  padding: 10px 10px;
+  border-radius: 30px 0px 0px 30px;
+  outline: none;
+  border: none;
+  background: var(--grey-1);
+  color: white;
+}
+
+.message-list .search {
+  display: inline;
+  border: none;
+  border-radius: 0px 30px 30px 0px;
+  background: var(--grey-1);
+  color: white;
+  outline: none;
+}
+
+.message-list .add {
+  border: none;
+  background: transparent;
+  font-size: 30px;
+  color: white;
+  outline: none;
+}
+
+.message-list .contact {
+  display: grid;
+  grid-template-columns: 25% auto;
+  height: 50px;
+  padding: 10px;
+  background: var(--grey-1);
+  color: white;
+  font-family: var(--font-1);
+  position: relative;
+}
+
+@media screen and (max-width: 640px) {
+  .message-list .contact {
+    display: grid;
+    grid-template-columns: 60px auto;
+  }
+}
+
+.message-list .active {
+  background: var(--grey-4);
+}
+
+.message-list .unread:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background: var(--color-1);
+  z-index: 1;
+}
+
+.message-list .name {
+  margin: 5px 10px;
+  font-size: 16px;
+  font-weight: 100;
+}
+
+.message-list img {
+  height: 100%;
+  width: auto;
+  max-height: 50px;
+  border-radius: 50%;
+  filter: grayscale(1);
+  z-index: 2;
+}
+
+/*======== Chat Part ===========*/
+
+.chat {
+  display: grid;
+  grid-template-rows: 8vh 72vh 20vh;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+/*========= Top Nav ============*/
+
+.chat .top {
+  font-family: "Roboto", sans-serif;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.chat .top .open-message {
+  padding: 0 10px;
+  color: var(--grey-3);
+  display: none;
+}
+
+@media screen and (max-width: 640px) {
+  .chat .top .open-message {
+    display: block;
+  }
+}
+
+.chat .top .open-message:hover {
+  color: var(--color-1);
+  transition: color ease 0.5s;
+}
+
+.chat .top .name {
+  font-size: 20px;
+  font-weight: 600;
+  color: grey;
+  margin-left: 10px;
+  width: 200px;
+  cursor: pointer;
+}
+
+.chat .top .name:hover {
+  color: var(--color-1);
+  transition: color ease 0.5s;
+}
+
+.chat .button-container {
+  text-align: right;
+  width: 75%;
+}
+
+.chat .button-container button {
+  border: none;
+  background: white;
+  font-size: 20px;
+  color: var(--grey-2);
+}
+
+.chat .button-container button:hover {
+  color: var(--color-1);
+  transition: color ease 0.5s;
+}
+
+/*======== Chat Message Container =====*/
+
+.chat .message-container {
+  padding: 5px;
+  overflow-y: scroll;
+  width: 100%;
+  height: 96%;
+  padding-right: 18px;
+  box-sizing: content-box;
+}
+
+.chat .divider {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  color: var(--grey-5);
+  font-family: var(--font-1);
+  text-align: center;
+  position: relative;
+  display: inline-block;
+}
+
+.chat .divider span {
+  background: white;
+  padding: 0px 10px;
+}
+
+.chat .divider:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  height: 1px;
+  width: 100%;
+  background: var(--grey-5);
+  z-index: -1;
+}
+
+.chat .comment {
+  min-height: 50px;
+  width: 100%;
+  float: left;
+  margin: 5px 0px;
+  text-align: left;
+}
+
+.chat .me {
+  float: right;
+  text-align: right;
+}
+
+.chat .comment img {
+  filter: grayscale(1);
+  height: 50px;
+  width: auto;
+  border-radius: 50%;
+  float: left;
+}
+
+.chat .me img {
+  float: right;
+}
+
+.chat .bubble {
+  display: inline-block;
+  background: var(--color-1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: white;
+  font-family: var(--font-1);
+  max-width: 55%;
+  position: relative;
+  margin: 0px 15px;
+}
+
+.chat .me .bubble {
+  background: var(--grey-5);
+  text-align: left;
+}
+
+.chat .other .bubble:before {
+  content: "";
+  top: 0px;
+  left: -25px;
+  position: absolute;
+  background: transparent;
+  height: 0px;
+  width: 0px;
+  border-left: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-right: 20px solid var(--color-1);
+}
+
+.chat .me .bubble:after {
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: -25px;
+  background: transparent;
+  height: 0px;
+  width: 0px;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 20px solid var(--grey-5);
+}
+
+.chat .bubble img {
+  border-radius: 5px;
+  height: 200px;
+  width: auto;
+  filter: none;
+}
+
+.chat .bubble a {
+  color: white;
+}
+
+/*======== Typing part =========*/
+
+.chat .input-container {
+  display: grid;
+  grid-template-columns: 8vh auto 8vh;
+  padding: 10px 6px;
+  border-top: 1px solid #ccc;
+}
+
+.chat .attach {
+  border: none;
+  border-radius: 50%;
+  width: 100%;
+  height: 8vh;
+  max-height: 60px;
+  max-width: 60px;
+}
+
+.chat .textarea-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.chat textarea {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
+  resize: none;
+  overflow-y: scroll;
+  width: 100%;
+  height: 8vh;
+  padding-right: 18px;
+  box-sizing: content-box;
+  margin-left: 10px;
+}
+
+.chat .send {
+  border: none;
+  background: var(--color-1);
+  color: white;
+  font-size: 20px;
+  height: 8vh;
+  width: 8vh;
+  border-radius: 50%;
+  max-height: 60px;
+  max-width: 60px;
+}
+/*======= Contact List =======*/
+
+.contact-detail {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background: #eee;
+  display: none;
+  font-family: "Roboto", sans-serif;
+  padding: 0px 10px;
+  overflow-y: scroll;
+}
+
+.close {
+  font-size: 20px;
+  border: none;
+  background: transparent;
+}
+
+.contact-detail img {
+  width: 70%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  filter: grayscale(0);
+  border-radius: 50%;
+}
+
+.contact-detail h3 {
+  color: var(--grey-2);
+  text-align: center;
+  margin: 8px 0px;
+  font-size: 22px;
+}
+
+.contact-detail .bio {
+  text-align: center;
+}
+
+.contact-detail ul {
+  margin: 0px;
+  margin-top: 10px;
+  padding: 0px;
+}
+
+.contact-detail ul li {
+  list-style: none;
+  width: 100%;
+  background: white;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  padding: 10px 0px;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.contact-detail ul li .contact-img {
+  border-radius: none;
+  height: auto;
+  width: 55px;
+  margin: 0 10px;
+  display: inline-block;
+  filter: grayscale(1);
+}
+
+.contact-list ul li .name {
+  display: inline-block;
+}

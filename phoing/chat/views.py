@@ -18,18 +18,21 @@ def index(request):
     return render(request, 'chat/index.html', {})
 
 def chat_room(request, room_name):
+    contact_pk = int(room_name[4:])
+    contact = get_object_or_404(Contact, pk=contact_pk)
+
     return render(request, 'chat/chat_room.html', {
-        'room_name': room_name
+        'room_name': room_name,
+        'group': contact.group,
     })
+
 
 @login_required
 def chat_home(request, pk):
 
     user = User.objects.get(pk=pk)
+    ctx = {}
 
-    ctx = {
-
-    }
     return render(request, 'chat/chat_home.html', context=ctx)
 
 
