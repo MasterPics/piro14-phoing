@@ -266,87 +266,73 @@
 {% endblock stylesheet %}
 
 {% block content %}
-
-<div class="choose">
-    {% if request.user.pk == user.pk %}
-    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
-        <div class="btn"><span class="noselect">My Profile</span></div>
-    </a>
-    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
-        <div class="btn"><span class="noselect">My Posts</span></div>
-    </a>
-    <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}">
-        <div class="btn"><span class="noselect">My Saves</span></div>
-    </a>
-    {% else %}
-    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
-        <div class="btn"><span class="noselect">My Profile</span></div>
-    </a>
-    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
-        <div class="btn"><span class="noselect">My Posts</span></div>
-    </a>
-    {% endif %}
-</div>
-
-
-<div class="user_postlist">
-    <!--category-->
-    <div class="postlist_left">
-        <ul class="category">
-            <li><a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a></li>
-        </ul>
+<div>
+    <div class="choose">
+        {% if request.user.pk == user.pk %}
+        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
+            <div class="btn"><span class="noselect">My Profile</span></div>
+        </a>
+        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
+            <div class="btn"><span class="noselect">My Posts</span></div>
+        </a>
+        <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}">
+            <div class="btn"><span class="noselect">My Saves</span></div>
+        </a>
+        {% else %}
+        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
+            <div class="btn"><span class="noselect">My Profile</span></div>
+        </a>
+        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
+            <div class="btn"><span class="noselect">My Posts</span></div>
+        </a>
+        {% endif %}
     </div>
 
-    {% if request.user.pk == user.pk %}
-    <!--post_create-->
-    <div class="post_create">
-        <a class="update_btn" href="{% url 'myApp:post_create' %}"><i class="far fa-plus-square"></i></a>
-    </div>
-    {% endif %}
 
-    <!--post_list-->
-    <div class="content">
-        <!---->
-        <div class="infinite-container">
-            {% for post in posts %}
+    <div class="user_postlist">
+        <!--category-->
+        <div class="postlist_left">
+            <ul class="category">
+                <li><a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a></li>
+                <li><a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a></li>
+            </ul>
+        </div>
 
-            {% if post.classname == "Contact" %}
-            <div class="infinite-item">
-                <div class="item_top">
-                    <a href="{% url 'myApp:contact_detail' post.pk %}">
-                        <div>{{ post.title }}</div>
-                        <img src="{{ post.thumbnail.url }}" alt="">
-                        <div>{{post.created_at}}</div>
-                    </a>
-                    <div class="item_bottom">
-                        <div class="save save-{{post.id}}">
-                            {% if request_user in post.save_users.all %}
-                            <i class="fas fa-bookmark" style="color:red" type="submit"
-                                onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
-                            {% else %}
-                            <i class="far fa-bookmark" style="color:red" type="submit"
-                                onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
-                            {% endif %}
-                            <span class="save__content">{{ post.save_users.count }}</span>
+        {% if request.user.pk == user.pk %}
+        <!--post_create-->
+        <div class="post_create">
+            <a class="update_btn" href="{% url 'myApp:post_create' %}"><i class="far fa-plus-square"></i></a>
+        </div>
+        {% endif %}
+
+        <!--post_list-->
+        <div class="content">
+            <!---->
+            <div class="grid">
+                {% for post in posts %}
+                {% for i in "x"|rjust:"10" %}
+                <div class="grid-item">
+                    {% if post.classname == "Contact" %}
+                    <div class="item_top">
+                        <a href="{% url 'myApp:contact_detail' post.pk %}">
+                            <div>{{ post.title }}</div>
+                            <img src="{{ post.thumbnail.url }}" alt="">
+                            <div>{{post.created_at}}</div>
+                        </a>
+                        <div class="item_bottom">
+                            <div class="save save-{{post.id}}">
+                                {% if request_user in post.save_users.all %}
+                                <i class="fas fa-bookmark" style="color:red" type="submit"
+                                    onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
+                                {% else %}
+                                <i class="far fa-bookmark" style="color:red" type="submit"
+                                    onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
+                                {% endif %}
+                                <span class="save__content">{{ post.save_users.count }}</span>
+                            </div>
                         </div>
                     </div>
-                    <div>{{post.created_at}}</div>
-                </div>
-                <div class="item_bottom">
-                    <div class="save save-{{post.id}}">
-                        {% if request_user in post.save_users.all %}
-                        <i class="fas fa-bookmark" type="submit" onclick="onClickContactSave({{ post.pk }})" name="type"
-                            value="save"></i>
-                        {% else %}
-                        <i class="far fa-bookmark" type="submit" onclick="onClickContactSave({{ post.pk }})" name="type"
-                            value="save"></i>
-                        {% endif %}
-                        <span class="save__content">{{ post.save_users.count }}</span>
-                    </div>
-                </div>
-                {% elif post.classname == "Portfolio" %}
-                <div class="infinite-item">
+                    {% elif post.classname == "Portfolio" %}
                     <div class="item_top">
                         <a href="{% url 'myApp:portfolio_detail' post.pk %}">
                             <div>{{ post.title }}</div>
@@ -365,24 +351,12 @@
                                 <span class="save__content">{{ post.save_users.count }}</span>
                             </div>
                         </div>
-                        <div>{{post.created_at}}</div>
-                    </div>
-                    <div class="item_bottom">
-                        <div class="save save-{{post.id}}">
-                            {% if request_user in post.save_users.all %}
-                            <i class="fas fa-bookmark" type="submit" onclick="onClickContactSave({{ post.pk }})"
-                                name="type" value="save"></i>
-                            {% else %}
-                            <i class="far fa-bookmark" type="submit" onclick="onClickContactSave({{ post.pk }})"
-                                name="type" value="save"></i>
-                            {% endif %}
-                            <span class="save__content">{{ post.save_users.count }}</span>
-                        </div>
                     </div>
                     {% endif %}
-
-                    {% endfor %}
                 </div>
+
+                {% endfor %}
+                {% endfor %}
             </div>
 
             <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
@@ -402,204 +376,205 @@
             </form>
         </div>
     </div>
-    {% endblock content %}
+</div>
+{% endblock content %}
 
 
 
-    <!--js-->
-    {% block script %}
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!--js-->
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-    <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
 
 
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-    <script src="{% static 'js/infinite.min.js' %}"></script>
-    <script src="{% static 'js/contact.js' %}" defer></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+<script src="{% static 'js/contact.js' %}" defer></script>
 
-    <script>
-        //top_button
-        //Get the button:
-        mybutton = document.getElementById("myBtn");
+<script>
+    //top_button
+    //Get the button:
+    mybutton = document.getElementById("myBtn");
 
-        // When the user scrolls down 20px from the top of the document, show the button
-        window.onscroll = function () {
-            scrollFunction()
-        };
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunction()
+    };
 
-        function scrollFunction() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                mybutton.style.display = "block";
-            } else {
-                mybutton.style.display = "none";
-            }
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
         }
+    }
 
-        // When the user clicks on the button, scroll to the top of the document
-        function topFunction() {
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+
+    //
+    let infinite = new Waypoint.Infinite({
+        element: $('.grid')[0],
+        items: '.grid-item',
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
+            })
         }
+    });
+    let msnry = new Masonry('.grid', {
+        // optionsW
+        itemSelector: '.grid-item',
+        gutter: 10,
+        // columnWidth: 200
+    });
 
-        //
-        let infinite = new Waypoint.Infinite({
-            element: $('.grid')[0],
-            items: '.grid-item',
-            onBeforePageLoad: function () {
-                $('.loading').show();
-            },
-            onAfterPageLoad: function () {
-                $('.loading').hide();
-                let msnry = new Masonry('.grid', {
-                    itemSelector: '.grid-item',
-                    gutter: 10,
-                })
-            }
-        });
-        let msnry = new Masonry('.grid', {
-            // optionsW
-            itemSelector: '.grid-item',
-            gutter: 10,
-            // columnWidth: 200
-        });
+    //Save
+    const onClickContactSave = async (contact_id) => {
+        try {
+            console.log("here")
+            // const url = '/contact/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     contact_id,
+            // })
+            // modify(data.contact_id, data.is_saved)
 
-        //Save
-        const onClickContactSave = async (contact_id) => {
-            try {
-                console.log("here")
-                // const url = '/contact/';
-                // const {
-                //     data
-                // } = await axios.post(url, {
-                //     contact_id,
-                // })
-                // modify(data.contact_id, data.is_saved)
-
-                const options = {
-                    url: '/contact/save/',
-                    method: 'POST',
-                    data: {
-                        contact_id: contact_id,
-                    }
+            const options = {
+                url: '/contact/save/',
+                method: 'POST',
+                data: {
+                    contact_id: contact_id,
                 }
-                const response = await axios(options)
-                const responseOK = response && response.status === 200 && response.statusText === 'OK'
-                if (responseOK) {
-                    const data = response.data
-                    //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                    modifyContact(data.contact_id, data.is_saved)
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modifyContact(data.contact_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modifyContact = (contact_id, is_saved) => {
+        const save = document.querySelector(`.save-${contact_id} i`);
+        const save_content = document.querySelector(`.save-${contact_id} .save__content`)
+        const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+
+
+
+    //Save
+    const onClickPortfolioSave = async (portfolio_id) => {
+        try {
+            // const url = '/portfolio/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     portfolio_id,
+            // })
+            // modify(data.portfolio_id, data.is_saved)
+
+            const options = {
+                url: '/portfolio/save/',
+                method: 'POST',
+                data: {
+                    portfolio_id: portfolio_id,
                 }
-            } catch (error) {
-                console.log(error)
             }
-        }
-
-        const modifyContact = (contact_id, is_saved) => {
-            const save = document.querySelector(`.save-${contact_id} i`);
-            const save_content = document.querySelector(`.save-${contact_id} .save__content`)
-            const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
-            console.log(num)
-            if (is_saved === true) {
-
-                save.className = "fas fa-bookmark";
-
-                const count = Number(num) + 1;
-                save_content.innerHTML = count
-            } else {
-                save.className = "far fa-bookmark";
-
-                const count = Number(num) - 1;
-                save_content.innerHTML = count
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modifyPortfolio(data.portfolio_id, data.is_saved)
             }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
+    const modifyPortfolio = (portfolio_id, is_saved) => {
+        const save = document.querySelector(`.save-${portfolio_id} i`);
+        const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
+        const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+            console.log("here1")
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            console.log("here2")
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
         }
 
-
-
-        //Save
-        const onClickPortfolioSave = async (portfolio_id) => {
-            try {
-                // const url = '/portfolio/';
-                // const {
-                //     data
-                // } = await axios.post(url, {
-                //     portfolio_id,
-                // })
-                // modify(data.portfolio_id, data.is_saved)
-
-                const options = {
-                    url: '/portfolio/save/',
-                    method: 'POST',
-                    data: {
-                        portfolio_id: portfolio_id,
-                    }
-                }
-                const response = await axios(options)
-                const responseOK = response && response.status === 200 && response.statusText === 'OK'
-                if (responseOK) {
-                    const data = response.data
-                    //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                    modifyPortfolio(data.portfolio_id, data.is_saved)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-        const modifyPortfolio = (portfolio_id, is_saved) => {
-            const save = document.querySelector(`.save-${portfolio_id} i`);
-            const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
-            const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
-            console.log(num)
-            if (is_saved === true) {
-                console.log("here1")
-
-                save.className = "fas fa-bookmark";
-
-                const count = Number(num) + 1;
-                save_content.innerHTML = count
-            } else {
-                console.log("here2")
-                save.className = "far fa-bookmark";
-
-                const count = Number(num) - 1;
-                save_content.innerHTML = count
-            }
-
-        }
+    }
 
 
 
 
-        //category
-        const onClickLink = (category) => {
-            const categoryIdInput = document.querySelector('#category')
-            categoryIdInput.value = category
-            const searchForm = document.querySelector('#searchForm')
-            searchForm.submit()
-        }
+    //category
+    const onClickLink = (category) => {
+        const categoryIdInput = document.querySelector('#category')
+        categoryIdInput.value = category
+        const searchForm = document.querySelector('#searchForm')
+        searchForm.submit()
+    }
 
-        //search
-        const searchButton = document.querySelector('.btn_search')
-        searchButton.addEventListener('click', () => {
-            const searchClassInput = document.querySelector('.search')
-            const searchIdInput = document.querySelector('#search')
-            const searchForm = document.querySelector('#searchForm')
-            searchIdInput.value = searchClassInput.value
-            searchForm.submit()
-        })
+    //search
+    const searchButton = document.querySelector('.btn_search')
+    searchButton.addEventListener('click', () => {
+        const searchClassInput = document.querySelector('.search')
+        const searchIdInput = document.querySelector('#search')
+        const searchForm = document.querySelector('#searchForm')
+        searchIdInput.value = searchClassInput.value
+        searchForm.submit()
+    })
 
 
-        //sort
-        const sortClassInput = document.querySelector('.sort')
-        sortClassInput.addEventListener('input', (e) => {
-            const sortIdInput = document.querySelector('#sort')
-            const searchForm = document.querySelector('#searchForm')
-            sortIdInput.value = e.target.value
-            searchForm.submit()
-        })
-    </script>
-    {% endblock script %}
+    //sort
+    const sortClassInput = document.querySelector('.sort')
+    sortClassInput.addEventListener('input', (e) => {
+        const sortIdInput = document.querySelector('#sort')
+        const searchForm = document.querySelector('#searchForm')
+        sortIdInput.value = e.target.value
+        searchForm.submit()
+    })
+</script>
+{% endblock script %}

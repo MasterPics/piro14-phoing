@@ -3,7 +3,7 @@
 
 
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'css/contact/contact.css' %}">
+<!-- <link rel="stylesheet" href="{% static 'css/contact/contact.css' %}"> -->
 <style>
 
 </style>
@@ -12,251 +12,280 @@
 
 
 {% block content %}
-
-<div class="choose">
-    {% if request.user.pk == user.pk %}
-    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
-    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
-    <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}"><div class="btn"><span class="noselect">My Saves</span></div></a>
-    {% else %}
-    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
-    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
-    {% endif %}
-</div>
-
-
-<div class="user_postlist">
-    <!--category-->
-    <div class="postlist_left">
-        <ul class="category">
-            <li><a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a></li>
-        </ul>
+<div>
+    <div class="choose">
+        {% if request.user.pk == user.pk %}
+        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
+            <div class="btn"><span class="noselect">My Profile</span></div>
+        </a>
+        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
+            <div class="btn"><span class="noselect">My Posts</span></div>
+        </a>
+        <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}">
+            <div class="btn"><span class="noselect">My Saves</span></div>
+        </a>
+        {% else %}
+        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
+            <div class="btn"><span class="noselect">My Profile</span></div>
+        </a>
+        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
+            <div class="btn"><span class="noselect">My Posts</span></div>
+        </a>
+        {% endif %}
     </div>
+
+
+    <div class="user_postlist">
+        <!--category-->
+        <div class="postlist_left">
+            <ul class="category">
+                <li><a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a></li>
+                <li><a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a></li>
+            </ul>
+        </div>
 
         <!--post_list-->
         <div class="content">
             <!---->
-            <div class="infinite-container">
+            <div class="grid">
                 {% for post in posts %}
+                {% for i in "x"|rjust:"10" %}
+                <div class="grid-item">
                     {% if user in post.save_users.all %}
-                        {% if post.classname == "Contact" %}
-                            <div class="infinite-item">
-                                <div class="item_top">
-                                    <a href="{% url 'myApp:contact_detail' post.pk %}">
-                                        <div>{{ post.title }}</div>
-                                        <img src="{{ post.thumbnail.url }}" alt="">
-                                        <div>{{post.created_at}}</div>
-                                    </a>
-                                    <div class="item_bottom">
-                                        <div class="save save-{{post.id}}">
-                                            {% if request_user in post.save_users.all %}
-                                            <i class="fas fa-bookmark" style="color:red" type="submit" onclick="onClickContactSave({{ post.id }})" name="type"
-                                                value="save"></i>
-                                            {% else %}
-                                            <i class="far fa-bookmark" style="color:red" type="submit" onclick="onClickContactSave({{ post.id }})" name="type"
-                                                value="save"></i>
-                                            {% endif %}
-                                            <span class="save__content">{{ post.save_users.count }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% elif post.classname == "Portfolio" %}
-                            <div class="infinite-item">
-                                <div class="item_top">
-                                    <a href="{% url 'myApp:portfolio_detail' post.pk %}">
-                                        <div>{{ post.title }}</div>
-                                        <img src="{{ post.thumbnail.url }}" alt="">
-                                        <div>{{post.created_at}}</div>
-                                    </a>
-                                    <div class="item_bottom">
-                                        <div class="save save-{{post.id}}">
-                                            {% if request_user in post.save_users.all %}
-                                            <i class="fas fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
-                                                value="save"></i>
-                                            {% else %}
-                                            <i class="far fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
-                                                value="save"></i>
-                                            {% endif %}
-                                            <span class="save__content">{{ post.save_users.count }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </div>
+                    {% if post.classname == "Contact" %}
 
-            <!--filter form-->
-            <div style="height: 0;">
-                <form id="searchForm" method="get" action="{% url 'myApp:profile_detail_saves' user.pk %}">
-                    <!--category-->
-                    <input type="hidden" id="category" name="category" value="{{ category }}">
+                    <div class="item_top">
+                        <a href="{% url 'myApp:contact_detail' post.pk %}">
+                            <div>{{ post.title }}</div>
+                            <img src="{{ post.thumbnail.url }}" alt="">
+                            <div>{{post.created_at}}</div>
+                        </a>
+                        <div class="item_bottom">
+                            <div class="save save-{{post.id}}">
+                                {% if request_user in post.save_users.all %}
+                                <i class="fas fa-bookmark" style="color:red" type="submit"
+                                    onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
+                                {% else %}
+                                <i class="far fa-bookmark" style="color:red" type="submit"
+                                    onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
+                                {% endif %}
+                                <span class="save__content">{{ post.save_users.count }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% elif post.classname == "Portfolio" %}
+                <div class="item_top">
+                    <a href="{% url 'myApp:portfolio_detail' post.pk %}">
+                        <div>{{ post.title }}</div>
+                        <img src="{{ post.thumbnail.url }}" alt="">
+                        <div>{{post.created_at}}</div>
+                    </a>
+                    <div class="item_bottom">
+                        <div class="save save-{{post.id}}">
+                            {% if request_user in post.save_users.all %}
+                            <i class="fas fa-bookmark" style="color:red" type="submit"
+                                onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
+                            {% else %}
+                            <i class="far fa-bookmark" style="color:red" type="submit"
+                                onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
+                            {% endif %}
+                            <span class="save__content">{{ post.save_users.count }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
 
-                </form>
+                {% endif %}
             </div>
+            {% endfor %}
+            {% endfor %}
         </div>
 
+        {% if reference_image_urls.has_next %}
+        <a class="infinite-more-link" href="?page={{ reference_image_urls.next_page_number }}">
+            <div class="loading" style="display: none;"></div>
+        </a>
+        {% endif %}
+
+
+        <!--filter form-->
+        <div style="height: 0;">
+            <form id="searchForm" method="get" action="{% url 'myApp:profile_detail_saves' user.pk %}">
+                <!--category-->
+                <input type="hidden" id="category" name="category" value="{{ category }}">
+
+            </form>
+        </div>
     </div>
 </div>
-        {% endblock content %}
+</div>
+{% endblock content %}
 
 
 
-        <!--js-->
-        {% block script %}
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-        <script src="{% static 'js/infinite.min.js' %}"></script>
-        <script src="{% static 'js/contact.js' %}" defer></script>
-
-        <script>
-            var infinite = new Waypoint.Infinite({
-                element: $('.infinite-container')[0],
-                onBeforePageLoad: function () {
-                    $('.loading').show();
-                },
-                onAfterPageLoad: function ($items) {
-                    $('.loading').hide();
-                }
-            });
-
-            //Save
-            const onClickContactSave = async (contact_id) => {
-                try {
-                    console.log("here")
-                    // const url = '/contact/';
-                    // const {
-                    //     data
-                    // } = await axios.post(url, {
-                    //     contact_id,
-                    // })
-                    // modify(data.contact_id, data.is_saved)
-
-                    const options = {
-                        url: '/contact/save/',
-                        method: 'POST',
-                        data: {
-                            contact_id: contact_id,
-                        }
-                    }
-                    const response = await axios(options)
-                    const responseOK = response && response.status === 200 && response.statusText === 'OK'
-                    if (responseOK) {
-                        const data = response.data
-                        //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                        modifyContact(data.contact_id, data.is_saved)
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-
-            const modifyContact = (contact_id, is_saved) => {
-                const save = document.querySelector(`.save-${contact_id} i`);
-                const save_content = document.querySelector(`.save-${contact_id} .save__content`)
-                const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
-                console.log(num)
-                if (is_saved === true) {
-
-                    save.className = "fas fa-bookmark";
-
-                    const count = Number(num) + 1;
-                    save_content.innerHTML = count
-                } else {
-                    save.className = "far fa-bookmark";
-
-                    const count = Number(num) - 1;
-                    save_content.innerHTML = count
-                }
-
-            }
-
-
-
-            //Save
-            const onClickPortfolioSave = async (portfolio_id) => {
-                try {
-                    // const url = '/portfolio/';
-                    // const {
-                    //     data
-                    // } = await axios.post(url, {
-                    //     portfolio_id,
-                    // })
-                    // modify(data.portfolio_id, data.is_saved)
-
-                    const options = {
-                        url: '/portfolio/save/',
-                        method: 'POST',
-                        data: {
-                            portfolio_id: portfolio_id,
-                        }
-                    }
-                    const response = await axios(options)
-                    const responseOK = response && response.status === 200 && response.statusText === 'OK'
-                    if (responseOK) {
-                        const data = response.data
-                        //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                        modifyPortfolio(data.portfolio_id, data.is_saved)
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-
-            const modifyPortfolio = (portfolio_id, is_saved) => {
-                const save = document.querySelector(`.save-${portfolio_id} i`);
-                const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
-                const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
-                console.log(num)
-                if (is_saved === true) {
-
-                    save.className = "fas fa-bookmark";
-
-                    const count = Number(num) + 1;
-                    save_content.innerHTML = count
-                } else {
-                    save.className = "far fa-bookmark";
-
-                    const count = Number(num) - 1;
-                    save_content.innerHTML = count
-                }
-
-            }
-
-
-
-
-            //category
-            const onClickLink = (category) => {
-                const categoryIdInput = document.querySelector('#category')
-                categoryIdInput.value = category
-                const searchForm = document.querySelector('#searchForm')
-                searchForm.submit()
-            }
-
-            //search
-            const searchButton = document.querySelector('.btn_search')
-            searchButton.addEventListener('click', () => {
-                const searchClassInput = document.querySelector('.search')
-                const searchIdInput = document.querySelector('#search')
-                const searchForm = document.querySelector('#searchForm')
-                searchIdInput.value = searchClassInput.value
-                searchForm.submit()
+<!--js-->
+{% block script %}
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+<script>
+    let infinite = new Waypoint.Infinite({
+        element: $('.grid')[0],
+        items: '.grid-item',
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
             })
+        }
+    });
+    let msnry = new Masonry('.grid', {
+        // optionsW
+        itemSelector: '.grid-item',
+        gutter: 10,
+        // columnWidth: 200
+    });
+
+    //Save
+    const onClickContactSave = async (contact_id) => {
+        try {
+            console.log("here")
+            // const url = '/contact/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     contact_id,
+            // })
+            // modify(data.contact_id, data.is_saved)
+
+            const options = {
+                url: '/contact/save/',
+                method: 'POST',
+                data: {
+                    contact_id: contact_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modifyContact(data.contact_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modifyContact = (contact_id, is_saved) => {
+        const save = document.querySelector(`.save-${contact_id} i`);
+        const save_content = document.querySelector(`.save-${contact_id} .save__content`)
+        const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
 
 
-            //sort
-            const sortClassInput = document.querySelector('.sort')
-            sortClassInput.addEventListener('input', (e) => {
-                const sortIdInput = document.querySelector('#sort')
-                const searchForm = document.querySelector('#searchForm')
-                sortIdInput.value = e.target.value
-                searchForm.submit()
-            })
-        </script>
-        {% endblock script %}
+
+    //Save
+    const onClickPortfolioSave = async (portfolio_id) => {
+        try {
+            // const url = '/portfolio/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     portfolio_id,
+            // })
+            // modify(data.portfolio_id, data.is_saved)
+
+            const options = {
+                url: '/portfolio/save/',
+                method: 'POST',
+                data: {
+                    portfolio_id: portfolio_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modifyPortfolio(data.portfolio_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modifyPortfolio = (portfolio_id, is_saved) => {
+        const save = document.querySelector(`.save-${portfolio_id} i`);
+        const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
+        const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+
+
+
+
+    //category
+    const onClickLink = (category) => {
+        const categoryIdInput = document.querySelector('#category')
+        categoryIdInput.value = category
+        const searchForm = document.querySelector('#searchForm')
+        searchForm.submit()
+    }
+
+    //search
+    const searchButton = document.querySelector('.btn_search')
+    searchButton.addEventListener('click', () => {
+        const searchClassInput = document.querySelector('.search')
+        const searchIdInput = document.querySelector('#search')
+        const searchForm = document.querySelector('#searchForm')
+        searchIdInput.value = searchClassInput.value
+        searchForm.submit()
+    })
+
+
+    //sort
+    const sortClassInput = document.querySelector('.sort')
+    sortClassInput.addEventListener('input', (e) => {
+        const sortIdInput = document.querySelector('#sort')
+        const searchForm = document.querySelector('#searchForm')
+        sortIdInput.value = e.target.value
+        searchForm.submit()
+    })
+</script>
+{% endblock script %}
