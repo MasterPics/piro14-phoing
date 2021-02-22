@@ -72,6 +72,7 @@ def chat_add_pendings(request):
 
 @csrf_exempt
 def chat_add_rejected(request):
+    print("Here")
     if request.method == 'POST':
         data = json.loads(request.body)
         contact_pk = data["contact_pk"]
