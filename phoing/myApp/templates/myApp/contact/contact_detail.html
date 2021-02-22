@@ -281,7 +281,7 @@
     <div class="pay_date">
         <p>pay: {{ contact.pay }}</p>
         <!-- 촬영날짜/마감여부 -->
-        <p>{{ contact.start_date }} ~ {{ contact.end_date }}</p>
+        <p>{{ contact.start_date|datefilter }} ~ {{ contact.end_date|datefilter }}</p>
 
     </div>
 

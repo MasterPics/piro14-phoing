@@ -141,12 +141,14 @@
     }
 
     .choose {
+        position: relative;
         display: flex;
         margin: auto 1px;
         padding: 2px;
         margin-top: 3%;
         justify-content: center;
         align-items: center;
+        margin-bottom: 3%;
     }
 
     .choose_profile {
@@ -154,53 +156,41 @@
         margin-right: 2%;
     }
 
-    .choose_portfolio{
+    .dropdown{
         margin-right: 2%;
     }
 
+    .dropdown .posts{
+        font-weight:900;
+    }
+
+
+
     /**/
 
-    .dropdown span {
-        font-weight: bolder;
-    }
-
-    .bar {
-        position: relative;
-    }
+   .bar{
+       margin-bottom: 20px;
+   }
 
 
     .grid-item {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-bottom: 20px;
+        margin-top:20px;
     }
 
 
-    .item_top>div {
+    .item_top div {
         padding: 10px;
     }
 
-    .contact_owner {
+    .item_top .title{
+        font-weight: bolder;
+    }
+
+    .item_top .date{
         display: flex;
-        align-items: center;
-        border-bottom: rgb(221, 221, 221) 1px solid;
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-
-    .contact_owner div {
-        margin-right: 8px;
-    }
-
-    .contact_owner .user_img {
-        width: 40px;
-        height: 40px;
-        border-radius: 100%;
-        margin-right: 10px;
-    }
-
-    .user_img .profile_image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+        justify-content: flex-end;
     }
 
 
@@ -209,21 +199,10 @@
         width: 20rem;
     }
 
-    .pay_date {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .pay_date p {
-        text-align: end;
-        line-height: 1.5rem;
-    }
-
     .item_bottom {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         border-top: rgb(221, 221, 221) solid 1px;
         border-bottom: rgb(180, 180, 180) solid 2px;
         padding: 15px;
@@ -261,6 +240,17 @@
         color: rgb(58, 58, 58);
         /* Add a dark-grey background on hover */
     }
+
+    /**/
+
+    .post_create{
+        position:absolute;
+        top:10;
+        right:0;
+        font-size: 2em;
+    }
+
+
 </style>
 {% endblock stylesheet %}
 
@@ -271,31 +261,36 @@
         <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
             <div class="btn"><span class="noselect">My Profile</span></div>
         </a>
-        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
-            <div class="btn"><span class="noselect">My Posts</span></div>
-        </a>
-        <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}">
-            <div class="btn"><span class="noselect">My Saves</span></div>
-        </a>
-        {% else %}
-        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
-            <div class="btn"><span class="noselect">My Profile</span></div>
-        </a>
-        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
-            <div class="btn"><span class="noselect">My Posts</span></div>
-        </a>
-        {% endif %}
-    </div>
-
-
-    <div class="user_postlist">
-        <!--category-->
-        <div class="postlist_left">
-            <ul class="category">
-                <li><a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a></li>
-                <li><a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a></li>
-            </ul>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <div class="btn"><span class="noselect"><div class="posts">My Posts</div></span></div>
+            </div>
+            <div class="dropdown-content">
+                <a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a>
+                <a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a>
+            </div>
         </div>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <div class="btn"><span class="noselect">My Saves</span></div>
+            </div>
+            <div class="dropdown-content">
+                <a href="{% url 'myApp:profile_detail_saves' user.pk %}" onclick="onClickLink('contact')">Contact</a>
+                <a href="{% url 'myApp:profile_detail_saves' user.pk %}" onclick="onClickLink('portfolio')">Portfolio</a>
+            </div>
+        </div>
+        {% else %}
+        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <div class="btn"><span class="noselect"><div class="posts">My Posts</div></span></div>
+            </div>
+            <div class="dropdown-content">
+                <a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a>
+                <a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a>            
+            </div>
+        </div>
+        {% endif %}
 
         {% if request.user.pk == user.pk %}
         <!--post_create-->
@@ -303,6 +298,11 @@
             <a class="update_btn" href="{% url 'myApp:post_create' %}"><i class="far fa-plus-square"></i></a>
         </div>
         {% endif %}
+    </div>
+
+
+
+    <div class="user_postlist">
 
         <!--post_list-->
         <div class="content">
@@ -312,19 +312,21 @@
                 {% for i in "x"|rjust:"10" %}
                 <div class="grid-item">
                     {% if post.classname == "Contact" %}
-                    <div class="item_top">
-                        <a href="{% url 'myApp:contact_detail' post.pk %}">
-                            <div>{{ post.title }}</div>
-                            <img src="{{ post.thumbnail.url }}" alt="">
-                            <div>{{post.created_at}}</div>
-                        </a>
+                    <div>
+                        <div class="item_top">
+                            <a href="{% url 'myApp:contact_detail' post.pk %}">
+                                <div class="title">{{ post.title }}</div>
+                                <div class="thumbnail_desc"><img src="{{ post.thumbnail.url }}" alt=""></div>
+                                <div class="date">{{post.created_at}}</div>
+                            </a>
+                        </div>
                         <div class="item_bottom">
                             <div class="save save-{{post.id}}">
                                 {% if request_user in post.save_users.all %}
-                                <i class="fas fa-bookmark" style="color:red" type="submit"
+                                <i class="fas fa-bookmark" type="submit"
                                     onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
                                 {% else %}
-                                <i class="far fa-bookmark" style="color:red" type="submit"
+                                <i class="far fa-bookmark" type="submit"
                                     onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
                                 {% endif %}
                                 <span class="save__content">{{ post.save_users.count }}</span>
@@ -350,10 +352,10 @@
                             <div class="item_bottom">
                                 <div class="save save-{{post.id}}">
                                     {% if request_user in post.save_users.all %}
-                                    <i class="fas fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
+                                    <i class="fas fa-bookmark"  type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
                                         value="save"></i>
                                     {% else %}
-                                    <i class="far fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
+                                    <i class="far fa-bookmark" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
                                         value="save"></i>
                                     {% endif %}
                                     <span class="save__content">{{ post.save_users.count }}</span>

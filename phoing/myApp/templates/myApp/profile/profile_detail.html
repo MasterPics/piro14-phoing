@@ -230,18 +230,24 @@
         <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
             <div class="btn"><span class="noselect">My Profile</span></div>
         </a>
-        <!-- <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a> -->
         <div class="dropdown">
             <div class="dropbtn">
-                <div class="btn"><span class="noselect"><a href="{% url 'myApp:profile_detail_posts' user.pk %}"
-                            onclick="onClickLink('all')">My Posts</a></span></div>
+                <div class="btn"><span class="noselect">My Posts</span></div>
             </div>
             <div class="dropdown-content">
                 <a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a>
                 <a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a>
             </div>
         </div>
-        <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}"><div class="btn"><span class="noselect">My Saves</span></div></a>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <div class="btn"><span class="noselect">My Saves</span></div>
+            </div>
+            <div class="dropdown-content">
+                <a href="{% url 'myApp:profile_detail_saves' user.pk %}" onclick="onClickLink('contact')">Contact</a>
+                <a href="{% url 'myApp:profile_detail_saves' user.pk %}" onclick="onClickLink('portfolio')">Portfolio</a>
+            </div>
+        </div>
         {% else %}
         <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
         <div class="dropdown">
