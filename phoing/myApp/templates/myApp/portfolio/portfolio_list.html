@@ -4,201 +4,281 @@
 {% block stylesheet %}
 <script src="https://kit.fontawesome.com/9ada8679dc.js" crossorigin="anonymous"></script>
 <style>
-     /*category btn*/
-
-     * {
+    /*category btn*/
+     
+    * {
         box-sizing: border-box;
         scroll-behavior: smooth;
-        color:black;
-    
-        }
-        
-        .dropdown .btn {
-            width: 150px;
-            height: 50px;
-            border: 1px solid #333;
-            font-family: "Cinzel", serif;
-            font-size: 15px;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 0;
-            transition: 1s;
-        }
-        
-        .dropdown .btn::before,
-        .dropdown .btn::after {
-            position: absolute;
-            background: #fff;
-            z-index: -1;
-            transition: 1s;
-            content: "";
-        }
-        
-        .dropdown .btn::before {
-            height: 50px;
-            width: 130px;
-        }
-        
-        .dropdown .btn::after {
-            width: 150px;
-            height: 30px;
-        }
-        
-        .dropdown .noselect {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        
-        .dropdown .btn:hover::before {
-            width: 0px;
-            background: #fff;
-        }
-        
-        .dropdown .btn:hover::after {
-            height: 0px;
-            background: #fff;
-        }
-        
-        .dropdown .btn:hover {
-            background: #fff;
-        }
-    
-            /* Dropdown Button */
-            .dropbtn {
-                padding: 16px;
-            }
-            
-            /* The container <div> - needed to position the dropdown content */
-            .dropdown {
-                position: relative;
-                display: inline-block;
-            }
-            
-            /* Dropdown Content (Hidden by Default) */
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                min-width: 160px;
-                z-index: 1;
-                margin-left:11px;
-            }
-            
-            /* Links inside the dropdown */
-            .dropdown-content a {
-                color: black;
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-                background-color: white;
-                border:#ddd solid 1px;
-            }
-            
-            /* Change color of dropdown links on hover */
-            .dropdown-content a:hover {background-color: #ddd;}
-            
-            /* Show the dropdown menu on hover */
-            .dropdown:hover .dropdown-content {display: block;}
-            
-        
-            /* 무한스크롤 */
-    
+        color: black;
+
+    }
+
+    .dropdown .btn {
+        width: 150px;
+        height: 50px;
+        border: 1px solid #333;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 0;
+        transition: 1s;
+    }
+
+    .dropdown .btn::before,
+    .dropdown .btn::after {
+        position: absolute;
+        background: #fff;
+        z-index: -1;
+        transition: 1s;
+        content: "";
+    }
+
+    .dropdown .btn::before {
+        height: 50px;
+        width: 130px;
+    }
+
+    .dropdown .btn::after {
+        width: 150px;
+        height: 30px;
+    }
+
+    .dropdown .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .dropdown .btn:hover::before {
+        width: 0px;
+        background: #fff;
+    }
+
+    .dropdown .btn:hover::after {
+        height: 0px;
+        background: #fff;
+    }
+
+    .dropdown .btn:hover {
+        background: #fff;
+    }
+
+    /* Dropdown Button */
+    .dropbtn {
+        padding: 16px;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        min-width: 160px;
+        z-index: 1;
+        margin-left: 11px;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        background-color: white;
+        border: #ddd solid 1px;
+    }
+
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {
+        background-color: #ddd;
+    }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+
+    /* 무한스크롤 */
+
     .loading,
     .loading:after {
-      border-radius: 50%;
-      width: 2em;
-      height: 2em;
+        border-radius: 50%;
+        width: 2em;
+        height: 2em;
     }
-    
+
     .loading {
-      display: none;
-      margin: 60px auto;
-      font-size: 10px;
-      position: relative;
-      text-indent: -9999em;
-      border-top: 0.3em solid rgba(160, 160, 160, 0.2);
-      border-right: 0.3em solid rgba(160, 160, 160, 0.2);
-      border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
-      border-left: 0.3em solid rgb(0, 0, 0);
-      -webkit-transform: translateZ(0);
-      -ms-transform: translateZ(0);
-      transform: translateZ(0);
-      -webkit-animation: load8 0.6s infinite linear;
-      animation: load8 0.6s infinite linear;
+        display: none;
+        margin: 60px auto;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+        border-top: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-right: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-left: 0.3em solid rgb(0, 0, 0);
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation: load8 0.6s infinite linear;
+        animation: load8 0.6s infinite linear;
     }
-    
+
     .loading.show {
-      opacity: 1;
+        opacity: 1;
     }
-    
+
     @-webkit-keyframes load8 {
-      0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-      }
-    
-      100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-      }
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
     }
-    
+
     @keyframes load8 {
-      0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-      }
-    
-      100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-      }
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
     }
-    
+
     /* Portfolio List CSS */
     a {
         text-decoration: none;
         color: black;
-      }
-      
+    }
+
     .portfolio_list .bar {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin: 3% 5%;
-      }
+    }
 
 
-      .bar_right{
+    .bar_right {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-    
-    .bar .sort {
-    margin-right: 10px;
-  }
-  
-  .bar .sort select {
-    border: 0;
-    padding: 5px;
-    border: solid 1px black;
-    border-radius: 3px;
-  }
-  
 
-  .bar .create i {
-    font-size: 2rem;
-    font-weight: lighter;
-    color: rgb(75, 75, 75);
+    .bar .sort {
+        margin-right: 10px;
+    }
+
+    .bar .sort select {
+        border: 0;
+        padding: 5px;
+        border: solid 1px black;
+        border-radius: 3px;
+    }
+
+    
+    .bar .pay {
+        margin-right: 15px;
+    }
+
+    .bar .create i {
+        font-size: 2rem;
+        font-weight: lighter;
+        color: rgb(75, 75, 75);
+    }
+
+    .portfolio_owner{
+        display: flex;
+        align-items: center;
+        border-bottom: rgb(221, 221, 221) 1px solid;
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+
+    .portfolio_owner div {
+        margin-right: 8px;
+    }
+
+    .portfolio_owner .user_img {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        margin-right: 10px;
+    }
+
+    .user_img .profile_image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .item-top > div{
+        padding:10px;
+    }
+
+    
+    .thumbnail_desc img {
+        width: 20rem;
+    }
+
+    .grid-item{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-bottom:20px;
+    }
+
+    .portfolio_info{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: rgb(221, 221, 221) solid 1px;
+        padding:15px;
+    }
+    
+    .portfolio_info > div{
+        cursor:pointer;
+    }
+
+
+
+/*top button*/
+
+#myBtn {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed/sticky position */
+    bottom: 20px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 99; /* Make sure it does not overlap */
+    color: rgb(0, 0, 0); /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    font-size: 2em; /* Increase font size */
+    border-radius: 100%;
+    background-color: white;
+  }
+  
+  #myBtn i:hover {
+    color: rgb(58, 58, 58); /* Add a dark-grey background on hover */
   }
 
 
@@ -212,7 +292,10 @@
         <div class="bar_left">
             <!--category-->
             <div class="dropdown">
-                <div class="dropbtn"><div class="btn"><span class="noselect"><a href="javascript:void(0)" onclick="onClickLink('all')">Category</a></span></div></div>
+                <div class="dropbtn">
+                    <div class="btn"><span class="noselect"><a href="javascript:void(0)"
+                                onclick="onClickLink('all')">Category</a></span></div>
+                </div>
                 <div class="dropdown-content">
                     <a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a>
                     <a href="javascript:void(0)" onclick="onClickLink('model')">Model</a>
@@ -243,70 +326,88 @@
 
             <!--contact_create-->
             <div class="create">
-                {% if request_user.is_authenticated %}
                 <a class="create_btn" href="{% url 'myApp:portfolio_create' %}"><i class="far fa-plus-square"></i></a>
-                {% endif %}
             </div>
         </div>
-    </div>    
-    
-
-
-    
-
-
-
-    <div class="infinite-container portfolio_content">
-        {% for portfolio in portfolios %}
-        <div>
-            <div class="portfolio_owner">
-                <a href="{% url 'myApp:profile_detail' portfolio.user.pk %}">
-                    {% if user.image  %}
-                    <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" width="20%">    
-                    {% else %}
-                    <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
-                    {% endif %}
-                    <p>{{portfolio.user.username}}</p>
-                    <p>{{portfolio.user.category}}</p>
-                </a>
-            </div>
-            <div class="portfolio_profile">
-                <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
-                    <p>{{portfolio.title}}</p>
-                    <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
-                </a>
-            </div>
-            <div class="portfolio_info">
-                <div class="like like-{{portfolio.id}}">
-                    {% if request_user in portfolio.like_users.all %}
-                    <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                        value="like"></i>
-                    {% else %}
-                    <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                        value="like"></i>
-                    {% endif %}
-                    <span class="like__content">{{ portfolio.like_users.count }}</span>
-                </div>
-                <div >
-                    <i class="far fa-eye"></i>
-                    <span class="view__content">{{portfolio.view_count}}</span>
-                </div>
-                <div class="save save-{{portfolio.id}}">
-                    {% if request_user in portfolio.save_users.all %}
-                    <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                        value="save"></i>
-                    {% else %}
-                    <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                        value="save"></i>
-                    {% endif %}
-                    <span class="save__content">{{ portfolio.save_users.count }}</span>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
     </div>
 
+
+
+
+
+
+    <div>
+        <div class="grid">
+            {% for portfolio in portfolios %}
+            <div class="grid-item">
+                <div class='item-top'>
+                    <div>
+                        <a href="{% url 'myApp:profile_detail_other' portfolio.user.pk %}">
+                            <div class="portfolio_owner">
+                                    <div class="user_img">
+                                        {% if user.image  %}
+                                        <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" >
+                                        {% else %}
+                                        <img class="profile_image"
+                                            src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                                            alt="profile_image" >
+                                        {% endif %}
+                                    </div>
+                                    <div>user: {{portfolio.user.username}}</div>
+                                    <div>category: {{portfolio.user.category}}</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="title">
+                        <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
+                            <div style="font-weight:bolder;">{{portfolio.title}}</div>
+                        </a>
+                    </div>
+
+                    <div class="thumbnail_desc">
+                        <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
+                            <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
+                        </a>
+                    </div>
+                </div>    
+                <div class="portfolio_info">
+                    <div class="like like-{{portfolio.id}}">
+                        {% if request_user in portfolio.like_users.all %}
+                        <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                            value="like"></i>
+                        {% else %}
+                        <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                            value="like"></i>
+                        {% endif %}
+                        <span class="like__content">{{ portfolio.like_users.count }}</span>
+                    </div>
+                    <div>{{portfolio.view_count}}</div>
+                    <div class="save save-{{portfolio.id}}">
+                        {% if request_user in portfolio.save_users.all %}
+                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                            value="save"></i>
+                        {% else %}
+                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                            value="save"></i>
+                        {% endif %}
+                        <span class="save__content">{{ portfolio.save_users.count }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+        {% if portfolios.has_next %}
+        <a class="infinite-more-link" href="?page={{ portfolios.next_page_number }}">
+            <div class="loading" style="display: none;">Loading...</div>
+        </a>
+        {% endif %}
+    </div>
 </div>
+
+<div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
+
 
 {% if portfolios.has_next %}
 <a class="infinite-more-link" href="?page={{ portfolios.next_page_number }}">
@@ -324,28 +425,69 @@
         <input type="hidden" id="sort" name="sort" value="{{ sort }}">
     </form>
 </div>
-
 {% endblock content%}
 
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 
 <script type='text/javascript'>
-    // infinite scroll
-    var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
+
+    //top_button
+    //Get the button:
+    mybutton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+    } else {
+        mybutton.style.display = "none";
+    }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+    
+
+    let infinite = new Waypoint.Infinite({
+
+        element: $('.grid')[0],
+        items: '.grid-item',
         onBeforePageLoad: function () {
+            console.log("here here")
             $('.loading').show();
         },
-        onAfterPageLoad: function ($items) {
+        onAfterPageLoad: function () {
+            console.log("here here2")
             $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
+            })
         }
     });
+    let msnry = new Masonry('.grid', {
+        // optionsW
+        itemSelector: '.grid-item',
+        gutter: 10,
+        // columnWidth: 200
+    });
+
+    //
 
 
     // like
@@ -356,7 +498,7 @@
             //     data
             // } = await axios.post(url, {
             //     portfolio_id,
-            // })
+            // })s
             // modify(data.portfolio_id, data.is_liked)
 
             const options = {
