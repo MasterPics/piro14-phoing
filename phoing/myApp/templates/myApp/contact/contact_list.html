@@ -235,6 +235,10 @@
         color: rgb(75, 75, 75);
     }
 
+    .grid-item{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
 
     .item_top >div{
         padding:10px;
@@ -243,7 +247,6 @@
     .contact_owner {
         display: flex;
         align-items: center;
-        border-top: rgb(180, 180, 180) 2px solid;
         border-bottom: rgb(221, 221, 221) 1px solid;
         padding-top:10px;
         padding-bottom:10px;
@@ -297,7 +300,24 @@
         cursor:pointer;
     }
 
-    
+    /*top button*/
+
+    #myBtn {
+        display: none; /* Hidden by default */
+        position: fixed; /* Fixed/sticky position */
+        bottom: 20px; /* Place the button at the bottom of the page */
+        right: 30px; /* Place the button 30px from the right */
+        z-index: 99; /* Make sure it does not overlap */
+        color: rgb(0, 0, 0); /* Text color */
+        cursor: pointer; /* Add a mouse pointer on hover */
+        font-size: 2em; /* Increase font size */
+        border-radius: 100%;
+        background-color: white;
+      }
+      
+      #myBtn i:hover {
+        color: rgb(58, 58, 58); /* Add a dark-grey background on hover */
+      }
     
 </style>
 {% endblock stylesheet %}
@@ -449,6 +469,9 @@
 
         </div>
 
+        <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
+
+
         {% if contacts.has_next %}
         <a class="infinite-more-link" href="?page={{ contacts.next_page_number }}">
             <div class="loading" style="display: none;">Loading...</div>
@@ -493,6 +516,29 @@
 <script src="{% static 'js/infinite.min.js' %}"></script>
 
 <script>
+    //top_button
+    //Get the button:
+    mybutton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+    } else {
+        mybutton.style.display = "none";
+    }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+
+
+    //
     let infinite = new Waypoint.Infinite({
 
         element: $('.grid')[0],
