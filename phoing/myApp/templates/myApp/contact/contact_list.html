@@ -371,7 +371,7 @@
             <div class="grid-item">
                 <div class=" item_top contact-{{contact.pk}}">
                     <div>
-                        <a href="{% url 'myApp:profile_detail_other' contact.user.pk %}">
+                        <a href="{% url 'myApp:profile_detail' contact.user.pk %}">
                             <div class="contact_owner">
                                 <div class="user_img">
                                     {% if contact.user.image  %}

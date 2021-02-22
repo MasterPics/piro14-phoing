@@ -4,6 +4,10 @@
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/contact/contact.css' %}">
+<style>
+
+</style>
+
 {% endblock stylesheet %}
 
 
@@ -12,6 +16,7 @@
 <div class="choose">
     <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
     <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
+    <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}"><div class="btn"><span class="noselect">My Saves</span></div></a>
 </div>
 
 
@@ -24,20 +29,12 @@
         </ul>
     </div>
 
-    <div class="postlist_right">
-        <div class="bar">
-
-            <!--search-->
-
-            <!--sort: portfolio와 contact의 공통 부분만 sort할 수 있으므로 일단 제외-->
-
-
-            <!--post_create-->
-            <div class="post_create">
-                <a class="update_btn" href="{% url 'myApp:post_create' %}"><i class="far fa-plus-square"></i></a>
-            </div>
-        </div>
-
+    {% if request_user.username == user.username %}
+    <!--post_create-->
+    <div class="post_create">
+        <a class="update_btn" href="{% url 'myApp:post_create' %}"><i class="far fa-plus-square"></i></a>
+    </div>
+    {% endif %}
 
         <!--post_list-->
         <div class="content">

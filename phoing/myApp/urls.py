@@ -7,14 +7,16 @@ urlpatterns = [
     #####################profile#######################
     path('', view=views.main_list, name='main_list'),
     path('profile/<int:pk>/', view=views.profile_detail, name='profile_detail'),
-    path('profile/<int:pk>/other', view=views.profile_detail_other,
-         name='profile_detail_other'),
     path('profile/<int:pk>/posts/',
          view=views.profile_detail_posts, name='profile_detail_posts'),
+     path('profile/<int:pk>/saves/',
+         view=views.profile_detail_saves, name='profile_detail_saves'),
     path('profile/<int:pk>/delete/',
          view=views.profile_delete, name='profile_delete'),
     path('profile/<int:pk>/update/',
          view=views.profile_update, name='profile_update'),
+    path('profile/<int:pk>/profile_update_password/',
+         view=views.profile_update_password, name='profile_update_password'),
     path('profile/create/', view=views.profile_create, name='profile_create'),
     path('profile/post/create/', view=views.post_create, name='post_create'),
 
@@ -51,8 +53,13 @@ urlpatterns = [
          name='portfolio_save'),
 
     #####################reference#######################
-    path('reference/', view=views.reference_list, name='reference_list'),
+    #1. from phoging(local) #
+    path('local/', view=views.local_list, name='local_list'),
+    path('local/<slug:tag>/', view=views.local_detail, name='local_detail'),
 
+
+    #2. from reference(pinterest) #
+    path('reference/', view=views.reference_list, name='reference_list'),
     path('reference/detail/<int:pk>/',
          view=views.reference_detail, name='reference_detail'),
 
