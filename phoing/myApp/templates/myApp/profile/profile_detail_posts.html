@@ -266,7 +266,6 @@
 
 {% block content %}
 
-<<<<<<< HEAD
 <div class="choose">
     {% if request.user.pk == user.pk %}
     <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
@@ -320,49 +319,6 @@
                                     {% endif %}
                                     <span class="save__content">{{ post.save_users.count }}</span>
                                 </div>
-=======
-<div class="">
-    <div class="bar">
-        <div class="choose">
-            <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
-                <div class="btn"><span class="noselect">My Profile</span></div>
-            </a>
-            <!-- <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a> -->
-            <div class="dropdown">
-                <div class="dropbtn">
-                    <div class="btn"><span class="noselect"><a href="{% url 'myApp:profile_detail_posts' user.pk %}"
-                                onclick="onClickLink('all')">My Posts</a></span></div>
-                </div>
-                <div class="dropdown-content">
-                    <a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a>
-                    <a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a>
-                </div>
-            </div>
-        </div>
-        <div class="post_create">
-            <a class="update_btn" href="{% url 'myApp:post_create' %}"><i class="far fa-plus-square"></i></a>
-        </div>
-    </div>
-
-    <div class="">
-        <!--post_list-->
-        <!---->
-        <div class="grid">
-            {% for post in posts %}
-            <div class="grid-item">
-
-                {% if post.classname == "Contact" %}
-                {% if not post %}
-                <div>Create a contact.</div>
-                {% else %}
-                <a href="{% url 'myApp:contact_detail' post.pk %}">
-                    <div class="item_top">
-                            <div>{{ post.title }}</div>
-                            <div class="thumbnail_desc">
-                                <a href="{% url 'myApp:contact_detail' contact.pk %}">
-                                    <img src="{{ contact.thumbnail.url }}" alt="">
-                                </a>
->>>>>>> sy4
                             </div>
                             <div>{{post.created_at}}</div>
                     </div>
@@ -378,7 +334,6 @@
                             <span class="save__content">{{ post.save_users.count }}</span>
                         </div>
                     </div>
-<<<<<<< HEAD
                     {% elif post.classname == "Portfolio" %}
                     <div class="infinite-item">
                         <div class="item_top">
@@ -398,22 +353,6 @@
                                     {% endif %}
                                     <span class="save__content">{{ post.save_users.count }}</span>
                                 </div>
-=======
-                </a>
-
-                {% endif %}
-                {% elif post.classname == "Portfolio" %}
-                {% if not post %}
-                <div>Create a portfolio.</div>
-                {% else %}
-                <a href="{% url 'myApp:contact_detail' post.pk %}">
-                    <div class="item_top">
-                            <div>{{ post.title }}</div>
-                            <div class="thumbnail_desc">
-                                <a href="{% url 'myApp:contact_detail' contact.pk %}">
-                                    <img src="{{ contact.thumbnail.url }}" alt="">
-                                </a>
->>>>>>> sy4
                             </div>
                             <div>{{post.created_at}}</div>
                     </div>
@@ -429,17 +368,10 @@
                             <span class="save__content">{{ post.save_users.count }}</span>
                         </div>
                     </div>
-<<<<<<< HEAD
                     {% endif %}
                 
                 {% endfor %}
-=======
-                </a>
-                {% endif %}
-                {% endif %}
->>>>>>> sy4
             </div>
-            {% endfor %}
         </div>
 
         <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
