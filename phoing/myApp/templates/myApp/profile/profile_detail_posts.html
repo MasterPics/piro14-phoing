@@ -258,47 +258,59 @@
 
 {% block content %}
 
-<div class="">
-    <div class="bar">
-        <div class="choose">
-            <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
-                <div class="btn"><span class="noselect">My Profile</span></div>
-            </a>
-            <!-- <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a> -->
-            <div class="dropdown">
-                <div class="dropbtn">
-                    <div class="btn"><span class="noselect"><a href="{% url 'myApp:profile_detail_posts' user.pk %}"
-                                onclick="onClickLink('all')">My Posts</a></span></div>
-                </div>
-                <div class="dropdown-content">
-                    <a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a>
-                    <a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a>
-                </div>
-            </div>
-        </div>
-        <div class="post_create">
-            <a class="update_btn" href="{% url 'myApp:post_create' %}"><i class="far fa-plus-square"></i></a>
-        </div>
+<div class="choose">
+    {% if request.user.pk == user.pk %}
+    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
+    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
+    <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}"><div class="btn"><span class="noselect">My Saves</span></div></a>
+    {% else %}
+    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
+    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
+    {% endif %}
+</div>
+
+
+<div class="user_postlist">
+    <!--category-->
+    <div class="postlist_left">
+        <ul class="category">
+            <li><a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a></li>
+        </ul>
     </div>
 
-    <div class="">
+    {% if request.user.pk == user.pk %}
+    <!--post_create-->
+    <div class="post_create">
+        <a class="update_btn" href="{% url 'myApp:post_create' %}"><i class="far fa-plus-square"></i></a>
+    </div>
+    {% endif %}
+
         <!--post_list-->
-        <!---->
-        <div class="grid">
-            {% for post in posts %}
-            <div class="grid-item">
+        <div class="content">
+            <!---->
+            <div class="infinite-container">
+                {% for post in posts %}
 
-                {% if post.classname == "Contact" %}
-                {% if not post %}
-                <div>Create a contact.</div>
-                {% else %}
-                <a href="{% url 'myApp:contact_detail' post.pk %}">
-                    <div class="item_top">
-                            <div>{{ post.title }}</div>
-                            <div class="thumbnail_desc">
-                                <a href="{% url 'myApp:contact_detail' contact.pk %}">
-                                    <img src="{{ contact.thumbnail.url }}" alt="">
-                                </a>
+                    {% if post.classname == "Contact" %}
+                    <div class="infinite-item">
+                        <div class="item_top">
+                            <a href="{% url 'myApp:contact_detail' post.pk %}">
+                                <div>{{ post.title }}</div>
+                                <img src="{{ post.thumbnail.url }}" alt="">
+                                <div>{{post.created_at}}</div>
+                            </a>
+                            <div class="item_bottom">
+                                <div class="save save-{{post.id}}">
+                                    {% if request_user in post.save_users.all %}
+                                    <i class="fas fa-bookmark" style="color:red" type="submit" onclick="onClickContactSave({{ post.id }})" name="type"
+                                        value="save"></i>
+                                    {% else %}
+                                    <i class="far fa-bookmark" style="color:red" type="submit" onclick="onClickContactSave({{ post.id }})" name="type"
+                                        value="save"></i>
+                                    {% endif %}
+                                    <span class="save__content">{{ post.save_users.count }}</span>
+                                </div>
                             </div>
                             <div>{{post.created_at}}</div>
                     </div>
@@ -314,20 +326,25 @@
                             <span class="save__content">{{ post.save_users.count }}</span>
                         </div>
                     </div>
-                </a>
-
-                {% endif %}
-                {% elif post.classname == "Portfolio" %}
-                {% if not post %}
-                <div>Create a portfolio.</div>
-                {% else %}
-                <a href="{% url 'myApp:contact_detail' post.pk %}">
-                    <div class="item_top">
-                            <div>{{ post.title }}</div>
-                            <div class="thumbnail_desc">
-                                <a href="{% url 'myApp:contact_detail' contact.pk %}">
-                                    <img src="{{ contact.thumbnail.url }}" alt="">
-                                </a>
+                    {% elif post.classname == "Portfolio" %}
+                    <div class="infinite-item">
+                        <div class="item_top">
+                            <a href="{% url 'myApp:portfolio_detail' post.pk %}">
+                                <div>{{ post.title }}</div>
+                                <img src="{{ post.thumbnail.url }}" alt="">
+                                <div>{{post.created_at}}</div>
+                            </a>
+                            <div class="item_bottom">
+                                <div class="save save-{{post.id}}">
+                                    {% if request_user in post.save_users.all %}
+                                    <i class="fas fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
+                                        value="save"></i>
+                                    {% else %}
+                                    <i class="far fa-bookmark" style="color:red" type="submit" onclick="onClickPortfolioSave({{ post.id }})" name="type"
+                                        value="save"></i>
+                                    {% endif %}
+                                    <span class="save__content">{{ post.save_users.count }}</span>
+                                </div>
                             </div>
                             <div>{{post.created_at}}</div>
                     </div>
@@ -343,11 +360,10 @@
                             <span class="save__content">{{ post.save_users.count }}</span>
                         </div>
                     </div>
-                </a>
-                {% endif %}
-                {% endif %}
+                    {% endif %}
+                
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
 
         <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
