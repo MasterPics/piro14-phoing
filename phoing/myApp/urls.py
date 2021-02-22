@@ -15,6 +15,8 @@ urlpatterns = [
          view=views.profile_delete, name='profile_delete'),
     path('profile/<int:pk>/update/',
          view=views.profile_update, name='profile_update'),
+    path('profile/<int:pk>/profile_update_password/',
+         view=views.profile_update_password, name='profile_update_password'),
     path('profile/create/', view=views.profile_create, name='profile_create'),
     path('profile/post/create/', view=views.post_create, name='post_create'),
 

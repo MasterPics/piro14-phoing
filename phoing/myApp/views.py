@@ -26,6 +26,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # for multiple images
 from django.forms import modelformset_factory
 
+# for change password
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
 
 def main_list(request):
     ctx = {}
@@ -52,20 +57,40 @@ def profile_update(request, pk):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            # print("form.is_valid")
+            print("form.is_valid")
 
             # user = form.save()
             # if user.image:
             #     user.image = request.FILES.get('image')
             # return redirect('myApp:profile_detail', user.id)
-            user.image = request.FILES.get('image')
             user = form.save()
+            user.image = request.FILES.get('image')
+
             return redirect('myApp:profile_detail', user.id)
 
     else:
         form = ProfileForm(instance=user)
         ctx = {'form': form}
         return render(request, 'myApp/profile/profile_update.html', ctx)
+
+
+@login_required
+def profile_update_password(request, pk):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(
+                request, 'Your password was successfully updated!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'myApp/profile/profile_update_password.html', {
+        'form': form
+    })
 
 
 def profile_create(request):
@@ -285,14 +310,23 @@ def portfolio_create(request):
                     photo.save()
             messages.success(request, "posted!")
 
+            # # prev_tag
+            # prev_tags = Tag.objects.all()
             # save tag
-            tags = Tag.add_tags(portfolio.tag_str)
-            for tag in tags:
+            tags_portfolio = Tag.add_tags(portfolio.tag_str)
+            for tag in tags_portfolio:
                 portfolio.tags.add(tag)
+
+            # # tag compare
+            # # tags_portfolio의 tag가 tag_all에 있는지 확인하고
+            # # 이미 있으면 do nothing
+            # # 없으면 tag 게시물 create
+            # local_create(request, prev_tags)
 
             return redirect('myApp:portfolio_detail', portfolio.pk)
         else:
             print(form.errors, formset.errors)
+
     else:
         form = PortfolioForm()
         formset = ImageFormSet(queryset=Images.objects.none())
@@ -588,7 +622,16 @@ def local_detail(request, tag):
     }
     return render(request, 'myApp/local/local_detail.html', context=context)
 
-###################### 2. from pinterest ######################
+
+# def local_create(request, prev_tags):
+#     prev_tags_pk = prev_tags.values_list('pk', flat=True)
+#     tags_pk = Tag.objects.all().values_list('pk', flat=True)
+#     tags_pk_list = list(set(tags_pk) - set(prev_tags_pk))
+#     tags = Tag.objects.filter(pk__in=tags_pk_list)
+#     if tags:
+#         for tag in tags:
+
+    ###################### 2. from pinterest ######################
 
 
 def reference_list(request):
@@ -1030,5 +1073,3 @@ def with_artist_map(request):
     }
 
     return render(request, 'myApp/with_artist/with_artist_map.html', context=ctx)
-
-
