@@ -274,9 +274,9 @@ def portfolio_detail(request, pk):
         Portfolio.objects.filter(pk=pk).update(view_count=portfolio.view_count+1)
         view_counts.save()
     else:
-        if not view_counts.date == timezone.now().date():
+        if not view_counts.date == timezone.localtime().date():
             Portfolio.objects.filter(pk=pk).update(view_count=portfolio.view_count+1)
-            view_counts.date=timezone.now()
+            view_counts.date=timezone.localtime()
             view_counts.save()
         else:
             print(str()+'has already hit his post.\n\n')
