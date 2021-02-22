@@ -422,7 +422,7 @@ def contact_list(request):
         ).distinct()
 
     # infinite scroll
-    contacts_per_page = 3
+    contacts_per_page = 30
     page = request.GET.get('page', 1)
     paginator = Paginator(contacts, contacts_per_page)
     print(contacts)
@@ -508,11 +508,13 @@ def contact_create(request):
             
             print("up")
             # create group object
-            Group.objects.create(
+            group = Group.objects.create(
                 name=contact.title,
                 contact=contact,
                 host=request.user,
             )
+            group.members.add(request.user)
+            group.save()
             print("down")
 
             return redirect('myApp:contact_detail', contact.pk)

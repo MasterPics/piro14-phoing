@@ -122,15 +122,12 @@
                                 {% if request.user in contact.group.pendings.all %}
                                 <button onclick="alert('호스트의 승인을 기다려주세요!'); return false;" class="chat-btn">Requested</button>
                                 {% elif request.user in contact.group.members.all %}
-                                <button onclick="location.href='#'"class="chat-btn">Enter Chatroom</button>
+                                <button onclick="onClickToChatRoom({{contact.pk}})" class="chat-btn">Enter Chatroom</button>
                                 {% elif request.user in contact.group.rejected.all %}
                                 <button onclick="alert('호스트가 신청을 거절했습니다.'); return false;" class="chat-btn">Rejected</button>    
                                 {% else %}
                                 <button onclick="onClickToPendings({{contact.pk}}, {{request.user.pk}})" class="chat-btn">Join</button>
                                 {% endif %}
-
-                    
-            
 
                                     
                                     

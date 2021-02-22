@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Room</title>
-</head>
-<body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
-    {{ room_name|json_script:"room-name" }}
-    <script>
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+const roomName = {{room_name}};
 
         const chatSocket = new WebSocket(
             'ws://'
@@ -19,6 +7,8 @@
             + roomName
             + '/'
         );
+
+        console.log(roomName)
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
@@ -44,6 +34,3 @@
             }));
             messageInputDom.value = '';
         };
-    </script>
-</body>
-</html>

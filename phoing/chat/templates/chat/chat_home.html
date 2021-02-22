@@ -4,6 +4,7 @@
 {% block stylesheet %}
 <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+<link rel="stylesheet" href="{% static 'css/chat_home.css' %}">
 
 <style>
 
@@ -15,39 +16,75 @@
 <div class="group-wrapper">
 
     {% for group in request.user.user_groups.all %}
-    <div class="group">
-        <div class="group-profile">
-            <img src="{{ group.contact.thumbnail.url }}" alt="">
-        </div>
-        <div class="group-name">
-            {{ group.name }}
-        </div>
-        <div class="group-host">
-            {{ group.host }}
-        </div>
-        <div class="group-members">
-            {% for member in group.members.all  %}
-            <span> member.username </span> <br /> 
-            {% endfor %}
-        </div>
-    </div>
-    
-    <div class="pending-list">
-        {% for pending in group.pendings.all  %}
-        Pendings: 
-        <span>{{ pending.username }}</span> <br />
-        {% endfor %}
-    </div>
-    {% endfor %}
 
-    <div class="rejected">
-        Rejected: 
-        {% for rejected in group.rejected.all %}
-        <span>{{ rejected.username }}</span> <br />
-        {% endfor %}
+    <div class="profile">
+
+        <div class="profile-left">
+
+            <img src="{{ group.contact.thumbnail.url }}" alt="">
+            <h1 class="profile-group-name">{{ group.name }}</h1>
+            <a href="{% url 'myApp:profile_detail_other' group.host.pk %}" class="profile-host">{{group.host.username}}</a>
+            <a href="{% url 'myApp:contact_detail' group.contact.pk %}" class="btn profile-to-btn">Contact</a>
+
+        </div>
+
+        <div class="profile-right profile-right-{{group.contact.pk}}">
+            <div class="profile-members">
+                <div class="members-head member-list">
+                    참여자
+                    <hr class="member-list-hr">
+                </div>
+                <div class="members-wrapper">
+                    {% for member in group.members.all  %}
+                    <div class="member members-member member-{{member.pk}}">
+                        <div class="member-info-{{member.pk}} member-info"> {{ member.username }} <span class="middot"> &middot;</span> <span class="member-category">{{ member.category }}</span></div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+            </div>
+            <div class="profile-pendings">
+                <div class="pendings-head member-list">
+                    대기자
+                    <hr class="member-list-hr">
+                </div>
+                <div class="members-wrapper">
+                    {% for member in group.pendings.all  %}
+                    <div class="member pending-member member-{{member.pk}}"> 
+                        <div class="member-info-{{member.pk}} member-info">
+                            {{ member.username }}<span class="middot"> &middot;</span> <span class="member-category">{{ member.category }}</span><br />
+                        </div>
+                        <div class="buttons">
+                            <button onclick="onClickToMembers({{group.contact.pk}}, {{member.pk}})">수락</button>
+                            <button onclick="onClickToReject({{group.contact.pk}}, {{member.pk}} )">거절</button>
+                        </div>
+                        
+                    </div>
+                    {% endfor %}
+                </div>
+                
+            </div>
+
+        </div>
+
+
     </div>
+    <!-- End of profile section -->
+    {% endfor %}
 
     
 </div>
 
+
 {% endblock content%}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/chat_home.js' %}"></script>
+
+{% endblock script %}
+
+
+
