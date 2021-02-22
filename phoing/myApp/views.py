@@ -103,7 +103,7 @@ def profile_detail_posts(request, pk):
 
     category = request.GET.get('category', 'contact')  # CATEGORY
     # sort = request.GET.get('sort', 'recent')  # SORT
-    search = request.GET.get('search', '')  # SEARCH
+    # search = request.GET.get('search', '')  # SEARCH
 
     # CATEGORY
     if category == 'contact':
@@ -184,7 +184,7 @@ def portfolio_list(request):
             'save_users')).order_by('-num_save', '-updated_at')
 
     # infinite scroll
-    portfolios_per_page = 3
+    portfolios_per_page = 6
     page = request.GET.get('page', 1)
     paginator = Paginator(portfolios, portfolios_per_page)
     try:
@@ -445,20 +445,17 @@ def contact_list(request):
             Q(user__username__icontains=search)  # 질문 글쓴이검색
         ).distinct()
 
-
     # infinite scroll
     contacts_per_page = 1
     page = request.GET.get('page', 1)
     paginator = Paginator(contacts, contacts_per_page)
-    
+
     try:
         contacts = paginator.page(page)
     except PageNotAnInteger:
         contacts = paginator.page(1)
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
-
-    
 
     context = {
         'contacts': contacts,
