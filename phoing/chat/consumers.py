@@ -3,6 +3,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from asgiref.sync import async_to_sync
 from .models import Message, Group
+from myApp.models import Contact
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -34,6 +35,11 @@ class ChatConsumer(WebsocketConsumer):
         self.count = 0
         return super().__init__(*args, **kwargs)
 
+    def get_group(self, room_name):
+        contact_pk = int(room_name[4:])
+        group = Contact.objects.get(pk=contact_pk).group
+        return group
+
 
     def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
@@ -63,8 +69,8 @@ class ChatConsumer(WebsocketConsumer):
         
     # data: info related with group
     def fetch_old_messages(self, data): 
-        name = data["name"]
-        group = Group.objects.get(name=name)
+        room_name = data["room_name"]
+        group = self.get_group(room_name)
         messages = group.last_10_messages(times=self.count)
         if messages:
             self.count += 1
@@ -78,33 +84,53 @@ class ChatConsumer(WebsocketConsumer):
 
     def fetch_messages(self, data):
         self.count = 0
-        name = data["name"]
-        group = Group.objects.get(name=name)
+        room_name = data["room_name"]
+        group = self.get_group(room_name)
         messages = group.last_10_messages(times=self.count)
         content = {"command": "messages", "messages": self.messages_to_json(messages)}
         self.send_message(content)
 
 
-    def groups_to_json(self, groups):
-        result = [group.to_json() for group in groups]
-        return results
+    # def groups_to_json(self, groups):
+    #     result = [group.to_json() for group in groups]
+    #     return results
 
-    def fetch_groups(self, data):
-        user_name = data["username"]
-        user = User.objects.get(username=user_name)
-        groups = user.all_groups.all()
-        content = {
-            "command" : "groups",
-            "groups" : self.groups_to_json(groups),
-        }
-        self.send_message(content)    
+
+    
+
+    # def fetch_group(self, data):
+    #     user_name = data["username"]
+    #     roon_name = data["room_name"]
+    #     contact_pk = int(room_name[4:])
+    #     user = User.objects.get(username=user_name)
+    #     group = Contact.objects.get(pk=contact_pk).group
+    #     content = {
+    #         "command" : "groups",
+    #         "group" : group.to_json()
+    #     }
+    #     self.send_message(content)    
+
+
+
+    def new_message(self, data):
+        author = data["from"]
+        room_name = data["grp_name"]
+        author = User.objects.get(username=author)
+        group = self.get_group(room_name)
+        message = Messages.objects.create(
+            author=author,
+            group=group,
+            message_text=data["message"],
+        )
+        content = {"command": "new_message", "message": self.message_to_json(message)}
+        return self.send_chat_message(content)
 
     def new_message(self, data):
         author_name = data["from"]
-        group_name = data["name"]
+        room_name = data["grp_name"]
         author = User.objects.get(username=author_name)
-        group = Group.objects.get(name=group_name)
-        message = Messages.objects.create(
+        group = self.get_group(room_name)
+        message = Message.objects.create(
             group=group,
             author=author,
             text=data["message"],
@@ -116,7 +142,7 @@ class ChatConsumer(WebsocketConsumer):
         "fetch_old_messages": fetch_old_messages,
         "fetch_messages": fetch_messages,
         "new_message": new_message,
-        "fetch_groups" : fetch_groups,
+        # "fetch_group" : fetch_group,
     }
     
 

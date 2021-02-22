@@ -41,8 +41,8 @@ class Group(models.Model):
 
     def last_10_messages(self, times=0):
         if not times:
-            return list(group.messages.order_by("created_at"))[-30:0]
-        return list(group.messages.order_by("created_at"))[-30*(times+1):(-30*times)]
+            return list(self.messages.order_by("created_at"))[-30:0]
+        return list(self.messages.order_by("created_at"))[-30*(times+1):(-30*times)]
 
     def to_json(self):
         last_message = self.messages.last()
@@ -68,8 +68,8 @@ class Message(models.Model):
             "author": self.author.username,
             "author_profile_img": self.author.image.url,
             "group": self.group.name,
-            "content": message.text,
-            "timestamp": str(message.created_at),
+            "content": self.text,
+            "timestamp": str(self.created_at),
         }
 
     # def get_absolute_url(self):
