@@ -4,208 +4,207 @@
 {% block stylesheet %}
 <script src="https://kit.fontawesome.com/9ada8679dc.js" crossorigin="anonymous"></script>
 <style>
-     /*category btn*/
-
-     * {
+    /*category btn*/
+    /* 
+    * {
         box-sizing: border-box;
         scroll-behavior: smooth;
-        color:black;
-    
-        }
-        
-        .dropdown .btn {
-            width: 150px;
-            height: 50px;
-            border: 1px solid #333;
-            font-family: "Cinzel", serif;
-            font-size: 15px;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 0;
-            transition: 1s;
-        }
-        
-        .dropdown .btn::before,
-        .dropdown .btn::after {
-            position: absolute;
-            background: #fff;
-            z-index: -1;
-            transition: 1s;
-            content: "";
-        }
-        
-        .dropdown .btn::before {
-            height: 50px;
-            width: 130px;
-        }
-        
-        .dropdown .btn::after {
-            width: 150px;
-            height: 30px;
-        }
-        
-        .dropdown .noselect {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        
-        .dropdown .btn:hover::before {
-            width: 0px;
-            background: #fff;
-        }
-        
-        .dropdown .btn:hover::after {
-            height: 0px;
-            background: #fff;
-        }
-        
-        .dropdown .btn:hover {
-            background: #fff;
-        }
-    
-            /* Dropdown Button */
-            .dropbtn {
-                padding: 16px;
-            }
-            
-            /* The container <div> - needed to position the dropdown content */
-            .dropdown {
-                position: relative;
-                display: inline-block;
-            }
-            
-            /* Dropdown Content (Hidden by Default) */
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                min-width: 160px;
-                z-index: 1;
-                margin-left:11px;
-            }
-            
-            /* Links inside the dropdown */
-            .dropdown-content a {
-                color: black;
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-                background-color: white;
-                border:#ddd solid 1px;
-            }
-            
-            /* Change color of dropdown links on hover */
-            .dropdown-content a:hover {background-color: #ddd;}
-            
-            /* Show the dropdown menu on hover */
-            .dropdown:hover .dropdown-content {display: block;}
-            
-        
-            /* 무한스크롤 */
-    
+        color: black;
+
+    }
+
+    .dropdown .btn {
+        width: 150px;
+        height: 50px;
+        border: 1px solid #333;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 0;
+        transition: 1s;
+    }
+
+    .dropdown .btn::before,
+    .dropdown .btn::after {
+        position: absolute;
+        background: #fff;
+        z-index: -1;
+        transition: 1s;
+        content: "";
+    }
+
+    .dropdown .btn::before {
+        height: 50px;
+        width: 130px;
+    }
+
+    .dropdown .btn::after {
+        width: 150px;
+        height: 30px;
+    }
+
+    .dropdown .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .dropdown .btn:hover::before {
+        width: 0px;
+        background: #fff;
+    }
+
+    .dropdown .btn:hover::after {
+        height: 0px;
+        background: #fff;
+    }
+
+    .dropdown .btn:hover {
+        background: #fff;
+    }
+
+    /* Dropdown Button */
+    .dropbtn {
+        padding: 16px;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        min-width: 160px;
+        z-index: 1;
+        margin-left: 11px;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        background-color: white;
+        border: #ddd solid 1px;
+    }
+
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {
+        background-color: #ddd;
+    }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+
+    /* 무한스크롤 */
+
     .loading,
     .loading:after {
-      border-radius: 50%;
-      width: 2em;
-      height: 2em;
+        border-radius: 50%;
+        width: 2em;
+        height: 2em;
     }
-    
+
     .loading {
-      display: none;
-      margin: 60px auto;
-      font-size: 10px;
-      position: relative;
-      text-indent: -9999em;
-      border-top: 0.3em solid rgba(160, 160, 160, 0.2);
-      border-right: 0.3em solid rgba(160, 160, 160, 0.2);
-      border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
-      border-left: 0.3em solid rgb(0, 0, 0);
-      -webkit-transform: translateZ(0);
-      -ms-transform: translateZ(0);
-      transform: translateZ(0);
-      -webkit-animation: load8 0.6s infinite linear;
-      animation: load8 0.6s infinite linear;
+        display: none;
+        margin: 60px auto;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+        border-top: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-right: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-left: 0.3em solid rgb(0, 0, 0);
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation: load8 0.6s infinite linear;
+        animation: load8 0.6s infinite linear;
     }
-    
+
     .loading.show {
-      opacity: 1;
+        opacity: 1;
     }
-    
+
     @-webkit-keyframes load8 {
-      0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-      }
-    
-      100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-      }
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
     }
-    
+
     @keyframes load8 {
-      0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-      }
-    
-      100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-      }
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
     }
-    
+
     /* Portfolio List CSS */
     a {
         text-decoration: none;
         color: black;
-      }
-      
+    }
+
     .portfolio_list .bar {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin: 3% 5%;
-      }
+    }
 
 
-      .bar_right{
+    .bar_right {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-    
+
     .bar .sort {
-    margin-right: 10px;
-  }
-  
-  .bar .sort select {
-    border: 0;
-    padding: 5px;
-    border: solid 1px black;
-    border-radius: 3px;
-  }
-  
+        margin-right: 10px;
+    }
 
-  .bar .create i {
-    font-size: 2rem;
-    font-weight: lighter;
-    color: rgb(75, 75, 75);
-  }
+    .bar .sort select {
+        border: 0;
+        padding: 5px;
+        border: solid 1px black;
+        border-radius: 3px;
+    }
 
 
-
-
-
-</style>
+    .bar .create i {
+        font-size: 2rem;
+        font-weight: lighter;
+        color: rgb(75, 75, 75);
+    }
+</style> */
 {% endblock stylesheet %}
 
 {% block content %}
@@ -215,7 +214,10 @@
         <div class="bar_left">
             <!--category-->
             <div class="dropdown">
-                <div class="dropbtn"><div class="btn"><span class="noselect"><a href="javascript:void(0)" onclick="onClickLink('all')">Category</a></span></div></div>
+                <div class="dropbtn">
+                    <div class="btn"><span class="noselect"><a href="javascript:void(0)"
+                                onclick="onClickLink('all')">Category</a></span></div>
+                </div>
                 <div class="dropdown-content">
                     <a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a>
                     <a href="javascript:void(0)" onclick="onClickLink('model')">Model</a>
@@ -251,11 +253,11 @@
                 {% endif %}
             </div>
         </div>
-    </div>    
-    
+    </div>
 
 
-    
+
+
 
 
     <div>
@@ -265,9 +267,11 @@
                 <div class="portfolio_owner">
                     <a href="{% url 'myApp:profile_detail_other' portfolio.user.pk %}">
                         {% if user.image  %}
-                        <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" width="20%">    
+                        <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" width="20%">
                         {% else %}
-                        <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
+                        <img class="profile_image"
+                            src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                            alt="profile_image" width="20%">
                         {% endif %}
                         <p>{{portfolio.user.username}}</p>
                         <p>{{portfolio.user.category}}</p>
@@ -303,19 +307,17 @@
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        
+
+
+        {% if portfolios.has_next %}
+        <a class="infinite-more-link" href="?page={{ portfolios.next_page_number }}">
+            <div class="loading" style="display: none;">Loading...</div>
+        </a>
+        {% endif %}
     </div>
-    {% endfor %}
-
 </div>
-
-{% if portfolios.has_next %}
-<a class="infinite-more-link" href="?page={{ portfolios.next_page_number }}">
-    <div class="loading" style="display: none;">Loading...</div>
-</a>
-{% endif %}
-
 
 <!--filter form-->
 <div style="height: 0;">
@@ -326,7 +328,6 @@
         <input type="hidden" id="sort" name="sort" value="{{ sort }}">
     </form>
 </div>
-
 {% endblock content%}
 
 
@@ -342,7 +343,6 @@
 <script src="{% static 'js/infinite.min.js' %}"></script>
 
 <script type='text/javascript'>
-
     let infinite = new Waypoint.Infinite({
 
         element: $('.grid')[0],
@@ -368,7 +368,7 @@
     });
 
     //
-    
+
 
     // like
     const onClickLike = async (portfolio_id) => {
