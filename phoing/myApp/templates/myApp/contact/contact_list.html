@@ -367,7 +367,6 @@
         <div class="grid">
 
             {% for contact in contacts %}
-            {% for i in "x"|rjust:"10" %}
             <div class="grid-item">
                 <div class=" item_top contact-{{contact.pk}}">
                     <div>
@@ -424,7 +423,6 @@
 
                 </div>
             </div>
-            {% endfor %}
             {% endfor %}
 
         </div>
