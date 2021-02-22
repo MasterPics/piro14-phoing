@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Alarm</title>
+</head>
+<body>
+    <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
+</body>
+<script>
+    username='{{ username }}';
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/test/'+username+'/');
+
+    chatSocket.onmessage = function(e) {
+        console.log(e);
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        document.querySelector('#chat-log').value += (message + '\n');
+    };
+
+    chatSocket.onopen=function (e) {
+      console.log("연결 성공");
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+</script>
+</html>
