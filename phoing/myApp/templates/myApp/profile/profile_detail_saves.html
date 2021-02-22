@@ -196,6 +196,49 @@
     }
 
 
+    /**/
+    
+    .grid-item {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-bottom: 20px;
+        margin-top:20px;
+    }
+
+
+    .item_top div {
+        padding: 10px;
+    }
+
+    .item_top .title{
+        font-weight: bolder;
+    }
+
+    .item_top .date{
+        display: flex;
+        justify-content: flex-end;
+    }
+
+
+
+    .thumbnail_desc img {
+        width: 20rem;
+    }
+
+    .item_bottom {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        border-top: rgb(221, 221, 221) solid 1px;
+        border-bottom: rgb(180, 180, 180) solid 2px;
+        padding: 15px;
+
+    }
+
+    .item_bottom>div {
+        cursor: pointer;
+    }
+
+
 
 </style>
 
@@ -262,49 +305,52 @@
                     {% for i in "x"|rjust:"10" %}
                     <div class="grid-item">
                         {% if user in post.save_users.all %}
-    {% if post.classname == "Contact" %}    
-
-    <div class="item_top">
-        <a href="{% url 'myApp:contact_detail' post.pk %}">
-            <div>{{ post.title }}</div>
-            <img src="{{ post.thumbnail.url }}" alt="">
-            <div>{{post.created_at}}</div>
-        </a>
-    </div>
-    <div class="item_bottom">
-        <div class="save save-{{post.id}}">
-            {% if request_user in post.save_users.all %}
-            <i class="fas fa-bookmark" style="color:red" type="submit"
-                onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
-            {% else %}
-            <i class="far fa-bookmark" style="color:red" type="submit"
-                onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
-            {% endif %}
-            <span class="save__content">{{ post.save_users.count }}</span>
-        </div>
-    </div>
-    {% elif post.classname == "Portfolio" %}
-    <div class="item_top">
-        <a href="{% url 'myApp:portfolio_detail' post.pk %}">
-            <div>{{ post.title }}</div>
-            <img src="{{ post.thumbnail.url }}" alt="">
-            <div>{{post.created_at}}</div>
-        </a>
-    </div>
-    <div class="item_bottom">
-        <div class="save save-{{post.id}}">
-            {% if request_user in post.save_users.all %}
-            <i class="fas fa-bookmark" style="color:red" type="submit"
-                onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
-            {% else %}
-            <i class="far fa-bookmark" style="color:red" type="submit"
-                onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
-            {% endif %}
-            <span class="save__content">{{ post.save_users.count }}</span>
-        </div>
-    </div>
-    {% endif %}
-{% endif %}
+                        {% if post.classname == "Contact" %}    
+                        <div>
+                        <div class="item_top">
+                            <a href="{% url 'myApp:contact_detail' post.pk %}">
+                                <div class="title"><div>{{ post.title }}</div></div>
+                                <div class="thumbnail_desc"><img src="{{ post.thumbnail.url }}" alt=""></div>
+                                <div class="date">{{post.created_at}}</div>
+                            </a>
+                        </div>
+                        <div class="item_bottom">
+                            <div class="save save-{{post.id}}">
+                                {% if request_user in post.save_users.all %}
+                                <i class="fas fa-bookmark" type="submit"
+                                    onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
+                                {% else %}
+                                <i class="far fa-bookmark" type="submit"
+                                    onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
+                                {% endif %}
+                                <span class="save__content">{{ post.save_users.count }}</span>
+                            </div>
+                        </div>
+                        </div>
+                        {% elif post.classname == "Portfolio" %}
+                        <div>
+                        <div class="item_top">
+                            <a href="{% url 'myApp:portfolio_detail' post.pk %}">
+                                <div class="title"></div>{{ post.title }}</div></div>
+                                <div class="thumbnail_desc"><img src="{{ post.thumbnail.url }}" alt=""></div>
+                                <div class="date">{{post.created_at}}</div>
+                            </a>
+                        </div>
+                        <div class="item_bottom">
+                            <div class="save save-{{post.id}}">
+                                {% if request_user in post.save_users.all %}
+                                <i class="fas fa-bookmark"  type="submit"
+                                    onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
+                                {% else %}
+                                <i class="far fa-bookmark" type="submit"
+                                    onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
+                                {% endif %}
+                                <span class="save__content">{{ post.save_users.count }}</span>
+                            </div>
+                        </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
                     </div>
                     {% endfor %}
                     {% endfor %}
