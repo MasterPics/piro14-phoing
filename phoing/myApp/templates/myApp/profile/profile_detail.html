@@ -165,10 +165,13 @@
 
 <div class="container">
     <div class="choose">
+        {% if request.user.pk == user.pk %}
         <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
         <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
-        {% if request_user.username == user.username %}
         <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}"><div class="btn"><span class="noselect">My Saves</span></div></a>
+        {% else %}
+        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
+        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
         {% endif %}
     </div>
     <div class="profile_container">
@@ -184,10 +187,8 @@
 
 
         </div>
-        {% if request_user.username == user.username %}
-        <div class="profile_button">
-            <a class="edit_btn" href="{% url 'myApp:profile_update' user.pk %}">프로필 수정</a> 
-            <a class="delete_btn" href="{% url 'myApp:profile_delete' user.pk %}">탈퇴</a>
+
+        
         <div class="profile_info_container">
             <ul>
                 <li>
@@ -220,13 +221,15 @@
                 </li>
             </ul>
         </div>
-        {% endif %}
     </div>
+
+    {% if request_user.username == user.username %}
     <div class="profile_button">
         <a class="edit_btn" href="{% url 'myApp:profile_update' user.pk %}">프로필 수정</a>
         <a class="edit_btn" href="{% url 'myApp:profile_update_password' user.pk %}">비밀번호 변경</a>
         <a class="delete_btn" href="{% url 'myApp:profile_delete' user.pk %}">탈퇴</a>
     </div>
-</div>
+    {% endif %}
+
 </div>
 {% endblock content%}

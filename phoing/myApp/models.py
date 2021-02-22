@@ -15,6 +15,8 @@ import datetime
 
 from place.models import Location
 from django_mysql.models import ListCharField
+from django.utils import timezone
+
 
 
 class Tag(models.Model):
@@ -166,9 +168,9 @@ class Portfolio(models.Model):
     desc = models.TextField()
 
     # specific field
+    view_count = models.PositiveIntegerField(default=0)
     like_users = models.ManyToManyField(
         to=User, related_name='portfolio_like_users', blank=True)
-    view_count = models.PositiveIntegerField(default=0)
     tag_str = models.CharField(max_length=50, blank=True)
     tags = models.ManyToManyField(Tag, related_name='portfolios', blank=True)
 
@@ -291,5 +293,5 @@ class Place(models.Model):
 
 class ViewCount(models.Model):
     ip=models.CharField(max_length=15, default=None, null=True)
-    post=models.ForeignKey(Portfolio, default=None, null=True)
+    post=models.ForeignKey(Portfolio, default=None, null=True, related_name='view_counts', on_delete=models.CASCADE)
     date=models.DateField(default=timezone.now(), null=True, blank=True)
