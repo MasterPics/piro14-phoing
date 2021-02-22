@@ -31,6 +31,10 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 
+# get ip
+# from ipware.ip import get_ip
+
+
 
 def main_list(request):
     ctx = {}
@@ -186,27 +190,10 @@ def post_create(request):
 
 ###################### portfolio section ######################
 
-
+# @api_view(['GET'])
 def portfolio_list(request):
     portfolios = Portfolio.objects.all().order_by("?")
     request_user = request.user
-
-    # 조회수
-
-    try: 
-        view_counts=ViewCount.objects.get(ip=ip, post=post)
-    except Exception as e:
-        print(e)
-        view_counts=ViewCount(ip=ip, post=post)
-        Portfolio.objects.filter(pk=pk).update(view_counts=post.view_counts+1)
-        view_counts.save()
-    else:
-        if not view_counts.date=timezone.now().date():
-            Portfolio.objects.filter(pk=pk).update(view_counts=post.view_counts+1)
-            view_counts.date=timezone.now()
-            view_counts.save()
-            else:
-                print(str()+'has already hit his post.\n\n')
 
     # category 분류 # order_by("?"): random 으로 선택
     category = request.GET.get('category', 'all')
@@ -268,6 +255,33 @@ def portfolio_detail(request, pk):
 
     portfolio_owner = portfolio.user  # 게시글 작성자
     request_user = request.user  # 로그인한 유저
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    print(ip)
+
+    # 조회수
+
+    try: 
+        view_counts=ViewCount.objects.get(ip=ip, post=portfolio)
+    except Exception as e:
+        print(e)
+        view_counts=ViewCount(ip=ip, post=portfolio)
+        Portfolio.objects.filter(pk=pk).update(view_count=portfolio.view_count+1)
+        view_counts.save()
+    else:
+        if not view_counts.date == timezone.now().date():
+            Portfolio.objects.filter(pk=pk).update(view_count=portfolio.view_count+1)
+            view_counts.date=timezone.now()
+            view_counts.save()
+        else:
+            print(str()+'has already hit his post.\n\n')
+
+
+
     ctx = {'portfolio': portfolio,
            'images': images,
            'tags': tags,
