@@ -203,22 +203,13 @@
         margin-right: 15px;
     }
 
-    .bar .contact_create i {
+    .bar .create i {
         font-size: 2rem;
         font-weight: lighter;
         color: rgb(75, 75, 75);
     }
 
-    .grid-item{
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
-
-
-    .item_top > div{
-        padding:10px;
-    }
-
-    .portfolio_owner {
+    .portfolio_owner{
         display: flex;
         align-items: center;
         border-bottom: rgb(221, 221, 221) 1px solid;
@@ -243,36 +234,33 @@
         object-fit: contain;
     }
 
+    .item-top > div{
+        padding:10px;
+    }
 
-
+    
     .thumbnail_desc img {
         width: 20rem;
     }
 
-    .pay_date {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+    .grid-item{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-bottom:20px;
     }
 
-    .pay_date p{
-        text-align: end;
-        line-height: 1.5rem;
-    }
-
-    .item_bottom {
+    .portfolio_info{
         display: flex;
         align-items: center;
         justify-content: space-between;
         border-top: rgb(221, 221, 221) solid 1px;
-        border-bottom: rgb(180, 180, 180) solid 2px;
         padding:15px;
-        
     }
-
-    .item_bottom > div{
+    
+    .portfolio_info > div{
         cursor:pointer;
     }
+
+
 
 /*top button*/
 
@@ -354,30 +342,36 @@
         <div class="grid">
             {% for portfolio in portfolios %}
             <div class="grid-item">
-                <div>
-                    <a href="{% url 'myApp:profile_detail_other' portfolio.user.pk %}">
-                        <div class="portfolio_owner">
-                                <div class="user_img">
-                                    {% if user.image  %}
-                                    <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" >
-                                    {% else %}
-                                    <img class="profile_image"
-                                        src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
-                                        alt="profile_image" >
-                                    {% endif %}
-                                </div>
-                                <div>user: {{portfolio.user.username}}</div>
-                                <div>category: {{portfolio.user.category}}</div>
-                                
-                        </div>
-                    </a>
-                </div>
-                <div class="portfolio_profile">
-                    <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
-                        <p>{{portfolio.title}}</p>
-                        <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
-                    </a>
-                </div>
+                <div class='item-top'>
+                    <div>
+                        <a href="{% url 'myApp:profile_detail_other' portfolio.user.pk %}">
+                            <div class="portfolio_owner">
+                                    <div class="user_img">
+                                        {% if user.image  %}
+                                        <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" >
+                                        {% else %}
+                                        <img class="profile_image"
+                                            src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                                            alt="profile_image" >
+                                        {% endif %}
+                                    </div>
+                                    <div>user: {{portfolio.user.username}}</div>
+                                    <div>category: {{portfolio.user.category}}</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="title">
+                        <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
+                            <div style="font-weight:bolder;">{{portfolio.title}}</div>
+                        </a>
+                    </div>
+
+                    <div class="thumbnail_desc">
+                        <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
+                            <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
+                        </a>
+                    </div>
+                </div>    
                 <div class="portfolio_info">
                     <div class="like like-{{portfolio.id}}">
                         {% if request_user in portfolio.like_users.all %}
