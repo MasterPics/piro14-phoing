@@ -137,7 +137,7 @@
     }
 
     .container {
-    margin: 3% 4%;
+        margin: 3% 4%;
     }
 
     .choose {
@@ -154,12 +154,12 @@
     }
 
 
-    .dropdown span{
+    .dropdown span {
         font-weight: bolder;
     }
 
-    .bar{
-        position:relative;
+    .bar {
+        position: relative;
     }
 
     .post_create {
@@ -167,24 +167,24 @@
         top: 9;
         right: 10;
         font-size: 2em;
-    } 
+    }
 
 
-    .grid-item{
+    .grid-item {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
 
 
-    .item_top >div{
-        padding:10px;
+    .item_top>div {
+        padding: 10px;
     }
 
     .contact_owner {
         display: flex;
         align-items: center;
         border-bottom: rgb(221, 221, 221) 1px solid;
-        padding-top:10px;
-        padding-bottom:10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 
     .contact_owner div {
@@ -216,7 +216,7 @@
         justify-content: space-between;
     }
 
-    .pay_date p{
+    .pay_date p {
         text-align: end;
         line-height: 1.5rem;
     }
@@ -227,32 +227,41 @@
         justify-content: space-between;
         border-top: rgb(221, 221, 221) solid 1px;
         border-bottom: rgb(180, 180, 180) solid 2px;
-        padding:15px;
-        
+        padding: 15px;
+
     }
 
-    .item_bottom > div{
-        cursor:pointer;
+    .item_bottom>div {
+        cursor: pointer;
     }
 
     /*top button*/
 
     #myBtn {
-        display: none; /* Hidden by default */
-        position: fixed; /* Fixed/sticky position */
-        bottom: 20px; /* Place the button at the bottom of the page */
-        right: 30px; /* Place the button 30px from the right */
-        z-index: 99; /* Make sure it does not overlap */
-        color: rgb(0, 0, 0); /* Text color */
-        cursor: pointer; /* Add a mouse pointer on hover */
-        font-size: 2em; /* Increase font size */
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Fixed/sticky position */
+        bottom: 20px;
+        /* Place the button at the bottom of the page */
+        right: 30px;
+        /* Place the button 30px from the right */
+        z-index: 99;
+        /* Make sure it does not overlap */
+        color: rgb(0, 0, 0);
+        /* Text color */
+        cursor: pointer;
+        /* Add a mouse pointer on hover */
+        font-size: 2em;
+        /* Increase font size */
         border-radius: 100%;
         background-color: white;
-      }
-      
-      #myBtn i:hover {
-        color: rgb(58, 58, 58); /* Add a dark-grey background on hover */
-      }
+    }
+
+    #myBtn i:hover {
+        color: rgb(58, 58, 58);
+        /* Add a dark-grey background on hover */
+    }
 </style>
 {% endblock stylesheet %}
 
@@ -260,12 +269,22 @@
 
 <div class="choose">
     {% if request.user.pk == user.pk %}
-    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
-    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
-    <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}"><div class="btn"><span class="noselect">My Saves</span></div></a>
+    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
+        <div class="btn"><span class="noselect">My Profile</span></div>
+    </a>
+    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
+        <div class="btn"><span class="noselect">My Posts</span></div>
+    </a>
+    <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}">
+        <div class="btn"><span class="noselect">My Saves</span></div>
+    </a>
     {% else %}
-    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
-    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}"><div class="btn"><span class="noselect">My Posts</span></div></a>
+    <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
+        <div class="btn"><span class="noselect">My Profile</span></div>
+    </a>
+    <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
+        <div class="btn"><span class="noselect">My Posts</span></div>
+    </a>
     {% endif %}
 </div>
 
@@ -286,11 +305,11 @@
     </div>
     {% endif %}
 
-        <!--post_list-->
-        <div class="content">
-            <!---->
-            <div class="infinite-container">
-                {% for post in posts %}
+    <!--post_list-->
+    <div class="content">
+        <!---->
+        <div class="infinite-container">
+            {% for post in posts %}
 
                     {% if post.classname == "Contact" %}
                     <div class="infinite-item">
@@ -335,229 +354,231 @@
                                     <span class="save__content">{{ post.save_users.count }}</span>
                                 </div>
                             </div>
-                            <div>{{post.created_at}}</div>
+                        </div>
+                        <div>{{post.created_at}}</div>
                     </div>
 
                     {% endif %}
-                
-                {% endfor %}
+
+                    {% endfor %}
+                </div>
             </div>
+
+            <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
+
+            {% if posts.has_next %}
+            <a class="infinite-more-link" href="?page={{ posts.next_page_number }}">
+                <div class="loading" style="display: none;"></div>
+            </a>
+            {% endif %}
         </div>
 
-        <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
-
-        {% if posts.has_next %}
-        <a class="infinite-more-link" href="?page={{ posts.next_page_number }}">
-            <div class="loading" style="display: none;"></div>
-        </a>
-        {% endif %}
+        <!--filter form-->
+        <div style="height: 0;">
+            <form id="searchForm" method="get" action="{% url 'myApp:profile_detail_posts' user.pk %}">
+                <!--category-->
+                <input type="hidden" id="category" name="category" value="{{ category }}">
+            </form>
+        </div>
     </div>
-
-    <!--filter form-->
-    <div style="height: 0;">
-        <form id="searchForm" method="get" action="{% url 'myApp:profile_detail_posts' user.pk %}">
-            <!--category-->
-            <input type="hidden" id="category" name="category" value="{{ category }}">
-        </form>
-    </div>
-</div>
-{% endblock content %}
+    {% endblock content %}
 
 
 
-<!--js-->
-{% block script %}
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!--js-->
+    {% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
 
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-<script src="{% static 'js/infinite.min.js' %}"></script>
-<script src="{% static 'js/contact.js' %}" defer></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/infinite.min.js' %}"></script>
+    <script src="{% static 'js/contact.js' %}" defer></script>
 
-<script>
+    <script>
+        //top_button
+        //Get the button:
+        mybutton = document.getElementById("myBtn");
 
-    //top_button
-    //Get the button:
-    mybutton = document.getElementById("myBtn");
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () {
+            scrollFunction()
+        };
 
-    // When the user scrolls down 20px from the top of the document, show the button
-    window.onscroll = function() {scrollFunction()};
-
-    function scrollFunction() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        mybutton.style.display = "block";
-    } else {
-        mybutton.style.display = "none";
-    }
-    }
-
-    // When the user clicks on the button, scroll to the top of the document
-    function topFunction() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    }
-
-    //
-    let infinite = new Waypoint.Infinite({
-        element: $('.grid')[0],
-        items: '.grid-item',
-        onBeforePageLoad: function () {
-            $('.loading').show();
-        },
-        onAfterPageLoad: function () {
-            $('.loading').hide();
-            let msnry = new Masonry('.grid', {
-                itemSelector: '.grid-item',
-                gutter: 10,
-            })
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
         }
-    });
-    let msnry = new Masonry('.grid', {
-        // optionsW
-        itemSelector: '.grid-item',
-        gutter: 10,
-        // columnWidth: 200
-    });
 
-    //Save
-    const onClickContactSave = async (contact_id) => {
-        try {
-            console.log("here")
-            // const url = '/contact/';
-            // const {
-            //     data
-            // } = await axios.post(url, {
-            //     contact_id,
-            // })
-            // modify(data.contact_id, data.is_saved)
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
 
-            const options = {
-                url: '/contact/save/',
-                method: 'POST',
-                data: {
-                    contact_id: contact_id,
+        //
+        let infinite = new Waypoint.Infinite({
+            element: $('.grid')[0],
+            items: '.grid-item',
+            onBeforePageLoad: function () {
+                $('.loading').show();
+            },
+            onAfterPageLoad: function () {
+                $('.loading').hide();
+                let msnry = new Masonry('.grid', {
+                    itemSelector: '.grid-item',
+                    gutter: 10,
+                })
+            }
+        });
+        let msnry = new Masonry('.grid', {
+            // optionsW
+            itemSelector: '.grid-item',
+            gutter: 10,
+            // columnWidth: 200
+        });
+
+        //Save
+        const onClickContactSave = async (contact_id) => {
+            try {
+                console.log("here")
+                // const url = '/contact/';
+                // const {
+                //     data
+                // } = await axios.post(url, {
+                //     contact_id,
+                // })
+                // modify(data.contact_id, data.is_saved)
+
+                const options = {
+                    url: '/contact/save/',
+                    method: 'POST',
+                    data: {
+                        contact_id: contact_id,
+                    }
                 }
-            }
-            const response = await axios(options)
-            const responseOK = response && response.status === 200 && response.statusText === 'OK'
-            if (responseOK) {
-                const data = response.data
-                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                modifyContact(data.contact_id, data.is_saved)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const modifyContact = (contact_id, is_saved) => {
-        const save = document.querySelector(`.save-${contact_id} i`);
-        const save_content = document.querySelector(`.save-${contact_id} .save__content`)
-        const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
-        console.log(num)
-        if (is_saved === true) {
-
-            save.className = "fas fa-bookmark";
-
-            const count = Number(num) + 1;
-            save_content.innerHTML = count
-        } else {
-            save.className = "far fa-bookmark";
-
-            const count = Number(num) - 1;
-            save_content.innerHTML = count
-        }
-
-    }
-
-
-
-    //Save
-    const onClickPortfolioSave = async (portfolio_id) => {
-        try {
-            // const url = '/portfolio/';
-            // const {
-            //     data
-            // } = await axios.post(url, {
-            //     portfolio_id,
-            // })
-            // modify(data.portfolio_id, data.is_saved)
-
-            const options = {
-                url: '/portfolio/save/',
-                method: 'POST',
-                data: {
-                    portfolio_id: portfolio_id,
+                const response = await axios(options)
+                const responseOK = response && response.status === 200 && response.statusText === 'OK'
+                if (responseOK) {
+                    const data = response.data
+                    //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                    modifyContact(data.contact_id, data.is_saved)
                 }
+            } catch (error) {
+                console.log(error)
             }
-            const response = await axios(options)
-            const responseOK = response && response.status === 200 && response.statusText === 'OK'
-            if (responseOK) {
-                const data = response.data
-                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                modifyPortfolio(data.portfolio_id, data.is_saved)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const modifyPortfolio = (portfolio_id, is_saved) => {
-        const save = document.querySelector(`.save-${portfolio_id} i`);
-        const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
-        const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
-        console.log(num)
-        if (is_saved === true) {
-            console.log("here1")
-
-            save.className = "fas fa-bookmark";
-
-            const count = Number(num) + 1;
-            save_content.innerHTML = count
-        } else {
-            console.log("here2")
-            save.className = "far fa-bookmark";
-
-            const count = Number(num) - 1;
-            save_content.innerHTML = count
         }
 
-    }
+        const modifyContact = (contact_id, is_saved) => {
+            const save = document.querySelector(`.save-${contact_id} i`);
+            const save_content = document.querySelector(`.save-${contact_id} .save__content`)
+            const num = save_content.innerText; // [ {{ contact.save_users.count }} ]
+            console.log(num)
+            if (is_saved === true) {
+
+                save.className = "fas fa-bookmark";
+
+                const count = Number(num) + 1;
+                save_content.innerHTML = count
+            } else {
+                save.className = "far fa-bookmark";
+
+                const count = Number(num) - 1;
+                save_content.innerHTML = count
+            }
+
+        }
+
+
+
+        //Save
+        const onClickPortfolioSave = async (portfolio_id) => {
+            try {
+                // const url = '/portfolio/';
+                // const {
+                //     data
+                // } = await axios.post(url, {
+                //     portfolio_id,
+                // })
+                // modify(data.portfolio_id, data.is_saved)
+
+                const options = {
+                    url: '/portfolio/save/',
+                    method: 'POST',
+                    data: {
+                        portfolio_id: portfolio_id,
+                    }
+                }
+                const response = await axios(options)
+                const responseOK = response && response.status === 200 && response.statusText === 'OK'
+                if (responseOK) {
+                    const data = response.data
+                    //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                    modifyPortfolio(data.portfolio_id, data.is_saved)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        const modifyPortfolio = (portfolio_id, is_saved) => {
+            const save = document.querySelector(`.save-${portfolio_id} i`);
+            const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
+            const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
+            console.log(num)
+            if (is_saved === true) {
+                console.log("here1")
+
+                save.className = "fas fa-bookmark";
+
+                const count = Number(num) + 1;
+                save_content.innerHTML = count
+            } else {
+                console.log("here2")
+                save.className = "far fa-bookmark";
+
+                const count = Number(num) - 1;
+                save_content.innerHTML = count
+            }
+
+        }
 
 
 
 
-    //category
-    const onClickLink = (category) => {
-        const categoryIdInput = document.querySelector('#category')
-        categoryIdInput.value = category
-        const searchForm = document.querySelector('#searchForm')
-        searchForm.submit()
-    }
+        //category
+        const onClickLink = (category) => {
+            const categoryIdInput = document.querySelector('#category')
+            categoryIdInput.value = category
+            const searchForm = document.querySelector('#searchForm')
+            searchForm.submit()
+        }
 
-    //search
-    const searchButton = document.querySelector('.btn_search')
-    searchButton.addEventListener('click', () => {
-        const searchClassInput = document.querySelector('.search')
-        const searchIdInput = document.querySelector('#search')
-        const searchForm = document.querySelector('#searchForm')
-        searchIdInput.value = searchClassInput.value
-        searchForm.submit()
-    })
+        //search
+        const searchButton = document.querySelector('.btn_search')
+        searchButton.addEventListener('click', () => {
+            const searchClassInput = document.querySelector('.search')
+            const searchIdInput = document.querySelector('#search')
+            const searchForm = document.querySelector('#searchForm')
+            searchIdInput.value = searchClassInput.value
+            searchForm.submit()
+        })
 
 
-    //sort
-    const sortClassInput = document.querySelector('.sort')
-    sortClassInput.addEventListener('input', (e) => {
-        const sortIdInput = document.querySelector('#sort')
-        const searchForm = document.querySelector('#searchForm')
-        sortIdInput.value = e.target.value
-        searchForm.submit()
-    })
-</script>
-{% endblock script %}
+        //sort
+        const sortClassInput = document.querySelector('.sort')
+        sortClassInput.addEventListener('input', (e) => {
+            const sortIdInput = document.querySelector('#sort')
+            const searchForm = document.querySelector('#searchForm')
+            sortIdInput.value = e.target.value
+            searchForm.submit()
+        })
+    </script>
+    {% endblock script %}

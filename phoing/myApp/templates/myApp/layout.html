@@ -2,246 +2,261 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHOING</title>
-    {% block stylesheet %}{% endblock %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHOING</title>
+  {% block stylesheet %}{% endblock %}
 
-    <script src="https://kit.fontawesome.com/0b02921f0e.js" crossorigin="anonymous"></script>
-    <script src="{% static 'js/main.js' %}" defer></script>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
-        rel="stylesheet">
+  <script src="https://kit.fontawesome.com/0b02921f0e.js" crossorigin="anonymous"></script>
+  <script src="{% static 'js/main.js' %}" defer></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
 
 
-    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+  <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
     <style>
         * {
             font-family: 'NanumSquare', sans-serif;
         }
     </style>-->
-    <style>
+  <style>
+    body {
+      overflow-x: hidden
+    }
 
-      body{
-        overflow-x: hidden
+    /*LOADING*/
+    #loading {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 1000;
+      /* 이 값으로 레이어의 위치를 조정합니다. */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      font-family: "Cabin Condensed", sans-serif;
+    }
+
+    @import url(https://fonts.googleapis.com/css?family=Cabin+Condensed);
+
+    svg {
+      font-weight: bold;
+      max-width: 600px;
+      height: 100%;
+    }
+
+    /*CSS*/
+
+    * {
+      margin: 0;
+      padding: 0;
+      text-decoration: none;
+      list-style-type: none;
+      font-family: "NanumSquare", sans-serif;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    nav {
+      background-color: #fff;
+    }
+
+    nav a {
+      color: black;
+    }
+
+    .content {
+      display: block;
+      margin: 0 auto;
+    }
+
+    #nav {
+      display: flex;
+      justify-content: initial;
+      align-items: center;
+      border-bottom: 1px solid rgb(54, 54, 54);
+      padding: 15px 15px;
+      position: sticky;
+      /* Set the navbar to fixed position */
+      top: 0;
+      /* Position the navbar at the top of the page */
+      width: 100%;
+      /* Full width */
+      background-color: #FFF;
+      z-index: 1;
+    }
+
+    .nav__logo {
+      font-size: 24px;
+    }
+
+    .nav__menu {
+      display: flex;
+      padding-left: 20px;
+    }
+
+    .nav__menu li {
+      padding: 8px 20px;
+    }
+
+    .nav__menu li a:hover {
+      color: purple;
+      cursor: pointer;
+    }
+
+    .nav__profile {
+      position: absolute;
+      right: 10px;
+    }
+
+    .nav__profile i {
+      font-size: 20px;
+    }
+
+    .nav__profile a:hover i {
+      color: purple;
+      cursor: pointer;
+    }
+
+    .nav__toggleBtn {
+      display: none;
+      position: absolute;
+      right: 32px;
+      font-size: 24px;
+    }
+
+    @media screen and (max-width: 820px) {
+      #nav {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-        /*LOADING*/
-#loading {
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    z-index: 1000; /* 이 값으로 레이어의 위치를 조정합니다. */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-size: cover;
-    font-family: "Cabin Condensed", sans-serif;
-  }
-  @import url(https://fonts.googleapis.com/css?family=Cabin+Condensed);
-  
-  svg {
-    font-weight: bold;
-    max-width: 600px;
-    height: 100%;
-  }
-  
-  /*CSS*/
-  
-  * {
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-    list-style-type: none;
-    font-family: "NanumSquare", sans-serif;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
+      .nav__menu {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+
+      .nav__menu li {
+        width: 100%;
+        text-align: center;
+        padding-left: 0;
+      }
+
+      .nav__profile {
+        display: none;
+      }
+
+      .nav__toggleBtn {
+        display: block;
+      }
+
+      .nav__menu.active {
+        display: flex;
+      }
+
+      .nav__profile.active {
+        display: block;
+        right: 70px;
+      }
     }
-  
-  nav {
-    background-color: #fff;
-  }
-  
-  nav a {
-    color: black;
-  }
-  
-  .content {
-    display: block;
-    margin: 0 auto;
-  }
-  
-  #nav {
-    display: flex;
-    justify-content: initial;
-    align-items: center;
-    border-bottom: 1px solid rgb(54, 54, 54);
-    padding: 15px 15px;
-    position: sticky; /* Set the navbar to fixed position */
-  top: 0; /* Position the navbar at the top of the page */
-  width: 100%; /* Full width */
-  background-color: #FFF;
-  z-index: 1;
-  }
-  
-  .nav__logo {
-    font-size: 24px;
-  }
-  
-  .nav__menu {
-    display: flex;
-    padding-left: 20px;
-  }
-  
-  .nav__menu li {
-    padding: 8px 20px;
-  }
-  
-  .nav__menu li a:hover {
-    color: purple;
-    cursor: pointer;
-  }
-  
-  .nav__profile {
-    position: absolute;
-    right: 10px;
-  }
-  
-  .nav__profile i {
-    font-size: 20px;
-  }
-  
-  .nav__profile a:hover i {
-    color: purple;
-    cursor: pointer;
-  }
-  
-  .nav__toggleBtn {
-    display: none;
-    position: absolute;
-    right: 32px;
-    font-size: 24px;
-  }
-  
-  @media screen and (max-width: 820px) {
-    #nav {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .nav__menu {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    }
-  
-    .nav__menu li {
-      width: 100%;
-      text-align: center;
-      padding-left: 0;
-    }
-  
-    .nav__profile {
-      display: none;
-    }
-  
-    .nav__toggleBtn {
-      display: block;
-    }
-  
-    .nav__menu.active {
+
+
+
+    #footer {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgb(54, 54, 54);
+      padding: 15px 30px;
+      font-size: 13px;
+      margin-top: 20px;
     }
-  
-    .nav__profile.active {
-      display: block;
-      right: 70px;
+
+    footer li,
+    footer a {
+      color: rgb(0, 0, 0);
     }
-  }
+
+    .footer__logo {
+      font-size: 15px;
+      padding-bottom: 8px;
+    }
+
+    .footer__right {
+      display: flex;
+      cursor: pointer;
+    }
+
+    .footer__right li {
+      padding: 8px 10px;
+    }
+
+    .footer__right i {
+      font-size: 30px;
+    }
+
+    .footer__right li:hover,
+    .footer__right a:hover {
+      color: purple;
+    }
+
+    /*LOADING*/
+    #loading {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 1000;
+      /* 이 값으로 레이어의 위치를 조정합니다. */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      font-family: "Cabin Condensed", sans-serif;
+    }
+
+    @import url(https://fonts.googleapis.com/css?family=Cabin+Condensed);
 
 
-  
-  #footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgb(54, 54, 54);
-    padding: 15px 30px;
-    font-size: 13px;
-    margin-top: 20px;
-  }
-  
-  footer li,
-  footer a {
-    color: rgb(0, 0, 0);
-  }
-  
-  .footer__logo {
-    font-size: 15px;
-    padding-bottom: 8px;
-  }
-  
-  .footer__right {
-    display: flex;
-    cursor: pointer;
-  }
-  
-  .footer__right li {
-    padding: 8px 10px;
-  }
-  
-  .footer__right i {
-    font-size: 30px;
-  }
-  
-  .footer__right li:hover,
-  .footer__right a:hover {
-    color: purple;
-  }
-  /*LOADING*/
-  #loading {
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    z-index: 1000; /* 이 값으로 레이어의 위치를 조정합니다. */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-size: cover;
-    font-family: "Cabin Condensed", sans-serif;
-  }
-  @import url(https://fonts.googleapis.com/css?family=Cabin+Condensed);
-  
-  
-  /**/
-  
-  * {
-    scroll-behavior: smooth;
-  }
+    /**/
 
-  /* SCROLL */
-::-webkit-scrollbar { width: 8px; }
-/* 스크롤바의 width */
-::-webkit-scrollbar-track { background-color: #fafafa; }
-/* 스크롤바의 전체 배경색 */
-::-webkit-scrollbar-thumb { 
-    background: linear-gradient(to bottom, #000000, #b6b6b6); 
-    border-radius: 20px;
-}
-/* 스크롤바 색 */
-::-webkit-scrollbar-button { display: none; }
-/* 위 아래 버튼 (버튼 없애기를 함) */
+    * {
+      scroll-behavior: smooth;
+    }
 
-  
-    </style>
+    /* SCROLL */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
 
-    
+    /* 스크롤바의 width */
+    ::-webkit-scrollbar-track {
+      background-color: #fafafa;
+    }
+
+    /* 스크롤바의 전체 배경색 */
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, #000000, #b6b6b6);
+      border-radius: 20px;
+    }
+
+    /* 스크롤바 색 */
+    ::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    /* 위 아래 버튼 (버튼 없애기를 함) */
+  </style>
+
+
 
 
 </head>
@@ -249,7 +264,7 @@
 <body>
 
 
-    <!-- <div id="loading">
+  <!-- <div id="loading">
         <svg viewbox="0 0 100 20">
             <defs>
                 <linearGradient id="gradient">
@@ -282,9 +297,9 @@
             <ul class="nav__menu">
                 <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
                 <li><a href="{% url 'myApp:portfolio_list' %}">Portfolio</a></li>
-                <li><a href="{% url 'place:place_list' %}">Place</a></li>
                 <li><a href="{% url 'myApp:reference_list' %}">Reference</a></li>
-                <li><a href="{% url 'myApp:with_brand_list' %}">Collaboration</a></li>
+                <li><a href="#">Place</a></li>
+                <li><a href="#">Collaboration</a></li>
                 <h1>{{ request.user.username }}</h1>
             </ul>
             <ul class="nav__profile">
@@ -293,10 +308,12 @@
                 <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
                 {% else %}
                 {% url 'myApp:profile_detail' user.id as profile_path %}
+               
                 {% if request.path ==  profile_path %}
-
+                <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
                 <li><a href="{% url 'account_logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
                 {% else %}
+                <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
                 <li><a href="{% url 'account_logout' %}?next={{ request.path }}"
                         onclick="return confirm('Are you sure?');">Log
                         Out</a></li>
@@ -307,28 +324,28 @@
                             class="far fa-user-circle"></i></a></li>
                 {% endif %}
 
-            </ul>
-            <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>
-        </nav>
-    </head>
-    <section class="container">
-  {% block content %}
-  {% endblock %}
-    </section>
-    <footer id="footer">
-        <ul class="footer__left">
-            <li class="footer__logo">PHOING</li>
-            <li>Copyright PHOING All right reserved</li>
-            <li><a href="#">개인정보처리방침</a></li>
-        </ul>
-        <ul class="footer__right">
-            <li><i class="fab fa-instagram"></i></li>
-            <li><i class="fab fa-facebook-square"></i></li>
-            <li><i class="fab fa-youtube-square"></i></li>
-        </ul>
-    </footer>
-    {% block script %}
-    {% endblock script%}
+      </ul>
+      <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>
+    </nav>
+  </head>
+  <section class="container">
+    {% block content %}
+    {% endblock %}
+  </section>
+  <footer id="footer">
+    <ul class="footer__left">
+      <li class="footer__logo">PHOING</li>
+      <li>Copyright PHOING All right reserved</li>
+      <li><a href="#">개인정보처리방침</a></li>
+    </ul>
+    <ul class="footer__right">
+      <li><i class="fab fa-instagram"></i></li>
+      <li><i class="fab fa-facebook-square"></i></li>
+      <li><i class="fab fa-youtube-square"></i></li>
+    </ul>
+  </footer>
+  {% block script %}
+  {% endblock script%}
 </body>
 
 </html>
