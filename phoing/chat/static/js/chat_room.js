@@ -1,13 +1,33 @@
-const roomName = JSON.parse(document.getElementById('room-name').textContent);
+let old_msg_page_count = 0;
+let loc = window.location, new_uri;
+if (loc.protocol === "https:") {
+    new_uri = "wss://";
+} else {
+    new_uri = "ws://";
+}
+
+let chatSocket = new ReconnectingWebSocket(
+    new_uri + window.location.host +
+    '/ws/chat/' + roomName + '/');
+    
+
+chatSocket.onopen = function(e) {
+    fetchGroups();
+    fetchMessages(true);
+    
+}
 
 
-const chatSocket = new WebSocket(
-    'ws://'
-    + window.location.host
-    + '/ws/chat/'
-    + roomName
-    + '/'
-);
+
+
+
+// const chatSocket = new WebSocket(
+//     'ws://'
+//     + window.location.host
+//     + '/ws/chat/'
+//     + roomName
+//     + '/'
+// );
 
 chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
@@ -33,3 +53,8 @@ document.querySelector('#chat-message-submit').onclick = function(e) {
     }));
     messageInputDom.value = '';
 };
+
+
+function fetchGroups() {
+    chatSocket.send(JSON.stringify({'command': 'fetch_groups','username' : username }));
+  }

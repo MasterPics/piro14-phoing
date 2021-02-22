@@ -8,6 +8,7 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 <link rel="stylesheet" href="{% static 'css/chat_room.css' %}">
 
 
@@ -32,10 +33,16 @@
 
 <div class="container">
   <div class="side-nav">
-    <div class="profile">
-      <img src="https://placekitten.com/350/350?image=10" alt="">
+
+    {% for user_group in request.user.user_groups.all %}
+
+    <div class="profile profile-{{user_group.contact.pk}}">
+      <img src="{{ user_group.contact.thumbnail.url }}" alt="">
     </div>
-    <div class="icon-container">
+      
+    {% endfor %}
+    
+    <!-- <div class="icon-container">
       <i class="fa fa-home"></i>
     </div>
     <div class="icon-container">
@@ -49,11 +56,12 @@
     </div>
     <div class="icon-container">
       <i class="fa fa-sticky-note"></i>
-    </div>
+    </div> -->
+
   </div>
   <div class="main-veiw">
     <div class="top-nav">
-      <div class="logo">&lt CHAT APP /&gt</div>
+      <div class="logo">{{ group.name }}</div>
     </div>
     <div class="content">
       <div class="message-list">
@@ -70,7 +78,50 @@
           </button>
         </div>
         <div class="list">
-          <div class="contact unread">
+          {% for member in group.members.all  %}
+
+          
+            {% if member == group.contact.user %}
+
+              <div class="contact unread host">
+                <div class="icon">
+                  <img src="{{ member.image.url }}" alt="kitten-image">
+                </div>
+                <div class="blurb">
+                  <h2 class="name">
+                    {{ member.username }} 
+                  </h2>
+                  <span class="category">
+                    {{ member.category }} 
+                  </span>
+                </div>
+                <div class="profile-detail icon">
+                  <a href="{% url 'myApp:profile_detail_other' member.pk %}"><i class="fas fa-search"></i></a>
+                </div>
+            </div>
+            {% else %}
+
+            <div class="contact unread">
+              <div class="icon">
+                <img src="{{ member.image.url }}" alt="kitten-image">
+              </div>
+              <div class="blurb">
+                <h2 class="name">
+                  {{ member.username }} 
+                </h2>
+                <span class="category">
+                  {{ member.category }} 
+                </span>
+              </div>
+              <div class="profile-detail icon">
+                <a href="{% url 'myApp:profile_detail_other' member.pk %}"><i class="fas fa-search"></i></a>
+              </div>
+            </div>
+              
+            {% endif %}
+            
+          {% endfor %}
+          <!-- <div class="contact unread">
             <div class="icon">
               <img src="https://placekitten.com/200/200" alt="kitten-image">
             </div>
@@ -119,11 +170,11 @@
                 Commander Dave
               </h2>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="chat">
-        <div class="top">
+        <!-- <div class="top">
           <div class="open-message">
             <i class="fa fa-chevron-left"></i>
           </div>
@@ -141,7 +192,7 @@
               <i class="fa fa-folder"></i>
             </button>
           </div>
-        </div>
+        </div> -->
         <div class="message-container">
           <div class="comment me">
             <img src="https://placekitten.com/300/300?image=10" alt="">
@@ -224,9 +275,9 @@
           </div>
         </div>
         <div class="input-container">
-          <button class="attach">
+          <!-- <button class="attach">
             <i class="fa fa-paperclip"></i>
-          </button>
+          </button> -->
           <div class="textarea-container">
             <textarea type="text" placeholder="message"></textarea>
           </div>
@@ -278,15 +329,18 @@
 
 
 
-{{ room_name|json_script:"room-name" }}
-
 
 {% endblock content%}
 
 {% block script %}
+<script>
+var roomName = {{ room_name_json }};
+var username = "{{ request.user.username }}";
+</script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'js/reconnecting-websocket.js' %}"></script>
 <script src="{% static 'js/chat_room.js' %}"></script>
 
 {% endblock script %}

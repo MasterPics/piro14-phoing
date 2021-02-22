@@ -1,6 +1,3 @@
-
-
-  
 // MIT License:
 //
 // Copyright (c) 2010-2012, Joe Walnes
@@ -366,17 +363,3 @@
 
     return ReconnectingWebSocket;
 });
-© 2021 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
- Octotree
- Login with GitHub

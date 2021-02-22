@@ -6,6 +6,8 @@ from .models import *
 from django.views.decorators.csrf import csrf_exempt
 from myApp.models import *
 from django.http import JsonResponse
+import json
+from django.utils.safestring import mark_safe
 
 DEFAULT = 0
 PENDING = 1
@@ -17,12 +19,14 @@ User = get_user_model()
 def index(request):
     return render(request, 'chat/index.html', {})
 
+@login_required
 def chat_room(request, room_name):
     contact_pk = int(room_name[4:])
     contact = get_object_or_404(Contact, pk=contact_pk)
+    
 
     return render(request, 'chat/chat_room.html', {
-        'room_name': room_name,
+        'room_name_json': mark_safe(json.dumps(room_name)),
         'group': contact.group,
     })
 
