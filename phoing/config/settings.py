@@ -102,7 +102,7 @@ ROOT_URLCONF = 'config.urls'
 # ]
 # '''
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '15.164.11.168'] # ALLOWED_HOST = [*]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '15.164.11.168', '3.36.2.44'] # ALLOWED_HOST = [*]
 
 TEMPLATES = [
     {
