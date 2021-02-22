@@ -210,15 +210,33 @@
         font-size: 1.3rem;
     }
 
-    .portfolio_info i:hover {
-        cursor: pointer;
-        color: #333;
-    }
+  .detail_right{
+      margin-left:15px;
+      padding: 0 5px;
+      height:600px;
+    overflow-x:hidden; 
+    overflow-y:auto; 
+  }
 
-    .detail_right {
-        margin-left: 15px;
-        padding: 0 5px;
-    }
+  .detail_right .img_container{
+    display: grid;
+    justify-content: center;
+    width:90%;
+    margin: 0 auto;
+  }
+  .detail_right .img_container img{
+      width:100%; object-fit: contain;
+      margin-bottom: 10px;
+  }
+
+  .detail_right .img_container img:hover{
+    box-shadow: 0 0 5px #000000;
+      cursor: pointer;
+      transform:scale(1.1);             /*  default */
+    -webkit-transform:scale(1.1);  /*  크롬 */
+    -moz-transform:scale(1.1);     /* FireFox */
+    -o-transform:scale(1.1); 
+  }
 
     .detail_right .img_container {
         display: grid;

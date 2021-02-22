@@ -134,7 +134,7 @@ def profile_detail_posts(request, pk):
 
     category = request.GET.get('category', 'contact')  # CATEGORY
     # sort = request.GET.get('sort', 'recent')  # SORT
-    search = request.GET.get('search', '')  # SEARCH
+    # search = request.GET.get('search', '')  # SEARCH
 
     # CATEGORY
     if category == 'contact':
@@ -232,7 +232,7 @@ def portfolio_list(request):
             'save_users')).order_by('-num_save', '-updated_at')
 
     # infinite scroll
-    portfolios_per_page = 3
+    portfolios_per_page = 6
     page = request.GET.get('page', 1)
     paginator = Paginator(portfolios, portfolios_per_page)
     try:
@@ -479,7 +479,6 @@ def contact_list(request):
     sort = request.GET.get('sort', 'recent')  # SORT
     search = request.GET.get('search', '')  # SEARCH
     no_pay = request.GET.get('no_pay', False)
-    print(type(no_pay), no_pay)
     if no_pay == 'true':
         contacts = Contact.objects.all().filter(pay=0).distinct()
     else:
@@ -515,27 +514,23 @@ def contact_list(request):
 
     # SEARCH
     if search:
-        print(contacts)
         contacts = contacts.filter(
             Q(title__icontains=search) |  # 제목검색
             Q(desc__icontains=search) |  # 내용검색
             Q(user__username__icontains=search)  # 질문 글쓴이검색
         ).distinct()
-        print(contacts)
 
     # infinite scroll
     contacts_per_page = 1
     page = request.GET.get('page', 1)
     paginator = Paginator(contacts, contacts_per_page)
-    print(contacts)
+
     try:
         contacts = paginator.page(page)
     except PageNotAnInteger:
         contacts = paginator.page(1)
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
-
-    print(contacts)
 
     context = {
         'contacts': contacts,
@@ -549,15 +544,14 @@ def contact_list(request):
 
 def contact_detail(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
-    request_user = request.user
-    contact_owner = contact.user  # contact 게시글 작성자
+    # contact_owner = contact.user  # contact 게시글 작성자
 
     tags = contact.tags.all()
 
     ctx = {
         'contact': contact,
-        'contact_owner': contact_owner,
-        'request_user': request_user,
+        # 'contact_owner': contact_owner,
+        'request_user': request.user,
         'tags': tags,
     }
     return render(request, 'myApp/contact/contact_detail.html', context=ctx)

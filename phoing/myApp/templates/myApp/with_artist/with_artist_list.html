@@ -25,33 +25,321 @@
         height: 400px;
         overflow: scroll;
     }
+
+    /*category btn*/
+
+    * {
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        color:black;
+    
+        }
+        
+        .dropdown .btn {
+            width: 150px;
+            height: 50px;
+            border: 1px solid #333;
+            font-family: "Cinzel", serif;
+            font-size: 15px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 0;
+            transition: 1s;
+        }
+        
+        .dropdown .btn::before,
+        .dropdown .btn::after {
+            position: absolute;
+            background: #fff;
+            z-index: -1;
+            transition: 1s;
+            content: "";
+        }
+        
+        .dropdown .btn::before {
+            height: 50px;
+            width: 130px;
+        }
+        
+        .dropdown .btn::after {
+            width: 150px;
+            height: 30px;
+        }
+        
+        .dropdown .noselect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .dropdown .btn:hover::before {
+            width: 0px;
+            background: #fff;
+        }
+        
+        .dropdown .btn:hover::after {
+            height: 0px;
+            background: #fff;
+        }
+        
+        .dropdown .btn:hover {
+            background: #fff;
+        }
+    
+            /* Dropdown Button */
+            .dropbtn {
+                padding: 16px;
+            }
+            
+            /* The container <div> - needed to position the dropdown content */
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+            
+            /* Dropdown Content (Hidden by Default) */
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                min-width: 160px;
+                z-index: 1;
+                margin-left:11px;
+            }
+            
+            /* Links inside the dropdown */
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                background-color: white;
+                border:#ddd solid 1px;
+            }
+            
+            /* Change color of dropdown links on hover */
+            .dropdown-content a:hover {background-color: #ddd;}
+            
+            /* Show the dropdown menu on hover */
+            .dropdown:hover .dropdown-content {display: block;}
+        
+             /* 무한스크롤 */
+
+.loading,
+.loading:after {
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+}
+
+.loading {
+  display: none;
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 0.3em solid rgba(160, 160, 160, 0.2);
+  border-right: 0.3em solid rgba(160, 160, 160, 0.2);
+  border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
+  border-left: 0.3em solid rgb(0, 0, 0);
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 0.6s infinite linear;
+  animation: load8 0.6s infinite linear;
+}
+
+.loading.show {
+  opacity: 1;
+}
+
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/* with_brand List CSS */
+a {
+    text-decoration: none;
+    color: black;
+  }
+  
+.with_artist_list .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2% 4%;
+  }
+
+  
+.bar_right{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bar .input-group {
+    display: flex;
+  margin-right: 5px;
+  padding: 0;
+}
+
+.input-group .form-control.search {
+  border: 0;
+  padding: 5px;
+  font-size: 1em;
+  border: solid 1px black;
+  border-radius: 3px;
+  margin-right: 10px;
+  width:300px;
+}
+
+
+
+.bar .btn_search {
+    padding: 6px;
+    border: solid 1px #ccc;
+    border-radius: 3px;
+    margin-right:20px;
+  }
+  
+  .bar .sort {
+    margin-right: 10px;
+  }
+  
+  .bar .sort select {
+    border: 0;
+    padding: 5px;
+    border: solid 1px black;
+    border-radius: 3px;
+  }
+  
+  .bar .pay{
+      margin-right: 15px;
+  }
+  
+  .bar .with_artist_create i {
+    font-size: 2rem;
+    color: rgb(41, 41, 41);
+    margin-right: 15px;
+
+  }
+
+
+  .bar #popup_open_btn i{
+   font-size:2rem;
+   color: rgb(41, 41, 41);
+
+  }
+
+  /*top button*/
+
+  #myBtn {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed/sticky position */
+    bottom: 20px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 99; /* Make sure it does not overlap */
+    color: rgb(0, 0, 0); /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    font-size: 2em; /* Increase font size */
+    border-radius: 100%;
+    background-color: white;
+  }
+  
+  #myBtn i:hover {
+    color: rgb(58, 58, 58); /* Add a dark-grey background on hover */
+  }
+
+  .top_nav{
+     border-bottom: rgb(201, 201, 201) solid 1px;
+     display: flex;
+     padding: 20px;
+     justify-content: center;
+  }
+
+  .top_nav div{
+      padding-left:12px;
+      padding-right:12px;
+  }
+
+  .top_nav .brand{
+      margin-right:5%;
+  }
+
+  /*page*/
+
+  .top_nav .artist a{
+    font-weight: bold;
+  }
+
+  .top_nav .artist{
+      border-left:rgb(185, 185, 185) 1px solid;
+      border-right:rgb(185, 185, 185) 1px solid;
+  }
+
+
+
+
+
 </style>
 {% endblock stylesheet %}
 
 
 {% block content %}
 
+<div class="top_nav">
+    <div class="brand">
+        <a href="{% url 'myApp:with_brand_list' %}">with  brand</a>
+    </div>
+    <div class="artist">
+        <a href="{% url 'myApp:with_artist_list' %}">with  artist</a>
+    </div>
+</div>
+
 
 <div class="with_artist_list">
-    <div>
-        <a href="{% url 'myApp:with_brand_list' %}">with brand</a>
-        <a href="{% url 'myApp:with_artist_list' %}">with artist</a>
-    </div>
+    <div class="bar">
+        <div class="bar_left">
+            <!--category-->
+            <div class="dropdown">
+                <div class="dropbtn"><div class="btn"><span class="noselect"><a href="javascript:void(0)" onclick="onClickLink('all')">Category</a></span></div></div>
+                <div class="dropdown-content">
+                    <a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a>
+                    <a href="javascript:void(0)" onclick="onClickLink('model')">Model</a>
+                    <a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair/makeup</a>
+                    <a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a>
+                    <a href="javascript:void(0)" onclick="onClickLink('otheruse')">Other use</a>
+                </div>
+            </div>
+        </div>
 
-    <!--category-->
-    <div class="with_artistlist_left">
-        <ul class="category">
-            <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('model')">Model</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair/Makeup</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a></li>
-            <li><a href="javascript:void(0)" onclick="onClickLink('otheruse')">Other Use</a></li>
-        </ul>
-    </div>
-
-    <div class="with_artistlist_right">
-        <div class="bar">
+        <div class="bar_right">
 
             <!--search-->
             <div class="input-group">
@@ -76,7 +364,7 @@
                 </select>
             </div>
 
-            <div>
+            <div class="pay">
                 <input type="checkbox" class="no_pay" name="no_pay" value="no_pay">
                 <label for="no_pay">상호 무페이</label><br>
             </div>
@@ -100,112 +388,109 @@
 
                 <button id="popup_open_btn">위치 확인하기</button>
             </div> -->
-            <button id="popup_open_btn">
-                <a href="{% url 'myApp:with_artist_map' %}">위치 확인하기</a>
-            </button>
-        </div>
-
-
-
-        <!--with_artist_list-->
-        <div class="content">
-            <div class="infinite-container">
-                {% for with_artist in with_artists %}
-
-                <div class="infinite-item">
-                    <div class="item_top with_artist-{{with_artist.pk}}">
-                        <div>
-                            User : {{ with_artist.user }}
-
-
-
-                        </div>
-                        <a href="{% url 'myApp:with_artist_detail' with_artist.pk %}">
-                            <div style="font-weight:bolder;">{{ with_artist.title }}</div>
-                        </a>
-                        <div>
-                            {% if with_artist.user.image %}
-                            <img src="{{ with_artist.user.image.url }}" alt="">
-                            {% endif %}
-                            {{ with_artist.user.category }}
-                        </div>
-                        <div class="thumbnail_desc">
-                            <img src="{{ with_artist.thumbnail.url }}" alt="">
-                        </div>
-                        <div class="pay_date">
-                            {% if with_artist.pay == 0 %}
-                            Pay : 상호 무페이
-                            {% else %}
-                            Pay : {{ with_artist.pay }}원
-                            {% endif %}
-                            <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
-                        </div>
-                    </div>
-
-                    <div class="item_bottom">
-                        <div class="comment">
-                            <i class="far fa-comment-dots"></i>
-                            <span class="comment__content">{{ with_artist.with_artist_comments.count }}</span>
-                        </div>
-
-                        <div class="save save-{{with_artist.id}}">
-                            {% if request_user in with_artist.save_users.all %}
-                            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ with_artist.id }})"
-                                name="type" value="save"></i>
-                            {% else %}
-                            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ with_artist.id }})"
-                                name="type" value="save"></i>
-                            {% endif %}
-                            <span class="save__content">{{ with_artist.save_users.count }}</span>
-                        </div>
-
-                    </div>
-
-
-                    <!--
-                    <div class="caption">
-                        <div class="caption-content">
-                            <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
-                        </div>
-                    </div>
-                    -->
-                </div>
-
-                {% endfor %}
-            </div>
-
-
-            <!-- 무한로딩 보류 -->
-            {% if with_artists.has_next %}
-            <a class="infinite-more-link" href="?page={{ with_artists.next_page_number }}">
-                <div class="loading" style="display: none;">Loading...</div>
-            </a>
-            {% endif %}
-
-            <!--filter form-->
-            <div style="height: 0;">
-                <form id="searchForm" method="get" action="{% url 'myApp:with_artist_list' %}">
-                    <!--category-->
-                    <input type="hidden" id="category" name="category" value="{{ category }}">
-                    <!--sort-->
-                    <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
-                    <!--search-->
-                    <input type="hidden" id="sort" name="sort" value="{{ sort }}">
-                    <!--상호무페이-->
-                    <input type="hidden" id="no_pay" name="no_pay" value="{{no_pay}}">
-                </form>
+            <div id="popup_open_btn">
+                <a href="{% url 'myApp:with_artist_map' %}"><i class="fas fa-search-location"></i></a>
             </div>
         </div>
-
-
-
-
-
-
 
     </div>
 
-    <div>
+
+
+    <!--with_artist_list-->
+    <div class="content">
+        <div class="infinite-container">
+            {% for with_artist in with_artists %}
+
+            <div class="infinite-item">
+                <div class="item_top with_artist-{{with_artist.pk}}">
+                    <div>
+                        User : {{ with_artist.user }}
+
+
+
+                    </div>
+                    <a href="{% url 'myApp:with_artist_detail' with_artist.pk %}">
+                        <div style="font-weight:bolder;">{{ with_artist.title }}</div>
+                    </a>
+                    <div>
+                        {% if with_artist.user.image %}
+                        <img src="{{ with_artist.user.image.url }}" alt="">
+                        {% endif %}
+                        {{ with_artist.user.category }}
+                    </div>
+                    <div class="thumbnail_desc">
+                        <img src="{{ with_artist.thumbnail.url }}" alt="">
+                    </div>
+                    <div class="pay_date">
+                        {% if with_artist.pay == 0 %}
+                        Pay : 상호 무페이
+                        {% else %}
+                        Pay : {{ with_artist.pay }}원
+                        {% endif %}
+                        <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
+                    </div>
+                </div>
+
+                <div class="item_bottom">
+                    <div class="comment">
+                        <i class="far fa-comment-dots"></i>
+                        <span class="comment__content">{{ with_artist.with_artist_comments.count }}</span>
+                    </div>
+
+                    <div class="save save-{{with_artist.id}}">
+                        {% if request_user in with_artist.save_users.all %}
+                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ with_artist.id }})"
+                            name="type" value="save"></i>
+                        {% else %}
+                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ with_artist.id }})"
+                            name="type" value="save"></i>
+                        {% endif %}
+                        <span class="save__content">{{ with_artist.save_users.count }}</span>
+                    </div>
+
+                </div>
+
+
+                <!--
+                <div class="caption">
+                    <div class="caption-content">
+                        <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
+                    </div>
+                </div>
+                -->
+            </div>
+
+            {% endfor %}
+        </div>
+
+        <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
+
+
+        <!-- 무한로딩 보류 -->
+        {% if with_artists.has_next %}
+        <a class="infinite-more-link" href="?page={{ with_artists.next_page_number }}">
+            <div class="loading" style="display: none;">Loading...</div>
+        </a>
+        {% endif %}
+
+        <!--filter form-->
+        <div style="height: 0;">
+            <form id="searchForm" method="get" action="{% url 'myApp:with_artist_list' %}">
+                <!--category-->
+                <input type="hidden" id="category" name="category" value="{{ category }}">
+                <!--sort-->
+                <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
+                <!--search-->
+                <input type="hidden" id="sort" name="sort" value="{{ sort }}">
+                <!--상호무페이-->
+                <input type="hidden" id="no_pay" name="no_pay" value="{{no_pay}}">
+            </form>
+        </div>
+    </div>
+
+
+</div>
         {% endblock content %}
 
 
@@ -226,6 +511,28 @@
 
 
         <script>
+            //top_button
+            //Get the button:
+            mybutton = document.getElementById("myBtn");
+
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+
+            //
             var infinite = new Waypoint.Infinite({
                 element: $('.infinite-container')[0],
                 onBeforePageLoad: function () {
