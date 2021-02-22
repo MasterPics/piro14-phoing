@@ -1,14 +1,48 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.utils.translation import ugettext_lazy as _
 from .models import *
 
 # User, Post, Contact, Portfolio, Comment, Tag, Image
 # Register your models here.
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    pass
+
+# @admin.register(User)
+# class UserAdmin(admin.ModelAdmin):
+#     pass
+
+
+# @admin.register(User)
+# class UserAdmin(DjangoUserAdmin):
+#     """Define admin model for custom User model with no email field."""
+
+#     fieldsets = (
+#         (None, {'fields': ('username', 'email', 'password', 'category')}),
+#         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
+#         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+#                                        'groups', 'user_permissions')}),
+#         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+#     )
+#     add_fieldsets = (
+#         (None, {
+#             'classes': ('wide',),
+#             'fields': ('email', 'password1', 'password2', 'category'),
+#         }),
+#     )
+#     list_display = ('id', 'username', 'first_name',
+#                     'last_name', 'email', 'category')
+#     search_fields = ('email', 'first_name', 'last_name')
+#     ordering = ('id',)
+
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'title']
+    list_display_links = ['title']
+    search_fields = ['title']
+
+
+@admin.register(Reference)
+class PortfolioAdmin(admin.ModelAdmin):
     pass
 
 
@@ -20,13 +54,15 @@ class PortfolioAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     pass
-    
+
+
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
+
+@admin.register(Images)
+class ImagesAdmin(admin.ModelAdmin):
     pass
 
 
