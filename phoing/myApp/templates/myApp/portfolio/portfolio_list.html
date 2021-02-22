@@ -202,6 +202,9 @@
   }
 
 
+
+
+
 </style>
 {% endblock stylesheet %}
 
@@ -255,53 +258,55 @@
     
 
 
-
-    <div class="infinite-container portfolio_content">
-        {% for portfolio in portfolios %}
-        <div>
-            <div class="portfolio_owner">
-                <a href="{% url 'myApp:profile_detail_other' portfolio.user.pk %}">
-                    {% if user.image  %}
-                    <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" width="20%">    
-                    {% else %}
-                    <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
-                    {% endif %}
-                    <p>{{portfolio.user.username}}</p>
-                    <p>{{portfolio.user.category}}</p>
-                </a>
-            </div>
-            <div class="portfolio_profile">
-                <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
-                    <p>{{portfolio.title}}</p>
-                    <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
-                </a>
-            </div>
-            <div class="portfolio_info">
-                <div class="like like-{{portfolio.id}}">
-                    {% if request_user in portfolio.like_users.all %}
-                    <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                        value="like"></i>
-                    {% else %}
-                    <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
-                        value="like"></i>
-                    {% endif %}
-                    <span class="like__content">{{ portfolio.like_users.count }}</span>
+    <div>
+        <div class="grid">
+            {% for portfolio in portfolios %}
+            <div class="grid-item">
+                <div class="portfolio_owner">
+                    <a href="{% url 'myApp:profile_detail_other' portfolio.user.pk %}">
+                        {% if user.image  %}
+                        <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" width="20%">    
+                        {% else %}
+                        <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image" width="20%">
+                        {% endif %}
+                        <p>{{portfolio.user.username}}</p>
+                        <p>{{portfolio.user.category}}</p>
+                    </a>
                 </div>
-                <div>{{portfolio.view_count}}</div>
-                <div class="save save-{{portfolio.id}}">
-                    {% if request_user in portfolio.save_users.all %}
-                    <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                        value="save"></i>
-                    {% else %}
-                    <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                        value="save"></i>
-                    {% endif %}
-                    <span class="save__content">{{ portfolio.save_users.count }}</span>
+                <div class="portfolio_profile">
+                    <a href="{% url 'myApp:portfolio_detail' portfolio.pk %}">
+                        <p>{{portfolio.title}}</p>
+                        <img src="{{portfolio.thumbnail.url}}" alt="thumbnail">
+                    </a>
+                </div>
+                <div class="portfolio_info">
+                    <div class="like like-{{portfolio.id}}">
+                        {% if request_user in portfolio.like_users.all %}
+                        <i class="fas fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                            value="like"></i>
+                        {% else %}
+                        <i class="far fa-heart" type="submit" onclick="onClickLike({{ portfolio.id }})" name="type"
+                            value="like"></i>
+                        {% endif %}
+                        <span class="like__content">{{ portfolio.like_users.count }}</span>
+                    </div>
+                    <div>{{portfolio.view_count}}</div>
+                    <div class="save save-{{portfolio.id}}">
+                        {% if request_user in portfolio.save_users.all %}
+                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                            value="save"></i>
+                        {% else %}
+                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                            value="save"></i>
+                        {% endif %}
+                        <span class="save__content">{{ portfolio.save_users.count }}</span>
+                    </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
+        
     </div>
+    {% endfor %}
 
 </div>
 
@@ -327,23 +332,43 @@
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 
 <script type='text/javascript'>
-    // infinite scroll
-    var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
+
+    let infinite = new Waypoint.Infinite({
+
+        element: $('.grid')[0],
+        items: '.grid-item',
         onBeforePageLoad: function () {
+            console.log("here here")
             $('.loading').show();
         },
-        onAfterPageLoad: function ($items) {
+        onAfterPageLoad: function () {
+            console.log("here here2")
             $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
+            })
         }
     });
+    let msnry = new Masonry('.grid', {
+        // optionsW
+        itemSelector: '.grid-item',
+        gutter: 10,
+        // columnWidth: 200
+    });
 
+    //
+    
 
     // like
     const onClickLike = async (portfolio_id) => {
@@ -353,7 +378,7 @@
             //     data
             // } = await axios.post(url, {
             //     portfolio_id,
-            // })
+            // })s
             // modify(data.portfolio_id, data.is_liked)
 
             const options = {

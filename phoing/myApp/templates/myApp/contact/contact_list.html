@@ -167,16 +167,21 @@
     }
 
     /* Contact List CSS */
+    
     a {
         text-decoration: none;
         color: black;
+    }
+
+    .contactlist{
+        padding:5px;
     }
 
     .contactlist .bar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 3% 5%;
+        margin:3% 4%;
     }
 
     .bar_right {
@@ -230,21 +235,18 @@
         color: rgb(75, 75, 75);
     }
 
-    .contactlist .content {
-        justify-content: center;
-    }
-    
-   
 
-    .contactlist .content .grid-item{
-        margin-right:10px;
-        margin-bottom:50px;
+    .item_top >div{
+        padding:10px;
     }
 
     .contact_owner {
         display: flex;
         align-items: center;
-        border-bottom: rgb(180, 180, 180) 1px solid;
+        border-top: rgb(180, 180, 180) 2px solid;
+        border-bottom: rgb(221, 221, 221) 1px solid;
+        padding-top:10px;
+        padding-bottom:10px;
     }
 
     .contact_owner div {
@@ -264,6 +266,8 @@
         object-fit: contain;
     }
 
+
+
     .thumbnail_desc img {
         width: 20rem;
     }
@@ -271,13 +275,30 @@
     .pay_date {
         display: flex;
         align-items: center;
+        justify-content: space-between;
+    }
+
+    .pay_date p{
+        text-align: end;
+        line-height: 1.5rem;
     }
 
     .item_bottom {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        border-top: rgb(221, 221, 221) solid 1px;
+        border-bottom: rgb(180, 180, 180) solid 2px;
+        padding:15px;
+        
     }
+
+    .item_bottom > div{
+        cursor:pointer;
+    }
+
+    
+    
 </style>
 {% endblock stylesheet %}
 
@@ -346,11 +367,10 @@
 
 
     <!--contact_list-->
-    <div class="content">
+    <div>
         <div class="grid">
 
             {% for contact in contacts %}
-            {% for i in "x"|rjust:"10" %}
             <div class="grid-item">
                 <div class=" item_top contact-{{contact.pk}}">
                     <div>
@@ -371,27 +391,45 @@
                             </div>
                         </a>
                     </div>
-                    <a href="{% url 'myApp:contact_detail' contact.pk %}">
-                        <div style="font-weight:bolder;">{{ contact.title }}</div>
-                    </a>
+                    <div class="title">
+                        <a href="{% url 'myApp:contact_detail' contact.pk %}">
+                            <div style="font-weight:bolder;">{{ contact.title }}</div>
+                        </a>
+                    </div>
 
                     <div class="thumbnail_desc">
-                        <img src="{{ contact.thumbnail.url }}" alt="">
+                        <a href="{% url 'myApp:contact_detail' contact.pk %}">
+                            <img src="{{ contact.thumbnail.url }}" alt="">
+                        </a>
                     </div>
                     <div class="pay_date">
-                        {% if contact.pay == 0 %}
-                        Pay : 상호 무페이
-                        {% else %}
-                        Pay : {{ contact.pay }}원
-                        {% endif %}
-                        <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
+                        <div>
+                            {% if contact.pay == 0 %}
+                            Pay : 상호 무페이
+                            {% else %}
+                            Pay : {{ contact.pay }}원
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div>
+                                {% if contact.is_closed %}
+                                    마감됐습니당
+                                {% else %}
+                                <p>{{ contact.start_date}}</p> <!--시작날짜-->
+                                <p>~{{ contact.end_date }}</p> <!--끝날짜-->
+                                {% endif %}
+    
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="item_bottom">
                     <div class="comment">
-                        <i class="far fa-comment-dots"></i>
-                        <span class="comment__content">{{ contact.contact_comments.count }}</span>
+                        <a href="{% url 'myApp:contact_detail' contact.pk %}">
+                            <i class="far fa-comment-dots"></i>
+                            <span class="comment__content">{{ contact.contact_comments.count }}</span>
+                        </a>
                     </div>
 
                     <div class="save save-{{contact.id}}">
@@ -407,7 +445,6 @@
 
                 </div>
             </div>
-            {% endfor %}
             {% endfor %}
 
         </div>
@@ -449,6 +486,7 @@
 
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>

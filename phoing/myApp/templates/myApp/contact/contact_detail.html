@@ -92,6 +92,7 @@
     justify-content: center;
     margin: 10px auto;
     padding: 10px;
+    width: 800px;
     max-width: 70%;
   }
 
@@ -233,21 +234,21 @@
 
 <!-- SHOW PROFILE 버튼 ''profile_detail_other''로 가게 하기-->
     <div class="choose">
-        <a class="choose_profile" href="{% url 'myApp:profile_detail_other'  contact_owner.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
+        <a class="choose_profile" href="{% url 'myApp:profile_detail_other'  contact.user.pk %}"><div class="btn"><span class="noselect">Show Profile</span></div></a>
     </div>
     
     <div class="container_8">
         <div class="user">
             <!-- user profile img 추가하기! -->
             <div class="user_img">
-                {% if contact_owner.image  %}
-                <img class="profile_image" src="{{contact_owner.image.url}}" alt="profile_image" >    
+                {% if contact.user.image  %}
+                <img class="profile_image" src="{{contact.user.image.url}}" alt="profile_image" >    
                 {% else %}
                 <img class="profile_image" src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png" alt="profile_image">
                 {% endif %}
             </div> 
-            <p>User: {{contact_owner.username}} </p>
-            <p>Category: {{contact_owner.category}}</p>
+            <p>User: {{contact.user.username}} </p>
+            <p>Category: {{contact.user.category}}</p>
         </div>
 
         <div><p style="font-weight: bolder; font-size:larger; margin-top:10px;">{{ contact.title }}</p></div>

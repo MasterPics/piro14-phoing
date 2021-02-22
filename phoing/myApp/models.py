@@ -55,8 +55,8 @@ class Contact(models.Model):
     location = models.ForeignKey(
         Location, on_delete=models.CASCADE, default=None, blank=True)
     pay = models.PositiveIntegerField()
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     is_closed = models.BooleanField(default=False)
     tag_str = models.CharField(max_length=50, blank=True)
     tags = models.ManyToManyField(Tag, related_name='contacts', blank=True)
