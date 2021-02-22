@@ -5,7 +5,7 @@
 <script src="https://kit.fontawesome.com/9ada8679dc.js" crossorigin="anonymous"></script>
 <style>
     /*category btn*/
-    /* 
+     
     * {
         box-sizing: border-box;
         scroll-behavior: smooth;
@@ -198,6 +198,81 @@
         border-radius: 3px;
     }
 
+    
+    .bar .pay {
+        margin-right: 15px;
+    }
+
+    .bar .contact_create i {
+        font-size: 2rem;
+        font-weight: lighter;
+        color: rgb(75, 75, 75);
+    }
+
+    .grid-item{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+
+    .item_top > div{
+        padding:10px;
+    }
+
+    .portfolio_owner {
+        display: flex;
+        align-items: center;
+        border-bottom: rgb(221, 221, 221) 1px solid;
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+
+    .portfolio_owner div {
+        margin-right: 8px;
+    }
+
+    .portfolio_owner .user_img {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        margin-right: 10px;
+    }
+
+    .user_img .profile_image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+
+
+    .thumbnail_desc img {
+        width: 20rem;
+    }
+
+    .pay_date {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .pay_date p{
+        text-align: end;
+        line-height: 1.5rem;
+    }
+
+    .item_bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: rgb(221, 221, 221) solid 1px;
+        border-bottom: rgb(180, 180, 180) solid 2px;
+        padding:15px;
+        
+    }
+
+    .item_bottom > div{
+        cursor:pointer;
+    }
 
 /*top button*/
 
@@ -279,17 +354,22 @@
         <div class="grid">
             {% for portfolio in portfolios %}
             <div class="grid-item">
-                <div class="portfolio_owner">
+                <div>
                     <a href="{% url 'myApp:profile_detail_other' portfolio.user.pk %}">
-                        {% if user.image  %}
-                        <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" width="20%">
-                        {% else %}
-                        <img class="profile_image"
-                            src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
-                            alt="profile_image" width="20%">
-                        {% endif %}
-                        <p>{{portfolio.user.username}}</p>
-                        <p>{{portfolio.user.category}}</p>
+                        <div class="portfolio_owner">
+                                <div class="user_img">
+                                    {% if user.image  %}
+                                    <img class="profile_image" src="{{portfolio.user.image.url}}" alt="profile_image" >
+                                    {% else %}
+                                    <img class="profile_image"
+                                        src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                                        alt="profile_image" >
+                                    {% endif %}
+                                </div>
+                                <div>user: {{portfolio.user.username}}</div>
+                                <div>category: {{portfolio.user.category}}</div>
+                                
+                        </div>
                     </a>
                 </div>
                 <div class="portfolio_profile">
