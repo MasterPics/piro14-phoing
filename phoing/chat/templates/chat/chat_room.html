@@ -1,0 +1,364 @@
+<!-- chat/templates/chat/chat_room.html -->
+{% extends 'myApp/layout.html' %}
+{% load static %}
+
+{% block stylesheet %}
+<link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+<link rel="stylesheet" href="{% static 'css/chat_room.css' %}">
+
+
+<!-- bootstrap/font-awsome -->
+
+
+{% endblock stylesheet %}
+
+
+{% block content %}
+
+<!-- <div class="container">
+
+    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+    <input id="chat-message-input" type="text" size="100"><br>
+    <input id="chat-message-submit" type="button" value="Send">
+
+</div> -->
+
+
+
+
+<div class="container">
+  <div class="side-nav">
+
+    {% for user_group in request.user.user_groups.all %}
+
+    <div class="profile profile-{{user_group.contact.pk}}">
+      <img src="{{ user_group.contact.thumbnail.url }}" alt="">
+    </div>
+      
+    {% endfor %}
+    
+    <!-- <div class="icon-container">
+      <i class="fa fa-home"></i>
+    </div>
+    <div class="icon-container">
+      <i class="fas fa-calendar"></i>
+    </div>
+    <div class="icon-container active">
+      <i class="fa fa-comment-alt"></i>
+    </div>
+    <div class="icon-container">
+      <i class="fa fa-list"></i>
+    </div>
+    <div class="icon-container">
+      <i class="fa fa-sticky-note"></i>
+    </div> -->
+
+  </div>
+  <div class="main-veiw">
+    <div class="top-nav">
+      <div class="logo">{{ group.name }}</div>
+    </div>
+    <div class="content">
+      <div class="message-list">
+        <div class="list-top">
+          <input type="text">
+          <button class="search">
+            <i class="fa fa-search"></i>
+          </button>
+          <button class="add">
+            +
+          </button>
+          <button class="close-list">
+            <i class="fa fa-chevron-left"></i>
+          </button>
+        </div>
+        <div class="list">ㅇ
+          {% for member in group.members.all  %}
+
+          
+            {% if member == group.contact.user %}
+
+              <div class="contact unread host">
+                <div class="icon">
+                  
+                  {% if  member.image.url %}
+                  <img src="{{ member.image.url }}" alt="kitten-image">  
+                  {% else %}
+                  <img src="https://placekitten.com/700/700?image=16" alt="kitten-image">  
+                  {% endif %}
+                    
+                  
+                </div>
+                <div class="blurb">
+                  <h2 class="name">
+                    {{ member.username }} 
+                  </h2>
+                  <span class="category">
+                    {{ member.category }} 
+                  </span>
+                </div>
+                <div class="profile-detail icon">
+                  <a href="{% url 'myApp:profile_detail' member.pk %}"><i class="fas fa-search"></i></a>
+                </div>
+            </div>
+            {% else %}
+
+            <div class="contact unread">
+              <div class="icon">
+                <img src="{{ member.image.url }}" alt="kitten-image">
+              </div>
+              <div class="blurb">
+                <h2 class="name">
+                  {{ member.username }} 
+                </h2>
+                <span class="category">
+                  {{ member.category }} 
+                </span>
+              </div>
+              <div class="profile-detail icon">
+                
+                {% if member.image %}
+                <a href="{% url 'myApp:profile_detail' member.pk %}"><i class="fas fa-search"></i></a>
+                {% else %}
+                <a href="#"><i class="fas fa-search"></i></a>  
+                {% endif %}
+                  
+                
+              </div>
+            </div>
+              
+            {% endif %}
+            
+          {% endfor %}
+          <!-- <div class="contact unread">
+            <div class="icon">
+              <img src="https://placekitten.com/200/200" alt="kitten-image">
+            </div>
+            <div class="blurb">
+              <h2 class="name">
+                Steve Wiggins
+              </h2>
+            </div>
+          </div>
+          <div class="contact unread active">
+            <div class="icon">
+              <img src="https://placekitten.com/200/200?image=2" alt="kitten-image">
+            </div>
+            <div class="blurb">
+              <h2 class="name">
+                Invasion Force
+              </h2>
+            </div>
+          </div>
+          <div class="contact">
+            <div class="icon">
+              <img src="https://placekitten.com/550/555" alt="kitten-image">
+            </div>
+            <div class="blurb">
+              <h2 class="name">
+                John Doe
+              </h2>
+            </div>
+          </div>
+          <div class="contact">
+            <div class="icon">
+              <img src="https://placekitten.com/700/700?image=16" alt="kitten-image">
+            </div>
+            <div class="blurb">
+              <h2 class="name">
+                Maria Hugges
+              </h2>
+            </div>
+          </div>
+          <div class="contact">
+            <div class="icon">
+              <img src="https://placedog.net/400/400" alt="puppy-image">
+            </div>
+            <div class="blurb">
+              <h2 class="name">
+                Commander Dave
+              </h2>
+            </div>
+          </div> -->
+        </div>
+      </div>
+      <div class="chat">
+        <!-- <div class="top">
+          <div class="open-message">
+            <i class="fa fa-chevron-left"></i>
+          </div>
+          <div class="name" id="open">
+            Invasion Force
+          </div>
+          <div class="button-container">
+            <button>
+              <i class="fa fa-phone"></i>
+            </button>
+            <button>
+              <i class="fa fa-camera"></i>
+            </button>
+            <button>
+              <i class="fa fa-folder"></i>
+            </button>
+          </div>
+        </div> -->
+        <div class="message-container">
+          <div id="check_older_messages">Older Messages</div>
+          <div class="comment me">
+            <img src="https://placekitten.com/300/300?image=10" alt="">
+            <div class="bubble">
+              <img src="https://dummyimage.com/400x400/ddd/fff" alt="">
+            </div>
+          </div>
+          <div class="comment me">
+            <img src="https://placekitten.com/300/300?image=10" alt="">
+            <div class="bubble">
+              Let me know if this works
+            </div>
+          </div>
+          <div class="comment other">
+            <img src="https://placekitten.com/700/700?image=16" alt="">
+            <div class="bubble">
+              yes this is great
+            </div>
+          </div>
+          <div class="divider"><span>
+              Feb 8 12:01
+            </span></div>
+          <div class="comment other">
+            <img src="https://placekitten.com/700/700?image=12" alt="">
+            <div class="bubble">
+              Did you find a place for monday's metting?
+            </div>
+          </div>
+          <div class="comment me">
+            <img src="https://placekitten.com/300/300?image=10" alt="">
+            <div class="bubble">
+              I found a couple venues. The one on meeting street seems nice.
+            </div>
+          </div>
+          <div class="comment me">
+            <img src="https://placekitten.com/300/300?image=10" alt="">
+            <div class="bubble">
+              can you give me some guidelines to follow as I look for one?
+            </div>
+          </div>
+          <div class="comment other">
+            <img src="https://placekitten.com/1000/1000?image=12" alt="">
+            <div class="bubble">
+              Here's a link to a good one. It should be avalible.
+              <a href="#">venues.com</a>
+            </div>
+          </div>
+          <div class="divider">
+            <span>Today 8:58 PM</span>
+          </div>
+          <div class="comment me">
+            <img src="https://placekitten.com/300/300?image=10" alt="">
+            <div class="bubble">
+              Are we still holding the metting on monday?
+            </div>
+          </div>
+          <div class="comment other">
+            <img src="https://placekitten.com/1000/1000?image=12" alt="">
+            <div class="bubble">
+              Yeah, can you bring napkins?
+            </div>
+          </div>
+          <div class="comment other">
+            <img src="https://placekitten.com/700/700?image=16" alt="">
+            <div class="bubble">
+              I've got napkins covered 👍
+            </div>
+          </div>
+          <div class="comment me">
+            <img src="https://placekitten.com/300/300?image=10" alt="">
+            <div class="bubble">
+              How do you feel about terraforming?
+            </div>
+          </div>
+          <div class="comment other">
+            <img src="https://placekitten.com/1000/1000?image=12" alt="">
+            <div class="bubble">
+              I feel like thats's a bit off topic. 
+            </div>
+          </div>
+        </div>
+        <div class="input-container">
+          <!-- <button class="attach">
+            <i class="fa fa-paperclip"></i>
+          </button> -->
+          <div class="textarea-container">
+            <textarea type="text" placeholder="message"></textarea>
+          </div>
+          <button class="send">
+            <i class="fa fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <button class="close">
+          x
+        </button>
+        <img src="https://placekitten.com/200/200?image=2" alt="">
+        <h3>Invasion Force</h3>
+        <div class="bio">
+          A bunch of great weirdos
+        </div>
+        <ul class="contact-list">
+          <li>
+            <img class="contact-img" src="https://placekitten.com/700/700?image=16" alt="">
+            <span class="name">
+              Maria Hugges
+            </span>
+          </li>
+          <li>
+            <img class="contact-img" src="https://placekitten.com/1000/1000?image=12" alt="">
+            <span class="name">
+              Lucy Farrel
+            </span>
+          </li>
+          <li>
+            <img class="contact-img" src="https://placekitten.com/540/540" alt="">
+            <span class="name">
+              Your Neighbor
+            </span>
+          </li>
+          <li>
+            <img class="contact-img" src="https://placedog.net/300/300" alt="">
+            <span class="name">
+              Sam Willis
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+
+
+
+{% endblock content%}
+
+{% block script %}
+<script>
+var roomName = {{ room_name_json }};
+var username = "{{ request.user.username }}";
+</script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'js/reconnecting-websocket.js' %}"></script>
+<script src="{% static 'js/chat_room.js' %}"></script>
+
+{% endblock script %}
+
+
+

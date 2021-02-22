@@ -1,0 +1,169 @@
+{% extends 'myApp/layout.html' %}
+{% load static %}
+{% block stylesheet %}
+
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+        list-style-type: none;
+    }
+    label{
+        font-size:1.1rem;
+    }
+
+    .form-group{
+        margin:20px 60px;
+        display: grid;
+        grid-template-columns: 200px 1fr;
+    }
+
+
+   .title input,
+   .desc textarea,
+   .location textarea,
+   .pay input,
+   .start_date input,
+   .end_date input {
+    border:0; 
+    padding:1px; 
+    font-size:1.1em; 
+    border:solid 1px #ccc; 
+    margin-top:4px; 
+    width:80%;
+    border-radius: 3px;
+   }
+
+   .title input:focus,
+   .desc textarea:focus,
+   .location textarea:focus,
+   .pay input:focus,
+   .start_date input:focus,
+   .end_date input:focus { 
+    outline: none !important;
+    border-color: #719ECE;
+    box-shadow: 0 0 10px #719ECE;
+   }
+
+   select{
+    border:0; 
+    padding:1px; 
+    font-size:1.1rem; 
+    border:solid 1px #ccc; 
+    margin-top:5px; 
+    width:50%;
+    border-radius: 3px;
+   }
+
+
+   .is_closed input{
+    margin-top:8px;
+   }
+
+   input.btn {
+    background-color: rgb(224, 224, 224);
+    border: none;
+    border-radius: 8px;
+    margin-top: 20px;
+    padding: 5px 10px;
+    margin-left:60px;
+   }
+
+   input.btn:hover {
+    cursor: pointer;
+  }
+
+
+
+
+</style>
+<link rel="stylesheet" href="{% static 'css/place_select.css' %}">
+
+{% endblock stylesheet %}
+{% block content %}
+
+<div class='container'>
+    <div class="map_wrap">
+        <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+    
+        <div id="menu_wrap" class="bg_white">
+            <div class="option">
+                <div>
+                    <form onsubmit="searchPlaces(); return false;">
+                        키워드 : <input type="text" value="" id="keyword" size="15" placeholder="검색어를 입력하세요"> 
+                        <button type="submit">검색하기</button> 
+                    </form>
+                </div>
+            </div>
+            <hr>
+            <ul id="placesList"></ul>
+            <div id="pagination"></div>
+        </div>
+    </div>
+    
+    <div class='row'>
+
+        <div class='col-md-12'>
+            <h1 style="margin-top: 80px; margin-left: 60px; margin-bottom: 40px; font-size:30px;">Create Place</h1>
+            <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="location-form">
+                    {{ location_form.as_table }}
+                </div>
+
+                <div class="place-form">
+                    {% for field in place_form.visible_fields %}
+                    <div class="form-group {{ field.name }}">
+                        {{ field.label_tag }}
+                        <div class='col-sm-10'>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <p class="help-block">{{ field.help_text }}</p>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+        
+                <input type="submit" class="btn" />
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content%}
+
+
+
+
+<!-- 
+<div class='container'>
+    <div class='row'>
+        <div class='col-md-12'>
+            <h1>Create Contact</h1>
+            <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table>
+                    {{ form.as_table }}
+                </table>
+                <input type="submit" class="btn btn-primary" value="submit" />
+            </form>
+        </div>
+    </div>
+</div> -->
+
+
+{% block script %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+<script type="text/javascript" src="{% static 'js/place_create_map.js' %}"></script>
+
+{% endblock script%}

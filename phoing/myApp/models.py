@@ -15,10 +15,16 @@ import datetime
 
 from place.models import Location
 from django_mysql.models import ListCharField
+from django.utils import timezone
+
 
 
 class Tag(models.Model):
     tag = models.CharField(max_length=30)
+    save_users = models.ManyToManyField(
+        to=User, related_name='tag_save_users', blank=True)
+    like_users = models.ManyToManyField(
+        to=User, related_name='tag_like_users', blank=True)
 
     @classmethod
     def add_tags(selt, tag_str):
@@ -55,8 +61,8 @@ class Contact(models.Model):
     location = models.ForeignKey(
         Location, on_delete=models.CASCADE, default=None, blank=True)
     pay = models.PositiveIntegerField()
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     is_closed = models.BooleanField(default=False)
     tag_str = models.CharField(max_length=50, blank=True)
     tags = models.ManyToManyField(Tag, related_name='contacts', blank=True)
@@ -72,6 +78,7 @@ class Contact(models.Model):
             "lat": self.location.lat,
             "lon": self.location.lon,
         }
+
     def classname(self):
         return self.__class__.__name__
 
@@ -161,9 +168,9 @@ class Portfolio(models.Model):
     desc = models.TextField()
 
     # specific field
+    view_count = models.PositiveIntegerField(default=0)
     like_users = models.ManyToManyField(
         to=User, related_name='portfolio_like_users', blank=True)
-    view_count = models.PositiveIntegerField(default=0)
     tag_str = models.CharField(max_length=50, blank=True)
     tags = models.ManyToManyField(Tag, related_name='portfolios', blank=True)
 
@@ -212,7 +219,7 @@ class Images(models.Model):
         to=Reference, null=True, blank=True, related_name='reference_images', on_delete=models.CASCADE)
 
     image = models.ImageField(
-        upload_to=uuid_name_upload_to, blank=True, verbose_name='Image')
+        upload_to=uuid_name_upload_to, blank=True,null=True, verbose_name='Image')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -283,3 +290,8 @@ class Place(models.Model):
             'pay': self.location.pay,
             'tag_str': ' '.join([tag.tag for tag in tags.all()])
         }
+
+class ViewCount(models.Model):
+    ip=models.CharField(max_length=15, default=None, null=True)
+    post=models.ForeignKey(Portfolio, default=None, null=True, related_name='view_counts', on_delete=models.CASCADE)
+    date=models.DateField(default=timezone.now, null=True, blank=True)
