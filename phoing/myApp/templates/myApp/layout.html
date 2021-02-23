@@ -93,15 +93,15 @@
       z-index: 1;
     }
 
-    .nav_left{
+    .nav_left {
       display: flex;
     }
 
-    .nav__profile{
+    .nav__profile {
       display: flex;
       align-items: center;
     }
-  
+
 
     .nav__logo {
       display: flex;
@@ -121,15 +121,15 @@
     }
 
 
-    .nav__profile li{
+    .nav__profile li {
       display: flex;
       align-items: center;
       padding-right: 20px;
 
     }
 
-    .nav__profile .padding{
-      padding-right:5px;
+    .nav__profile .padding {
+      padding-right: 5px;
     }
 
     .nav__menu li a:hover {
@@ -137,7 +137,7 @@
       cursor: pointer;
     }
 
-   
+
 
     .nav__profile i {
       font-size: 20px;
@@ -150,7 +150,7 @@
 
     .nav__toggleBtn {
       display: none;
-      
+
       font-size: 24px;
     }
 
@@ -339,13 +339,7 @@
           <h1>{{ request.user.username }}</h1>
         </ul>
       </div>
-      <ul class="nav__menu">
-        <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
-        <li><a href="{% url 'myApp:portfolio_list' %}">Portfolio</a></li>
-        <li><a href="{% url 'myApp:reference_list' %}">Reference</a></li>
-        <li><a href="{% url 'place:place_list' %}">Place</a></li>
-        <li><a href="{% url 'myApp:with_brand_list' %}">Collaboration</a></li>
-      </ul>
+
       <ul class="nav__profile" style="float: right;">
 
         {% if not user.is_authenticated %}
