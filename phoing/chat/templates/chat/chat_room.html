@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
-<link rel="stylesheet" href="{% static 'css/chat_room.css' %}">
+<link rel="stylesheet" href="{% static 'css/chat_room_backup.css' %}">
 
 
 <!-- bootstrap/font-awsome -->
@@ -31,12 +31,15 @@
 
 
 
+
+
 <div class="container">
   <div class="side-nav">
 
     {% for user_group in request.user.user_groups.all %}
 
     <div class="profile profile-{{user_group.contact.pk}}">
+      
       <img src="{{ user_group.contact.thumbnail.url }}" alt="">
     </div>
       
@@ -64,6 +67,7 @@
       <div class="logo">{{ group.name }}</div>
     </div>
     <div class="content">
+
       <div class="message-list">
         <div class="list-top">
           <input type="text">
@@ -301,43 +305,7 @@
           </button>
         </div>
       </div>
-      <div class="contact-detail">
-        <button class="close">
-          x
-        </button>
-        <img src="https://placekitten.com/200/200?image=2" alt="">
-        <h3>Invasion Force</h3>
-        <div class="bio">
-          A bunch of great weirdos
-        </div>
-        <ul class="contact-list">
-          <li>
-            <img class="contact-img" src="https://placekitten.com/700/700?image=16" alt="">
-            <span class="name">
-              Maria Hugges
-            </span>
-          </li>
-          <li>
-            <img class="contact-img" src="https://placekitten.com/1000/1000?image=12" alt="">
-            <span class="name">
-              Lucy Farrel
-            </span>
-          </li>
-          <li>
-            <img class="contact-img" src="https://placekitten.com/540/540" alt="">
-            <span class="name">
-              Your Neighbor
-            </span>
-          </li>
-          <li>
-            <img class="contact-img" src="https://placedog.net/300/300" alt="">
-            <span class="name">
-              Sam Willis
-            </span>
-          </li>
-        </ul>
-      </div>
-    </div>
+    </div> 
   </div>
 </div>
   

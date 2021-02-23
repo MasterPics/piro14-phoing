@@ -1,0 +1,80 @@
+<!-- chat/templates/chat/chat_room.html -->
+{% extends 'myApp/layout.html' %}
+{% load static %}
+
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+<link rel="stylesheet" href="{% static 'css/chat_room_new.css' %}">
+{% endblock stylesheet %}
+
+
+{% block content %}
+
+
+<div class="chat-container">
+    <div class="side-nav">
+        <div class="side-nav-top">참가자</div>
+        <div class="members-wrapper">
+            {% for member in group.members.all %}
+            <div class="member-wrapper">
+                <div class="member-profile member-left">
+    
+                    {% if member.image.url %}
+                        <img src="{{member.image.url}}" alt="">
+                    {% else %}
+                    <!-- TODO! -->
+                    {% endif %}
+                </div>
+                <div class="member-right">
+                    <div class="member-name">{{member.username}}</div>
+                    <div class="member-category">
+                        {{member.category}}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="main-view">
+        <div class="top-nav">{{group.name}}</div>
+        <div class="message-container">
+        
+        </div>
+        <div class="textarea-container">TextArea
+            <div class="textarea">
+                <textarea type="text" placeholder="message"></textarea>
+            </div>
+            <div class="textarea-button">
+                <button class="send">
+                    <i class="fa fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock content%}
+
+{% block script %}
+<script>
+var roomName = {{ room_name_json }};
+var username = "{{ request.user.username }}";
+</script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'js/reconnecting-websocket.js' %}"></script>
+<script src="{% static 'js/chat_room.js' %}"></script>
+
+{% endblock script %}
+
+
+
