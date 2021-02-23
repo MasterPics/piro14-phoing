@@ -63,7 +63,7 @@ class User(AbstractUser):
     category = models.CharField(
         max_length=20, choices=CATEGORY)
     image = models.ImageField(
-        upload_to=uuid_name_upload_to, blank=True)
+        upload_to=uuid_name_upload_to, blank=True, default='unnamed.png')
     desc = models.TextField(blank=True)
     # objects = UserManager()
 
