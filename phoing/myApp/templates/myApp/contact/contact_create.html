@@ -75,37 +75,43 @@
         border-radius: 8px;
         margin-top: 20px;
         padding: 5px 10px;
-        margin-left: 700px;
+        margin-left: 600px;
     }
 
     input.btn:hover {
         cursor: pointer;
     }
 
-    .container {
+    .contact_container {
         display: flex;
-        flex-direction : column;
         background: white;
-        height: 100%;
+        
     }
 
     .form-wrapper {
         color: #fff;
-        box-shadow: 0px 15px 50px 10px rgba(0, 0, 0, 0.2);
+
         box-sizing: border-box;
         background-color: #fff;
+        height:100vh;
     }
 
-    .option{
-        z-index:1;
+    .location-form {
+        visibility: hidden;
     }
 
-    .bg_white {
+    .map_wrap {
+        color:#fff;
+        box-sizing: border-box;
+        z-index:0;
+    }
+
+    .map{
         z-index:0;
     }
 
 
-    
+
 
 
 </style>
@@ -114,16 +120,16 @@
 {% endblock stylesheet %}
 {% block content %}
 
-<div class='container'>
+<div class='contact_container'>
     
     <div class='form-wrapper'>
-        <h1 style=" font-size:30px; color:black;">Create
+        <h1 style=" font-size:30px; color:black; margin-top:100px; margin-left:50px;">Create
             Contact</h1>
         <form action="" method="POST" class="" enctype="multipart/form-data">
             {% csrf_token %}
-            {% comment %} <div class="location-form">
+            <div class="location-form">
                 {{ location_form.as_table }}
-            </div> {% endcomment %}
+            </div>
 
             <div class="contact-form">
                 {% for field in contact_form.visible_fields %}
@@ -149,15 +155,14 @@
     </div>
 
     <div class="map_wrap">
-        <div id="map">
-        </div>
-
+        <div id="map" style="width:100%;height:100vh;"></div>
+    
         <div id="menu_wrap" class="bg_white">
             <div class="option">
                 <div>
                     <form onsubmit="searchPlaces(); return false;">
-                        키워드 : <input type="text" value="" id="keyword" size="15" placeholder="검색어를 입력하세요">
-                        <button type="submit">검색하기</button>
+                        키워드 : <input type="text" value="" id="keyword" size="15" placeholder="검색어를 입력하세요"> 
+                        <button type="submit">검색하기</button> 
                     </form>
                 </div>
             </div>
