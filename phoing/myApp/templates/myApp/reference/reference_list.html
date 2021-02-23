@@ -3,12 +3,48 @@
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/contact/contact.css' %}">
+
+<style>
+    
+    .top_nav {
+        border-bottom: rgb(201, 201, 201) solid 1px;
+        display: flex;
+        padding: 20px;
+        justify-content: center;
+    }
+
+    .top_nav div {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .top_nav .pinterest {
+        margin-right: 5%;
+    }
+
+    /*page*/
+
+    .top_nav .pinterest a {
+        font-weight: bold;
+    }
+
+    .top_nav .pinterest{
+        border-left: rgb(185, 185, 185) 1px solid;
+        border-right: rgb(185, 185, 185) 1px solid;
+    }
+</style>
 {% endblock stylesheet %}
 {% block content %}
 
-<div>
-    <a href="{% url 'myApp:reference_list' %}">from pinterest</a>
-    <a href="{% url 'myApp:local_list' %}">from phoing</a>
+
+
+<div class="top_nav">
+    <div class="pinterest">
+        <a href="{% url 'myApp:reference_list' %">from pinterest</a>
+    </div>
+    <div class="local">
+        <a href="{% url 'myApp:local_list' %}">from phoing</a>
+    </div>
 </div>
 
 
