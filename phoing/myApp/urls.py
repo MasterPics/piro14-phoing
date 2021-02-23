@@ -4,6 +4,7 @@ from . import views
 app_name = 'myApp'
 
 urlpatterns = [
+     path('login/general_login', view=views.general_login, name='general_login'),
     #####################profile#######################
     path('', view=views.main_list, name='main_list'),
     path('profile/<int:pk>/', view=views.profile_detail, name='profile_detail'),
