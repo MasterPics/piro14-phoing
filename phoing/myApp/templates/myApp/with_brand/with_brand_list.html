@@ -1,5 +1,6 @@
 {% extends 'myApp/layout.html' %}
 {% load static %}
+{% load poll_extras %}
 
 
 {% block stylesheet %}
@@ -318,6 +319,82 @@
         border-left: rgb(185, 185, 185) 1px solid;
         border-right: rgb(185, 185, 185) 1px solid;
     }
+
+    /* collaboration_list */
+
+    .grid-item {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-bottom: 20px;
+        margin-top:20px;
+
+    }
+
+    .item_top>div {
+        padding: 10px;
+    }
+
+    .brand_owner {
+        display: flex;
+        align-items: center;
+        border-bottom: rgb(221, 221, 221) 1px solid;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .brand_owner div {
+        margin-right: 8px;
+    }
+
+    .brand_owner .user_img {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        margin-right: 10px;
+    }
+
+    .user_img .profile_image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+
+    .thumbnail_desc img {
+        width: 280px;
+    }
+
+    .pay_date {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .pay_date p {
+        text-align: end;
+        line-height: 1.5rem;
+    }
+
+    .item_bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: rgb(221, 221, 221) solid 1px;
+        padding: 15px;
+
+    }
+
+    .item_bottom>div {
+        cursor: pointer;
+    }
+
+
+    /**/
+
+    .with_brand_list{
+        padding:30px;
+    }
+
+
 </style>
 {% endblock stylesheet %}
 
@@ -417,30 +494,52 @@
             <div class="grid-item">
                 <div class="item_top with_brand-{{with_brand.pk}}">
                     <div>
-                        User : {{ with_brand.user }}
+                        <a href="{% url 'myApp:profile_detail' with_brand.user.pk %}">
+                            <div class="brand_owner">
+                                <div class="user_img">
+                                    {% if with_brand.user.image %}
+                                    <img class="profile_image" src="{{ with_brand.user.image.url }}" alt="">
+                                    {% else %}
+                                    <img class="profile_image"
+                                        src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                                        alt="profile_image">
+                                    {% endif %}
+                                </div>
+                                <div>{{ with_brand.user }}</div>
+                                <div style="font-size:smaller;">{{ with_brand.user.category }}</div>
+                            </div>
+                        </a>
                     </div>
-                    <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
-                        <div style="font-weight:bolder;">{{ with_brand.title }}</div>
-                    </a>
-                    <div>
-                        <!--user_img and category-->
-
-
-                        {% if with_brand.user.image %}
-                        <img src="{{ with_brand.user.image.url }}" alt="">
-                        {% endif %}
-                        {{ with_brand.user.category }}
+                    <div class="title">
+                        <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
+                            <div style="font-weight:bolder;">{{ with_brand.title }}</div>
+                        </a>
                     </div>
                     <div class="thumbnail_desc">
-                        <img src="{{ with_brand.thumbnail.url }}" alt="">
+                        <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
+                            <img src="{{ with_brand.thumbnail.url }}" alt="">
+                        </a>
                     </div>
                     <div class="pay_date">
-                        {% if with_brand.pay == 0 %}
-                        Pay : 상호 무페이
-                        {% else %}
-                        Pay : {{ with_brand.pay }}원
-                        {% endif %}
+                        <div>
+                            {% if with_brand.pay == 0 %}
+                            Pay : 상호 무페이
+                            {% else %}
+                            Pay : {{ with_brand.pay }}원
+                            {% endif %}
                         <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
+                        </div>
+                        <div>
+                            {% if with_brand.is_closed %}
+                            마감
+                            {% else %}
+                            <p>{{ with_brand.start_date|datefilter }}</p>
+                            <!--시작날짜-->
+                            <p>~{{ with_brand.end_date|datefilter }}</p>
+                            <!--끝날짜-->
+                            {% endif %}
+
+                        </div>
                     </div>
                 </div>
 
@@ -464,13 +563,7 @@
                 </div>
 
 
-                <!--
-                <div class="caption">
-                    <div class="caption-content">
-                        <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
-                    </div>
-                </div>
-                -->
+               
             </div>
             {% endfor %}
             {% endfor %}

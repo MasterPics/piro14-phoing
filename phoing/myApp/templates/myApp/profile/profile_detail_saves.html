@@ -5,6 +5,240 @@
 {% block stylesheet %}
 <!-- <link rel="stylesheet" href="{% static 'css/contact/contact.css' %}"> -->
 <style>
+    * {
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+        list-style-type: none;
+        font-family: "NanumSquare", sans-serif;
+    }
+
+    /*category btn*/
+
+    * {
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        color: black;
+
+    }
+
+
+    /* Dropdown Button */
+    .dropbtn {
+        display: flex;
+        margin: auto 1px;
+        padding: 5px;
+        justify-content: center;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        min-width: 160px;
+        z-index: 1;
+        margin-left: 2px;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        background-color: white;
+        border: #ddd solid 1px;
+    }
+
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {
+        background-color: #ddd;
+    }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+
+    * {
+        box-sizing: border-box;
+    }
+
+
+    .btn {
+        width: 150px;
+        height: 50px;
+        border: 1px solid #333;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 0;
+        transition: 1s;
+    }
+
+    .btn::before,
+    .btn::after {
+        position: absolute;
+        background: #fff;
+        z-index: -1;
+        transition: 1s;
+        content: "";
+    }
+
+    .btn::before {
+        height: 50px;
+        width: 130px;
+    }
+
+    .btn::after {
+        width: 150px;
+        height: 30px;
+    }
+
+    .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .btn:hover::before {
+        width: 0px;
+        background: #fff;
+    }
+
+    .btn:hover::after {
+        height: 0px;
+        background: #fff;
+    }
+
+    .btn:hover {
+        background: #fff;
+    }
+
+
+    .choose a,
+    .profile_button a {
+        color: black;
+    }
+
+    .container {
+        margin: 3% 4%;
+    }
+
+    .choose {
+        position: relative;
+        display: flex;
+        margin: auto 1px;
+        padding: 2px;
+        margin-top: 3%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .choose_profile {
+        padding: 5px;
+        margin-right: 2%;
+    }
+
+    .dropdown{
+        margin-right: 2%;
+    }
+
+    .dropdown2 span{
+        font-weight:900;
+    }
+
+
+
+    
+
+    /*top button*/
+
+    #myBtn {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Fixed/sticky position */
+        bottom: 20px;
+        /* Place the button at the bottom of the page */
+        right: 30px;
+        /* Place the button 30px from the right */
+        z-index: 99;
+        /* Make sure it does not overlap */
+        color: rgb(0, 0, 0);
+        /* Text color */
+        cursor: pointer;
+        /* Add a mouse pointer on hover */
+        font-size: 2em;
+        /* Increase font size */
+        border-radius: 100%;
+        background-color: white;
+    }
+
+    #myBtn i:hover {
+        color: rgb(58, 58, 58);
+        /* Add a dark-grey background on hover */
+    }
+
+
+    /**/
+    
+    .grid-item {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-bottom: 20px;
+        margin-top:20px;
+    }
+
+
+    .item_top div {
+        padding: 10px;
+    }
+
+    .item_top .title{
+        font-weight: bolder;
+    }
+
+    .item_top .date{
+        display: flex;
+        justify-content: flex-end;
+    }
+
+
+
+    .thumbnail_desc img {
+        width: 20rem;
+    }
+
+    .item_bottom {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        border-top: rgb(221, 221, 221) solid 1px;
+        border-bottom: rgb(180, 180, 180) solid 2px;
+        padding: 15px;
+
+    }
+
+    .item_bottom>div {
+        cursor: pointer;
+    }
+
+
 
 </style>
 
@@ -18,89 +252,113 @@
         <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
             <div class="btn"><span class="noselect">My Profile</span></div>
         </a>
-        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
-            <div class="btn"><span class="noselect">My Posts</span></div>
-        </a>
-        <a class="choose_save" href="{% url 'myApp:profile_detail_saves' user.pk %}">
-            <div class="btn"><span class="noselect">My Saves</span></div>
-        </a>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <div class="btn"><span class="noselect">My Posts</span></div>
+            </div>
+            <div class="dropdown-content">
+                <a href="{% url 'myApp:profile_detail_posts' user.pk %}" onclick="onClickLink('contact')">Contact</a>
+                <a href="{% url 'myApp:profile_detail_posts' user.pk %}" onclick="onClickLink('portfolio')">Portfolio</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <div class="btn"><span class="noselect"><div></div>My Saves</span></div>
+            </div>
+            <div class="dropdown-content">
+                <a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a>
+                <a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a>
+            </div>
+        </div>
         {% else %}
-        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}">
-            <div class="btn"><span class="noselect">My Profile</span></div>
-        </a>
-        <a class="choose_portfolio" href="{% url 'myApp:profile_detail_posts' user.pk %}">
-            <div class="btn"><span class="noselect">My Posts</span></div>
-        </a>
+        <a class="choose_profile" href="{% url 'myApp:profile_detail' user.pk %}"><div class="btn"><span class="noselect">My Profile</span></div></a>
+        <div class="dropdown">
+            <div class="dropbtn">
+                <div class="btn"><span class="noselect">My Posts</span></div>
+            </div>
+            <div class="dropdown-content">
+                <a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a>
+                <a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a>            
+            </div>
+        </div>
         {% endif %}
+
+       
     </div>
 
 
+
     <div class="user_postlist">
-        <!--category-->
+        <!-- category
         <div class="postlist_left">
             <ul class="category">
                 <li><a href="javascript:void(0)" onclick="onClickLink('contact')">Contact</a></li>
                 <li><a href="javascript:void(0)" onclick="onClickLink('portfolio')">Portfolio</a></li>
             </ul>
-        </div>
+        </div> -->
 
         <!--post_list-->
-        <div class="content">
-            <!---->
-            <div class="grid">
-                {% for post in posts %}
-                {% for i in "x"|rjust:"10" %}
-                <div class="grid-item">
-                    {% if user in post.save_users.all %}
-                    {% if post.classname == "Contact" %}
-
-                    <div class="item_top">
-                        <a href="{% url 'myApp:contact_detail' post.pk %}">
-                            <div>{{ post.title }}</div>
-                            <img src="{{ post.thumbnail.url }}" alt="">
-                            <div>{{post.created_at}}</div>
-                        </a>
+              <!--post_list-->
+              <div class="">
+                <div class="grid">
+                    {% for post in posts %}
+                    {% for i in "x"|rjust:"10" %}
+                    <div class="grid-item">
+                        {% if user in post.save_users.all %}
+                        {% if post.classname == "Contact" %}    
+                        <div>
+                        <div class="item_top">
+                            <a href="{% url 'myApp:contact_detail' post.pk %}">
+                                <div class="title"><div>{{ post.title }}</div></div>
+                                <div class="thumbnail_desc"><img src="{{ post.thumbnail.url }}" alt=""></div>
+                                <div class="date">{{post.created_at}}</div>
+                            </a>
+                        </div>
                         <div class="item_bottom">
                             <div class="save save-{{post.id}}">
                                 {% if request_user in post.save_users.all %}
-                                <i class="fas fa-bookmark" style="color:red" type="submit"
+                                <i class="fas fa-bookmark" type="submit"
                                     onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
                                 {% else %}
-                                <i class="far fa-bookmark" style="color:red" type="submit"
+                                <i class="far fa-bookmark" type="submit"
                                     onclick="onClickContactSave({{ post.id }})" name="type" value="save"></i>
                                 {% endif %}
                                 <span class="save__content">{{ post.save_users.count }}</span>
                             </div>
                         </div>
-                    </div>
-                </div>
-                {% elif post.classname == "Portfolio" %}
-                <div class="item_top">
-                    <a href="{% url 'myApp:portfolio_detail' post.pk %}">
-                        <div>{{ post.title }}</div>
-                        <img src="{{ post.thumbnail.url }}" alt="">
-                        <div>{{post.created_at}}</div>
-                    </a>
-                    <div class="item_bottom">
-                        <div class="save save-{{post.id}}">
-                            {% if request_user in post.save_users.all %}
-                            <i class="fas fa-bookmark" style="color:red" type="submit"
-                                onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
-                            {% else %}
-                            <i class="far fa-bookmark" style="color:red" type="submit"
-                                onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
-                            {% endif %}
-                            <span class="save__content">{{ post.save_users.count }}</span>
                         </div>
+                        {% elif post.classname == "Portfolio" %}
+                        <div>
+                        <div class="item_top">
+                            <a href="{% url 'myApp:portfolio_detail' post.pk %}">
+                                <div class="title"></div>{{ post.title }}</div></div>
+                                <div class="thumbnail_desc"><img src="{{ post.thumbnail.url }}" alt=""></div>
+                                <div class="date">{{post.created_at}}</div>
+                            </a>
+                        </div>
+                        <div class="item_bottom">
+                            <div class="save save-{{post.id}}">
+                                {% if request_user in post.save_users.all %}
+                                <i class="fas fa-bookmark"  type="submit"
+                                    onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
+                                {% else %}
+                                <i class="far fa-bookmark" type="submit"
+                                    onclick="onClickPortfolioSave({{ post.id }})" name="type" value="save"></i>
+                                {% endif %}
+                                <span class="save__content">{{ post.save_users.count }}</span>
+                            </div>
+                        </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
                     </div>
+                    {% endfor %}
+                    {% endfor %}
                 </div>
-                {% endif %}
-
-                {% endif %}
             </div>
-            {% endfor %}
-            {% endfor %}
-        </div>
+
+        <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
+
 
         {% if reference_image_urls.has_next %}
         <a class="infinite-more-link" href="?page={{ reference_image_urls.next_page_number }}">
@@ -133,6 +391,32 @@
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 <script>
+    
+//top_button
+    //Get the button:
+    mybutton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunction()
+    };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+
+
+    //
     let infinite = new Waypoint.Infinite({
         element: $('.grid')[0],
         items: '.grid-item',
