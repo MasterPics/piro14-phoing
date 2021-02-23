@@ -1,6 +1,8 @@
 {% extends 'myApp/layout.html' %}
 
 {% load static %}
+{% load poll_extras %}
+
 {% block stylesheet %}
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
 
@@ -252,8 +254,8 @@
                 alt="profile_image">
             {% endif %}
         </div>
-        <p>User: {{contact.user.username}} </p>
-        <p>Category: {{contact.user.category}}</p>
+        <p>{{contact.user.username}} </p>
+        <p> {{contact.user.category}}</p>
     </div>
 
     <div>
@@ -281,7 +283,7 @@
     <div class="pay_date">
         <p>pay: {{ contact.pay }}</p>
         <!-- 촬영날짜/마감여부 -->
-        <p>{{ contact.start_date }} ~ {{ contact.end_date }}</p>
+        <p>{{ contact.start_date|datefilter }} ~ {{ contact.end_date|datefilter }}</p>
 
     </div>
 

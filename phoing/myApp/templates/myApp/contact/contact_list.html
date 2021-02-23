@@ -1,6 +1,6 @@
 {% extends 'myApp/layout.html' %}
 {% load static %}
-{% load custom_tags %}
+{% load poll_extras %}
 
 
 {% block stylesheet %}
@@ -175,7 +175,7 @@
     }
 
     .contactlist {
-        padding: 5px;
+        padding: 3%;
     }
 
     .contactlist .bar {
@@ -412,11 +412,11 @@
                                         alt="profile_image">
                                     {% endif %}
                                 </div>
-
+                                <div>{{contact.user.username}}</div>
+                                <div style="font-size: smaller">{{contact.user.category}}</div>
                             </div>
                         </a>
-                        <div>User: {{contact.user.username}}</div>
-                                <div>Category: {{contact.user.category}}</div>
+                       
                                 {% if request_user.is_authenticated %}
 
                                 <div class="chat-btn-{{contact.pk}}">
@@ -466,19 +466,19 @@
                             Pay : {{ contact.pay }}원
                             {% endif %}
                         </div>
+                        
                         <div>
-                            <div>
-                                {% if contact.is_closed %}
-                                마감됐습니당
-                                {% else %}
-                                <p>{{ contact.start_date}}</p>
-                                <!--시작날짜-->
-                                <p>~{{ contact.end_date }}</p>
-                                <!--끝날짜-->
-                                {% endif %}
+                            {% if contact.is_closed %}
+                            마감
+                            {% else %}
+                            <p>{{ contact.start_date|datefilter }}</p>
+                            <!--시작날짜-->
+                            <p>~{{ contact.end_date|datefilter }}</p>
+                            <!--끝날짜-->
+                            {% endif %}
 
-                            </div>
                         </div>
+                        
                     </div>
                 </div>
 
