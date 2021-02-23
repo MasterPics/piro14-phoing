@@ -74,6 +74,7 @@ chatSocket.onclose = function(e) {
     console.error('Chat socket closed unexpectedly');
 };
 
+document.querySelector('.textarea-container textarea').focus();
 document.querySelector('.textarea-container textarea').onkeyup = function(e) {
     if (e.keyCode === 13) {  // enter, return
         document.querySelector('.send').click();
@@ -91,7 +92,9 @@ document.querySelector('.send').onclick = function(e) {
     }));
 
     messageInputDom.value = '';
-    scroll();
+    
+
+  
 };
 
 document.querySelector('#check_older_messages').onclick = function(e) {
@@ -213,12 +216,14 @@ if (author === username){
 }
 
 commentDivTag.append(imgTag);
-commentDivTag.append(author);
+commentDivTag.append(nameDivTag);
 commentDivTag.append(bubbleDivTag);
 bubbleDivTag.append(contentDivTag);
-bubbleDivTag.append(timestampDivTag);
+
 
 document.querySelector('.message-container').appendChild(commentDivTag);
+let objDiv = document.querySelector('.message-container')
+objDiv.scrollTop = objDiv.scrollHeight;
 
 
 }

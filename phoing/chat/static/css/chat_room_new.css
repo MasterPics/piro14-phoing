@@ -1,0 +1,123 @@
+:root {
+  --grey-1: #2a2a2b;
+  --grey-2: #494848;
+  --grey-3: #131312;
+  --grey-4: #333334;
+  --grey-5: #bbb;
+  --color-1: #64af50; /*#1F09AC*/
+}
+
+.chat-container {
+  width: 100vw;
+  height: calc(100vh - 59px);
+
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.side-nav {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: grid;
+
+  /* group-left/group-right */
+  grid-template-rows: 80px auto;
+  border-right: 1px solid var(--grey-4);
+}
+
+.side-nav-top {
+  width: 100%;
+  height: 80px;
+  background-color: #dcdcdc;
+  border-right: 1px solid white;
+  box-shadow: 5px 5px;
+}
+
+.members-wrapper {
+  background-color: #e0e0e0;
+}
+
+.member-wrapper {
+  width: 100%;
+  min-height: 80px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  background-color: var(--grey-1);
+}
+
+.member-left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.member-left img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.member-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-view {
+  width: 100%;
+  height: 100%;
+  background-color: rebeccapurple;
+  display: grid;
+  grid-template-rows: 80px 8fr 2fr;
+}
+
+.top-nav {
+  background-color: white;
+  box-shadow: 5px 5px;
+  border-bottom: 1px solid var(--grey-2);
+}
+
+.message-container {
+  background-color: white;
+  overflow-y: scroll;
+  border-bottom: 1px solid var(--grey-2);
+}
+
+.textarea-container {
+  background-color: #000000;
+  display: grid;
+  grid-template-columns: 8fr 2fr;
+}
+
+.textarea {
+  width: 100%;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.textarea-container textarea {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  overflow-y: scroll;
+  width: 100%;
+  padding: 5px;
+  box-sizing: content-box;
+  height: 80%;
+}
+
+.send {
+  border: none;
+  background: var(--color-1);
+  color: white;
+  font-size: 40px;
+  height: 8vh;
+  width: 8vh;
+  border-radius: 50%;
+  max-height: 60px;
+  max-width: 60px;
+}

@@ -8,6 +8,11 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+<<<<<<< HEAD
+=======
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('myApp', '0001_initial'),
+>>>>>>> develop
     ]
 
     operations = [
@@ -17,6 +22,11 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('contact', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='group', to='myApp.contact')),
+                ('host', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='user_groups', to=settings.AUTH_USER_MODEL)),
+                ('members', models.ManyToManyField(blank=True, related_name='joined_groups', to=settings.AUTH_USER_MODEL)),
+                ('pendings', models.ManyToManyField(blank=True, related_name='pending_groups', to=settings.AUTH_USER_MODEL)),
+                ('rejected', models.ManyToManyField(blank=True, related_name='rejected_groups', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -28,3 +38,4 @@ class Migration(migrations.Migration):
             ],
         ),
     ]
+>>>>>>> develop

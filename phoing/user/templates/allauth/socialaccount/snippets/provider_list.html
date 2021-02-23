@@ -1,4 +1,65 @@
 {% load socialaccount %}
+{% block stylesheet %}
+<style>
+  /* .google {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+  }
+
+  .kakao {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+  }
+
+  .naver {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+  } */
+
+  .btn-brand:hover {}
+
+
+
+  .btn-brand {
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-color: white;
+    background-image: none;
+    border: 1px solid transparent;
+    width: 400px;
+    padding: 17px 0;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* float: left; */
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn-brand img {
+    height: 20px;
+    margin-right: 5px;
+  }
+</style>
+{% endblock stylesheet %}
+
 
 {% get_providers as socialaccount_providers %}
 
@@ -6,15 +67,40 @@
 {% if provider.id == "openid" %}
 {% for brand in provider.get_brands %}
 <li>
-  <a title="{{brand.name}}" 
-     class="socialaccount_provider {{provider.id}} {{brand.id}}" 
-     href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
-     >{{brand.name}}</a>
+  <button title="{{brand.name}}" class="socialaccount_provider {{provider.id}} {{brand.id}}" type="button"
+    onclick="location.href='{% provider_login_url provider.id openid=brand.openid_url process=process %}' ">{{brand.name}}</button>
 </li>
 {% endfor %}
 {% endif %}
+
+{% if provider.name == 'Google' %}
 <li>
-  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
-     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
+  <button title="{{provider.name}}" class="socialaccount_provider {{provider.id}} btn-brand"
+    onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}' "><span><img
+        src="/media/google.png" alt="kakao"></span>구글로
+    로그인하기</button>
 </li>
+{% elif provider.name == 'Naver' %}
+<li>
+  <button title="{{provider.name}}" class="socialaccount_provider {{provider.id}} btn-brand"
+    onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}' "><span><img
+        src="/media/naver.png" alt="kakao"></span>네이버로
+    로그인하기</button>
+</li>
+{% elif provider.name == 'Kakao' %}
+<li>
+
+  <button title="{{provider.name}}"="" class="socialaccount_provider {{provider.id}} btn-brand"
+    onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}' ">
+    <span><img src="/media/kakao.png" alt="kakao"></span> 카카오로
+    로그인하기</button>
+</li>
+
+<li>
+
+
+</li>
+{% endif %}
+
+
 {% endfor %}

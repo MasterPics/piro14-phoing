@@ -88,10 +88,9 @@
     .container_8 {
         display: grid;
         grid-template-rows: auto;
-        justify-content: center;
         margin: 10px auto;
         padding: 10px;
-        max-width: 70%;
+        max-width: 65%;
     }
 
     .container_8>div {
@@ -236,7 +235,7 @@
 {% comment %}
 <!-- SHOW PROFILE 버튼 ''profile_detail_other''로 가게 하기-->
 <div class="choose">
-    <a class="choose_profile" href="{% url 'myApp:profile_detail_other' request.user.pk %}">
+    <a class="choose_profile" href="{% url 'myApp:profile_detail' request.user.pk %}">
         <div class="btn"><span class="noselect">Show Profile</span></div>
     </a>
 </div>

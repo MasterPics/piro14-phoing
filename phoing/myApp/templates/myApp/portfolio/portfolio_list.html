@@ -172,6 +172,10 @@
         color: black;
     }
 
+    .portfolio_list {
+        padding:3%;
+    }
+
     .portfolio_list .bar {
         display: flex;
         align-items: center;
@@ -289,6 +293,15 @@
         color: rgb(58, 58, 58);
         /* Add a dark-grey background on hover */
     }
+
+
+    .toright{
+        display: flex;
+    }
+
+    .toright .eye{
+        margin-right:10px;
+    }
 </style>
 {% endblock stylesheet %}
 
@@ -362,8 +375,8 @@
                                         alt="profile_image">
                                     {% endif %}
                                 </div>
-                                <div>user: {{portfolio.user.username}}</div>
-                                <div>category: {{portfolio.user.category}}</div>
+                                <div>{{portfolio.user.username}}</div>
+                                <div style="font-size: smaller;">{{portfolio.user.category}}</div>
                             </div>
                         </a>
                     </div>
@@ -390,16 +403,22 @@
                         {% endif %}
                         <span class="like__content">{{ portfolio.like_users.count }}</span>
                     </div>
-                    <div>{{portfolio.view_count}}</div>
-                    <div class="save save-{{portfolio.id}}">
-                        {% if request_user in portfolio.save_users.all %}
-                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                            value="save"></i>
-                        {% else %}
-                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
-                            value="save"></i>
-                        {% endif %}
-                        <span class="save__content">{{ portfolio.save_users.count }}</span>
+                    <div class="toright">
+                        <div class="eye">
+                            <i class="far fa-eye"></i>
+                            <span class="view__content">{{portfolio.view_count}}</span>
+                        </div>
+    
+                        <div class="save save-{{portfolio.id}}">
+                            {% if request_user in portfolio.save_users.all %}
+                            <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                                value="save"></i>
+                            {% else %}
+                            <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ portfolio.id }})" name="type"
+                                value="save"></i>
+                            {% endif %}
+                            <span class="save__content">{{ portfolio.save_users.count }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
