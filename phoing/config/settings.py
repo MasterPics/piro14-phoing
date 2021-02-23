@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     
     'channels',
+    'django_extensions',
 
     'myApp',
     'user',
@@ -341,7 +342,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 # SOCIALACCOUNT_ADAPTER = "user.adapter.MyCustomSocialAccountAdapter"
-
+SOCIALACCOUNT_ADAPTER = 'adapters.SocialAccountAdapter'
 
 # WEBCHAT
 # Channels

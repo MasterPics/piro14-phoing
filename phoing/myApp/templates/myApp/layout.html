@@ -304,8 +304,8 @@
             </ul>
             <ul class="nav__profile">
                 {% if not user.is_authenticated %}
-                <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
-                <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+                <li><a href="{% url 'login:login'">Log In/Sign Up</a></li>
+                <li><a href="{% url 'login:login'%}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
                 {% else %}
                 {% url 'myApp:profile_detail' user.id as profile_path %}
                
