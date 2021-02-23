@@ -638,6 +638,12 @@ def contact_create(request):
             group.save()
             print("down")
 
+            # save tag
+            tags = Tag.add_tags(contact.tag_str)
+            for tag in tags:
+                contact.tags.add(tag)
+
+                contact=contact,
             return redirect('myApp:contact_detail', contact.pk)
 
     else:

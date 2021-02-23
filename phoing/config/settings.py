@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 from django.urls import reverse_lazy  # reverse url을 초기화 이후로 미뤄주는 함수!
 import os
+from os.path import normpath, join
 import sys
 import json
 from pathlib import Path
@@ -101,6 +102,8 @@ ROOT_URLCONF = 'config.urls'
 # ]
 # '''
 
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '15.164.11.168', '3.36.2.44'] # ALLOWED_HOST = [*]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -172,10 +175,19 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'config', 'static'),
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'config', 'static'),
+# ]
+
+# STATICFILES_DIRS = (
+#     normpath(join(BASE_DIR, 'config')),
+#     normpath(join(BASE_DIR, 'static')),
+# )
+
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = normpath(join(BASE_DIR, 'static'))
+
 STATICFILES_FINDERS = ['django.contrib.staticfiles.finders.FileSystemFinder',
                        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
                        ]
