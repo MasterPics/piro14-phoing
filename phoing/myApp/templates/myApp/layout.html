@@ -336,7 +336,6 @@
           <li><a href="{% url 'myApp:reference_list' %}">Reference</a></li>
           <li><a href="{% url 'place:place_list' %}">Place</a></li>
           <li><a href="{% url 'myApp:with_brand_list' %}">Collaboration</a></li>
-          <h1>{{ request.user.username }}</h1>
         </ul>
       </div>
 
@@ -357,12 +356,13 @@
           {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
           {% endif %}
-          <input class="here" type="submit" value="Log Out" onclick="return confirm('Are you sure?');"></input>
+          <input class="here" type="submit" value="Log Out" onclick="return confirm('Are you sure?');"
+            style="margin-right: 10px;"></input>
         </form>
 
         <li><a href=" {% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i class="far fa-user-circle"></i></a>
         </li>
-        <p>{{ request.user.username }}</p>
+
         {% endif %}
 
       </ul>
