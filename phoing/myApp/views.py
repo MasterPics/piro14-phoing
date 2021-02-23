@@ -17,7 +17,7 @@ from django.contrib.auth import login as auth_login
 from .utils import *
 from place.forms import LocationForm
 
-# category filtering
+# category filteringx
 from django.db.models import Count, Q
 
 # infinite loading
@@ -657,6 +657,10 @@ def contact_map(request):
 
     return render(request, 'myApp/contact/contact_map.html', context=ctx)
 
+
+def general_login(request):
+    form 
+    return render(request, 'allauth/account/general_login.html', context={})
 
 ###################### reference section ######################
 ###################### 1. from phoing    ######################

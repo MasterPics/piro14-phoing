@@ -38,7 +38,8 @@
     background-color: white;
     background-image: none;
     border: 1px solid transparent;
-    padding: 15px 150px;
+    width: 400px;
+    padding: 17px 0;
     font-size: 14px;
     line-height: 1.42857143;
     border-radius: 4px;
@@ -48,6 +49,13 @@
     user-select: none;
     /* float: left; */
     margin: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn-brand img {
+    height: 20px;
+    margin-right: 5px;
   }
 </style>
 {% endblock stylesheet %}
@@ -68,22 +76,29 @@
 {% if provider.name == 'Google' %}
 <li>
   <button title="{{provider.name}}" class="socialaccount_provider {{provider.id}} btn-brand"
-    onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}' ">구글로
+    onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}' "><span><img
+        src="/media/google.png" alt="kakao"></span>구글로
     로그인하기</button>
 </li>
 {% elif provider.name == 'Naver' %}
 <li>
   <button title="{{provider.name}}" class="socialaccount_provider {{provider.id}} btn-brand"
-    onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}' ">네이버로
+    onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}' "><span><img
+        src="/media/naver.png" alt="kakao"></span>네이버로
     로그인하기</button>
 </li>
 {% elif provider.name == 'Kakao' %}
 <li>
 
-  <button title="{{provider.name}}" class="socialaccount_provider {{provider.id}} btn-brand"
-    onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}' "><span><img
-        src="phoing/user/static/img/kakao.png" alt="kakao"></span>카카오로
+  <button title="{{provider.name}}"="" class="socialaccount_provider {{provider.id}} btn-brand"
+    onclick="location.href='{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}' ">
+    <span><img src="/media/kakao.png" alt="kakao"></span> 카카오로
     로그인하기</button>
+</li>
+
+<li>
+
+
 </li>
 {% endif %}
 
