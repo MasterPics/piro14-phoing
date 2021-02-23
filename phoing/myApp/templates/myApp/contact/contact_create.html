@@ -3,83 +3,80 @@
 {% block stylesheet %}
 
 <style>
-    *{
+    * {
         margin: 0;
         padding: 0;
         text-decoration: none;
         list-style-type: none;
     }
-    label{
-        font-size:1.1rem;
+
+    label {
+        font-size: 1.1rem;
     }
 
-    .form-group{
-        margin:20px 60px;
+    .form-group {
+        margin: 20px 60px;
         display: grid;
         grid-template-columns: 200px 1fr;
     }
 
 
-   .title input,
-   .desc textarea,
-   .location textarea,
-   .pay input,
-   .start_date input,
-   .end_date input {
-    border:0; 
-    padding:1px; 
-    font-size:1.1em; 
-    border:solid 1px #ccc; 
-    margin-top:4px; 
-    width:80%;
-    border-radius: 3px;
-   }
+    .title input,
+    .desc textarea,
+    .location textarea,
+    .pay input,
+    .start_date input,
+    .end_date input {
+        border: 0;
+        padding: 1px;
+        font-size: 1.1em;
+        border: solid 1px #ccc;
+        margin-top: 4px;
+        width: 80%;
+        border-radius: 3px;
+    }
 
-   .title input:focus,
-   .desc textarea:focus,
-   .location textarea:focus,
-   .pay input:focus,
-   .start_date input:focus,
-   .end_date input:focus { 
-    outline: none !important;
-    border-color: #000000;
-    box-shadow: 0 0 10px #000000;
-   }
+    .title input:focus,
+    .desc textarea:focus,
+    .location textarea:focus,
+    .pay input:focus,
+    .start_date input:focus,
+    .end_date input:focus {
+        outline: none !important;
+        border-color: #000000;
+        box-shadow: 0 0 10px #000000;
+    }
 
-   select{
-    border:0; 
-    padding:1px; 
-    font-size:1.0rem; 
-    border:solid 1px #ccc; 
-    margin-top:5px; 
-    width:50%;
-    border-radius: 3px;
-   }
-
-
-   .is_closed input{
-    margin-top:8px;
-   }
-
-   input.btn {
-    position: absolute;
-    left:72%;
-
-    background-color: rgb(224, 224, 224);
-    border: none;
-    border-radius: 8px;
-    margin-top: 20px;
-    padding: 8px 10px;
-    margin-left:60px;
-   }
-
-   input.btn:hover {
-    cursor: pointer;
-  }
+    select {
+        border: 0;
+        padding: 1px;
+        font-size: 1.0rem;
+        border: solid 1px #ccc;
+        margin-top: 5px;
+        width: 50%;
+        border-radius: 3px;
+    }
 
 
+    .is_closed input {
+        margin-top: 8px;
+    }
 
+    input.btn {
+        position: absolute;
+        left: 72%;
 
+        background-color: rgb(224, 224, 224);
+        border: none;
+        border-radius: 8px;
+        margin-top: 20px;
+        padding: 8px 10px;
+        margin-left: 60px;
+    }
+
+    input.btn:hover {
+        cursor: pointer;
+    }
 </style>
 <link rel="stylesheet" href="{% static 'css/contact/place_select.css' %}">
 
@@ -89,13 +86,13 @@
 <div class='container'>
     <div class="map_wrap">
         <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-    
+
         <div id="menu_wrap" class="bg_white">
             <div class="option">
                 <div>
                     <form onsubmit="searchPlaces(); return false;">
-                        키워드 : <input type="text" value="" id="keyword" size="15" placeholder="검색어를 입력하세요"> 
-                        <button type="submit">검색하기</button> 
+                        키워드 : <input type="text" value="" id="keyword" size="15" placeholder="검색어를 입력하세요">
+                        <button type="submit">검색하기</button>
                     </form>
                 </div>
             </div>
@@ -104,16 +101,16 @@
             <div id="pagination"></div>
         </div>
     </div>
-    
+
     <div class='row'>
 
         <div class='col-md-12'>
             <h1 style="margin-top: 80px; margin-left: 60px; margin-bottom: 40px; font-size:30px;">Create Contact</h1>
             <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="location-form">
+                <!-- <div class="location-form">
                     {{ location_form.as_table }}
-                </div>
+                </div> -->
 
                 <div class="contact-form">
                     {% for field in contact_form.visible_fields %}
@@ -122,18 +119,18 @@
                         <div class='col-sm-10'>
                             {{ field }}
                             {% if field.help_text %}
-                                <p class="help-block">{{ field.help_text }}</p>
+                            <p class="help-block">{{ field.help_text }}</p>
                             {% endif %}
                             {% for error in field.errors %}
-                                <div class="alert alert-danger">
-                                    {{ error }}
-                                </div>
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
                             {% endfor %}
                         </div>
                     </div>
                     {% endfor %}
                 </div>
-        
+
                 <input type="submit" class="btn" />
             </form>
         </div>
@@ -166,7 +163,8 @@
 {% block script %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+<script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
 <script type="text/javascript" src="{% static 'js/contact/contact_create_map.js' %}"></script>
 
 {% endblock script%}

@@ -1,4 +1,5 @@
 {% load static %}
+{% load poll_extras %}
 <html lang="en">
 
 <head>
@@ -78,7 +79,7 @@
 
     #nav {
       display: flex;
-      justify-content: initial;
+      justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgb(54, 54, 54);
       padding: 15px 15px;
@@ -92,7 +93,19 @@
       z-index: 1;
     }
 
+    .nav_left {
+      display: flex;
+    }
+
+    .nav__profile {
+      display: flex;
+      align-items: center;
+    }
+
+
     .nav__logo {
+      display: flex;
+      align-items: center;
       font-size: 24px;
     }
 
@@ -102,7 +115,21 @@
     }
 
     .nav__menu li {
-      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      padding-right: 20px;
+    }
+
+
+    .nav__profile li {
+      display: flex;
+      align-items: center;
+      padding-right: 20px;
+
+    }
+
+    .nav__profile .padding {
+      padding-right: 5px;
     }
 
     .nav__menu li a:hover {
@@ -110,10 +137,7 @@
       cursor: pointer;
     }
 
-    .nav__profile {
-      position: absolute;
-      right: 10px;
-    }
+
 
     .nav__profile i {
       font-size: 20px;
@@ -126,16 +150,11 @@
 
     .nav__toggleBtn {
       display: none;
-      position: absolute;
-      right: 32px;
+
       font-size: 24px;
     }
 
     @media screen and (max-width: 820px) {
-      #nav {
-        flex-direction: column;
-        align-items: flex-start;
-      }
 
       .nav__menu {
         display: none;
@@ -155,16 +174,17 @@
       }
 
       .nav__toggleBtn {
-        display: block;
+        display: flex;
+        justify-content: flex-end;
+
       }
 
       .nav__menu.active {
-        display: flex;
+        display: block;
       }
 
       .nav__profile.active {
         display: block;
-        right: 70px;
       }
     }
 
@@ -253,6 +273,21 @@
       display: none;
     }
 
+    .here {
+      background: none;
+      border: none;
+      font-family: "NanumSquare", sans-serif;
+      font-size: 16px;
+    }
+
+    .here:active {
+      cursor: pointer;
+    }
+
+    .here:focus {
+      outline: 0;
+    }
+
     /* 위 아래 버튼 (버튼 없애기를 함) */
   </style>
 
@@ -289,40 +324,46 @@
     </div> -->
 
 
-    <head>
-        <nav id="nav">
-            <div class="nav__logo">
-                <a href="{% url 'myApp:main_list' %}"><i class="fas fa-camera"></i> PHOING</a>
-            </div>
-            <ul class="nav__menu">
-                <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
-                <li><a href="{% url 'myApp:portfolio_list' %}">Portfolio</a></li>
-                <li><a href="{% url 'myApp:reference_list' %}">Reference</a></li>
-                <li><a href="#">Place</a></li>
-                <li><a href="#">Collaboration</a></li>
-                <h1>{{ request.user.username }}</h1>
-            </ul>
-            <ul class="nav__profile">
-                {% if not user.is_authenticated %}
-                <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
-                <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
-                {% else %}
-                {% url 'myApp:profile_detail' user.id as profile_path %}
-               
-                {% if request.path ==  profile_path %}
-                <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
-                <li><a href="{% url 'account_logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
-                {% else %}
-                <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
-                <li><a href="{% url 'account_logout' %}?next={{ request.path }}"
-                        onclick="return confirm('Are you sure?');">Log
-                        Out</a></li>
-                {% endif %}
+  <head>
+    <nav id="nav">
+      <div class="nav_left">
+        <div class="nav__logo">
+          <a href="{% url 'myApp:main_list' %}"><i class="fas fa-camera"></i> PHOING</a>
+        </div>
+        <ul class="nav__menu">
+          <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
+          <li><a href="{% url 'myApp:portfolio_list' %}">Portfolio</a></li>
+          <li><a href="{% url 'myApp:reference_list' %}">Reference</a></li>
+          <li><a href="#">Place</a></li>
+          <li><a href="{% url 'myApp:with_brand_list' %}">Collaboration</a></li>
+          <h1>{{ request.user.username }}</h1>
+        </ul>
+      </div>
+
+      <ul class="nav__profile" style="float: right;">
+
+        {% if not user.is_authenticated %}
+
+        <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
+        <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+        {% else %}
+        {% url 'myApp:profile_detail' user.id as profile_path %}
 
 
-                <li><a href="{% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i
-                            class="far fa-user-circle"></i></a></li>
-                {% endif %}
+        <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
+
+        <form method="post" action="{% url 'account_logout' %}">
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <input class="here" type="submit" value="Log Out" onclick="return confirm('Are you sure?');"></input>
+        </form>
+
+        <li><a href=" {% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i class="far fa-user-circle"></i></a>
+        </li>
+        <p>{{ request.user.username }}</p>
+        {% endif %}
 
       </ul>
       <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>
