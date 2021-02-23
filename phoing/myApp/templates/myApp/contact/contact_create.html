@@ -3,7 +3,6 @@
 {% block stylesheet %}
 
 <style>
-
     html,
     body {
         margin: 0;
@@ -14,12 +13,12 @@
     form {
         display: block;
     }
-    
+
     .form-group {
-        margin:20px 60px;
+        margin: 20px 60px;
         display: grid;
         grid-template-columns: 200px 1fr;
-        color:black;
+        color: black;
     }
 
     .title input,
@@ -28,12 +27,12 @@
     .pay input,
     .start_date input,
     .end_date input {
-        border:0; 
-        padding:1px; 
-        font-size:1.1em; 
-        border:solid 1px #ccc; 
-        margin-top:4px; 
-        width:400px;
+        border: 0;
+        padding: 1px;
+        font-size: 1.1em;
+        border: solid 1px #ccc;
+        margin-top: 4px;
+        width: 400px;
         border-radius: 3px;
     }
 
@@ -42,33 +41,33 @@
     .location textarea:focus,
     .pay input:focus,
     .start_date input:focus,
-    .end_date input:focus { 
+    .end_date input:focus {
         outline: none !important;
         border-color: #719ECE;
         box-shadow: 0 0 10px #719ECE;
-        color:black;
+        color: black;
     }
 
-   .title input:focus,
-   .desc textarea:focus,
-   .location textarea:focus,
-   .pay input:focus,
-   .start_date input:focus,
-   .end_date input:focus { 
-    outline: none !important;
-    border-color: #000000;
-    box-shadow: 0 0 10px #000000;
-   }
+    .title input:focus,
+    .desc textarea:focus,
+    .location textarea:focus,
+    .pay input:focus,
+    .start_date input:focus,
+    .end_date input:focus {
+        outline: none !important;
+        border-color: #000000;
+        box-shadow: 0 0 10px #000000;
+    }
 
-   select{
-    border:0; 
-    padding:1px; 
-    font-size:1.0rem; 
-    border:solid 1px #ccc; 
-    margin-top:5px; 
-    width:50%;
-    border-radius: 3px;
-   }
+    select {
+        border: 0;
+        padding: 1px;
+        font-size: 1.0rem;
+        border: solid 1px #ccc;
+        margin-top: 5px;
+        width: 50%;
+        border-radius: 3px;
+    }
 
     input.btn {
         background-color: rgb(224, 224, 224);
@@ -76,32 +75,44 @@
         border-radius: 8px;
         margin-top: 20px;
         padding: 5px 10px;
-        margin-left:700px;
+        margin-left: 600px;
     }
 
     input.btn:hover {
         cursor: pointer;
     }
 
-    .container {
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -ms-flexbox;
+    .contact_container {
         display: flex;
-        -webkit-box-align: center;
-        -webkit-align-items: center;
-        -ms-flex-align: center;
-        align-items: center;
-        -webkit-box-pack: center;
-        -webkit-justify-content: center;
-        -ms-flex-pack: center;
-        justify-content: center;
         background: white;
-        height: 100%;
+        
+    }
+
+    .form-wrapper {
+        color: #fff;
+
+        box-sizing: border-box;
+        background-color: #fff;
+        height:100vh;
+    }
+
+    .location-form {
+        visibility: hidden;
+    }
+
+    .map_wrap {
+        color:#fff;
+        box-sizing: border-box;
+        z-index:0;
+    }
+
+    .map{
+        z-index:0;
     }
 
 
-  
+
+
 
 </style>
 <link rel="stylesheet" href="{% static 'css/contact/place_select.css' %}">
@@ -109,9 +120,42 @@
 {% endblock stylesheet %}
 {% block content %}
 
-<div class='container'>
+<div class='contact_container'>
+    
+    <div class='form-wrapper'>
+        <h1 style=" font-size:30px; color:black; margin-top:100px; margin-left:50px;">Create
+            Contact</h1>
+        <form action="" method="POST" class="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="location-form">
+                {{ location_form.as_table }}
+            </div>
+
+            <div class="contact-form">
+                {% for field in contact_form.visible_fields %}
+                <div class="form-group {{ field.name }}">
+                    {{ field.label_tag }}
+                    <div class='input-fields'>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <p class="help-block">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+ 
+            <input type="submit" class="btn" />
+        </form>
+    </div>
+
     <div class="map_wrap">
-        <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+        <div id="map" style="width:100%;height:100vh;"></div>
     
         <div id="menu_wrap" class="bg_white">
             <div class="option">
@@ -127,73 +171,13 @@
             <div id="pagination"></div>
         </div>
     </div>
-    
-    <div class='row'>
-
-        <div class='col-md-12'>
-            <h1 style="margin-top: 80px; margin-left: 60px; margin-bottom: 40px; font-size:30px;">Create Contact</h1>
-            <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data">
-        <div class='form-wrapper'>
-            <h1 style="margin-top: 50px; margin-left: 60px; margin-bottom: 40px; font-size:30px; color:black;">Create Contact</h1>
-            <form action= "" method="POST" class="" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="location-form">
-                    {{ location_form.as_table }}
-                </div>
-
-                <div class="contact-form">
-                    {% for field in contact_form.visible_fields %}
-                    <div class="form-group {{ field.name }}">
-                        {{ field.label_tag }}
-                        <div class='input-fields'>
-                            {{ field }}
-                            {% if field.help_text %}
-                                <p class="help-block">{{ field.help_text }}</p>
-                            {% endif %}
-                            {% for error in field.errors %}
-                                <div class="alert alert-danger">
-                                    {{ error }}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-        
-                <input type="submit" class="btn" />
-            </form>
-        </div>
 </div>
 
 {% endblock content%}
 
 {% block script %}
-<script src="{% static 'js/contact_create_class.js' %}"></script>
-{% endblock script %}
-
-
-
-<!-- 
-<div class='container'>
-    <div class='row'>
-        <div class='col-md-12'>
-            <h1>Create Contact</h1>
-            <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data">
-                {% csrf_token %}
-                <table>
-                    {{ form.as_table }}
-                </table>
-                <input type="submit" class="btn btn-primary" value="submit" />
-            </form>
-        </div>
-    </div>
-</div> -->
-
-
-{% block script %}
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
-<script type="text/javascript" src="{% static 'js/contact/contact_create_map.js' %}"></script>
-
-{% endblock script%}
+<script src="{% static 'js/contact_create_class.js' %}"></script>
+<script src="{% static 'js/contact/contact_create_map.js' %}"></script>
+{% endblock script %}
