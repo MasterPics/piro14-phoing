@@ -4,18 +4,40 @@
 
 {% block head_title %}{% trans "Sign Out" %}{% endblock %}
 
+
+{% block stylesheet %}
+<style>
+  body {
+    margin: 0;
+  }
+
+  .in-middle {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 50vh;
+  }
+
+  .logout-btn {}
+</style>
+{% endblock stylesheet %}
+
+
 {% block content %}
-<h1 style="color: blueviolet;">{% trans "Sign Out" %}</h1>
+<div class="in-middle">
+  <!-- <h1 style="color: blueviolet;">{% trans "Sign Out" %}</h1> -->
 
-<p style="color: blueviolet;">{% trans 'Are you sure you want to sign out?' %}</p>
+  <p style="color: black; margin-bottom: 10px;">{% trans 'Are you sure you want to sign out?' %}</p>
 
-<form method="post" action="{% url 'account_logout' %}">
-  {% csrf_token %}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit">{% trans 'Sign Out' %}</button>
-</form>
+  <form method="post" action="{% url 'account_logout' %}">
+    {% csrf_token %}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button type="submit" style="font-size: 2rem;">{% trans 'Sign Out' %}</button>
+  </form>
+</div>
 
 
 {% endblock %}

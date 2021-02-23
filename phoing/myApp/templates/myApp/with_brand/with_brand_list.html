@@ -1,5 +1,6 @@
 {% extends 'myApp/layout.html' %}
 {% load static %}
+{% load poll_extras %}
 
 
 {% block stylesheet %}
@@ -27,286 +28,371 @@
     }
 
 
-     /*category btn*/
+    /*category btn*/
 
-     * {
+    * {
         box-sizing: border-box;
         scroll-behavior: smooth;
-        color:black;
-    
+        color: black;
+
+    }
+
+    .dropdown .btn {
+        width: 150px;
+        height: 50px;
+        border: 1px solid #333;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 0;
+        transition: 1s;
+    }
+
+    .dropdown .btn::before,
+    .dropdown .btn::after {
+        position: absolute;
+        background: #fff;
+        z-index: -1;
+        transition: 1s;
+        content: "";
+    }
+
+    .dropdown .btn::before {
+        height: 50px;
+        width: 130px;
+    }
+
+    .dropdown .btn::after {
+        width: 150px;
+        height: 30px;
+    }
+
+    .dropdown .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .dropdown .btn:hover::before {
+        width: 0px;
+        background: #fff;
+    }
+
+    .dropdown .btn:hover::after {
+        height: 0px;
+        background: #fff;
+    }
+
+    .dropdown .btn:hover {
+        background: #fff;
+    }
+
+    /* Dropdown Button */
+    .dropbtn {
+        padding: 16px;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        min-width: 160px;
+        z-index: 1;
+        margin-left: 11px;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        background-color: white;
+        border: #ddd solid 1px;
+    }
+
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {
+        background-color: #ddd;
+    }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* 무한스크롤 */
+
+    .loading,
+    .loading:after {
+        border-radius: 50%;
+        width: 2em;
+        height: 2em;
+    }
+
+    .loading {
+        display: none;
+        margin: 60px auto;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+        border-top: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-right: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
+        border-left: 0.3em solid rgb(0, 0, 0);
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation: load8 0.6s infinite linear;
+        animation: load8 0.6s infinite linear;
+    }
+
+    .loading.show {
+        opacity: 1;
+    }
+
+    @-webkit-keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
         }
-        
-        .dropdown .btn {
-            width: 150px;
-            height: 50px;
-            border: 1px solid #333;
-            font-family: "Cinzel", serif;
-            font-size: 15px;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 0;
-            transition: 1s;
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
         }
-        
-        .dropdown .btn::before,
-        .dropdown .btn::after {
-            position: absolute;
-            background: #fff;
-            z-index: -1;
-            transition: 1s;
-            content: "";
+    }
+
+    @keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
         }
-        
-        .dropdown .btn::before {
-            height: 50px;
-            width: 130px;
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
         }
-        
-        .dropdown .btn::after {
-            width: 150px;
-            height: 30px;
-        }
-        
-        .dropdown .noselect {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        
-        .dropdown .btn:hover::before {
-            width: 0px;
-            background: #fff;
-        }
-        
-        .dropdown .btn:hover::after {
-            height: 0px;
-            background: #fff;
-        }
-        
-        .dropdown .btn:hover {
-            background: #fff;
-        }
-    
-            /* Dropdown Button */
-            .dropbtn {
-                padding: 16px;
-            }
-            
-            /* The container <div> - needed to position the dropdown content */
-            .dropdown {
-                position: relative;
-                display: inline-block;
-            }
-            
-            /* Dropdown Content (Hidden by Default) */
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                min-width: 160px;
-                z-index: 1;
-                margin-left:11px;
-            }
-            
-            /* Links inside the dropdown */
-            .dropdown-content a {
-                color: black;
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-                background-color: white;
-                border:#ddd solid 1px;
-            }
-            
-            /* Change color of dropdown links on hover */
-            .dropdown-content a:hover {background-color: #ddd;}
-            
-            /* Show the dropdown menu on hover */
-            .dropdown:hover .dropdown-content {display: block;}
-        
-             /* 무한스크롤 */
+    }
 
-.loading,
-.loading:after {
-  border-radius: 50%;
-  width: 2em;
-  height: 2em;
-}
+    /* with_brand List CSS */
+    a {
+        text-decoration: none;
+        color: black;
+    }
 
-.loading {
-  display: none;
-  margin: 60px auto;
-  font-size: 10px;
-  position: relative;
-  text-indent: -9999em;
-  border-top: 0.3em solid rgba(160, 160, 160, 0.2);
-  border-right: 0.3em solid rgba(160, 160, 160, 0.2);
-  border-bottom: 0.3em solid rgba(160, 160, 160, 0.2);
-  border-left: 0.3em solid rgb(0, 0, 0);
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation: load8 0.6s infinite linear;
-  animation: load8 0.6s infinite linear;
-}
+    .with_brand_list .bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 2% 4%;
+    }
 
-.loading.show {
-  opacity: 1;
-}
 
-@-webkit-keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
+    .bar_right {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
+    .bar .input-group {
+        display: flex;
+        margin-right: 5px;
+        padding: 0;
+    }
 
-@keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-/* with_brand List CSS */
-a {
-    text-decoration: none;
-    color: black;
-  }
-  
-.with_brand_list .bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 2% 4%;
-  }
-
-  
-.bar_right{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.bar .input-group {
-    display: flex;
-  margin-right: 5px;
-  padding: 0;
-}
-
-.input-group .form-control.search {
-  border: 0;
-  padding: 5px;
-  font-size: 1em;
-  border: solid 1px black;
-  border-radius: 3px;
-  margin-right: 10px;
-  width:300px;
-}
+    .input-group .form-control.search {
+        border: 0;
+        padding: 5px;
+        font-size: 1em;
+        border: solid 1px black;
+        border-radius: 3px;
+        margin-right: 10px;
+        width: 300px;
+    }
 
 
 
-.bar .btn_search {
-    padding: 6px;
-    border: solid 1px #ccc;
-    border-radius: 3px;
-    margin-right:20px;
-  }
-  
-  .bar .sort {
-    margin-right: 10px;
-  }
-  
-  .bar .sort select {
-    border: 0;
-    padding: 5px;
-    border: solid 1px black;
-    border-radius: 3px;
-  }
-  
-  .bar .pay{
-      margin-right: 15px;
-  }
-  
-  .bar .with_brand_create i {
-    font-size: 2rem;
-    color: rgb(41, 41, 41);
-    margin-right: 15px;
+    .bar .btn_search {
+        padding: 6px;
+        border: solid 1px #ccc;
+        border-radius: 3px;
+        margin-right: 20px;
+    }
 
-  }
+    .bar .sort {
+        margin-right: 10px;
+    }
 
+    .bar .sort select {
+        border: 0;
+        padding: 5px;
+        border: solid 1px black;
+        border-radius: 3px;
+    }
 
-  .bar #popup_open_btn i{
-   font-size:2rem;
-   color: rgb(41, 41, 41);
+    .bar .pay {
+        margin-right: 15px;
+    }
 
-  }
+    .bar .with_brand_create i {
+        font-size: 2rem;
+        color: rgb(41, 41, 41);
+        margin-right: 15px;
 
-  /*top button*/
-
-  #myBtn {
-    display: none; /* Hidden by default */
-    position: fixed; /* Fixed/sticky position */
-    bottom: 20px; /* Place the button at the bottom of the page */
-    right: 30px; /* Place the button 30px from the right */
-    z-index: 99; /* Make sure it does not overlap */
-    color: rgb(0, 0, 0); /* Text color */
-    cursor: pointer; /* Add a mouse pointer on hover */
-    font-size: 2em; /* Increase font size */
-    border-radius: 100%;
-    background-color: white;
-  }
-  
-  #myBtn i:hover {
-    color: rgb(58, 58, 58); /* Add a dark-grey background on hover */
-  }
+    }
 
 
-  
-  .top_nav{
-    border-bottom: rgb(201, 201, 201) solid 1px;
-    display: flex;
-    padding: 20px;
-    justify-content: center;    
- }
+    .bar #popup_open_btn i {
+        font-size: 2rem;
+        color: rgb(41, 41, 41);
 
- .top_nav div{
-     padding-left:12px;
-     padding-right:12px;
- }
+    }
 
- .top_nav .brand{
-     margin-right:5%;
- }
+    /*top button*/
 
- /*page*/
+    #myBtn {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Fixed/sticky position */
+        bottom: 20px;
+        /* Place the button at the bottom of the page */
+        right: 30px;
+        /* Place the button 30px from the right */
+        z-index: 99;
+        /* Make sure it does not overlap */
+        color: rgb(0, 0, 0);
+        /* Text color */
+        cursor: pointer;
+        /* Add a mouse pointer on hover */
+        font-size: 2em;
+        /* Increase font size */
+        border-radius: 100%;
+        background-color: white;
+    }
 
- .top_nav .brand a{
-   font-weight: bold;
- }
+    #myBtn i:hover {
+        color: rgb(58, 58, 58);
+        /* Add a dark-grey background on hover */
+    }
 
- .top_nav .brand{
-     border-left:rgb(185, 185, 185) 1px solid;
-     border-right:rgb(185, 185, 185) 1px solid;
- }
 
-  
+
+    .top_nav {
+        border-bottom: rgb(201, 201, 201) solid 1px;
+        display: flex;
+        padding: 20px;
+        justify-content: center;
+    }
+
+    .top_nav div {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .top_nav .brand {
+        margin-right: 5%;
+    }
+
+    /*page*/
+
+    .top_nav .brand a {
+        font-weight: bold;
+    }
+
+    .top_nav .brand {
+        border-left: rgb(185, 185, 185) 1px solid;
+        border-right: rgb(185, 185, 185) 1px solid;
+    }
+
+    /* collaboration_list */
+
+    .grid-item {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-bottom: 20px;
+        margin-top:20px;
+
+    }
+
+    .item_top>div {
+        padding: 10px;
+    }
+
+    .brand_owner {
+        display: flex;
+        align-items: center;
+        border-bottom: rgb(221, 221, 221) 1px solid;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .brand_owner div {
+        margin-right: 8px;
+    }
+
+    .brand_owner .user_img {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        margin-right: 10px;
+    }
+
+    .user_img .profile_image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+
+    .thumbnail_desc img {
+        width: 280px;
+    }
+
+    .pay_date {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .pay_date p {
+        text-align: end;
+        line-height: 1.5rem;
+    }
+
+    .item_bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: rgb(221, 221, 221) solid 1px;
+        padding: 15px;
+
+    }
+
+    .item_bottom>div {
+        cursor: pointer;
+    }
+
+
+    /**/
+
+    .with_brand_list{
+        padding:30px;
+    }
 
 
 </style>
@@ -317,10 +403,10 @@ a {
 
 <div class="top_nav">
     <div class="brand">
-        <a href="{% url 'myApp:with_brand_list' %}">with  brand</a>
+        <a href="{% url 'myApp:with_brand_list' %}">with brand</a>
     </div>
     <div class="artist">
-        <a href="{% url 'myApp:with_artist_list' %}">with  artist</a>
+        <a href="{% url 'myApp:with_artist_list' %}">with artist</a>
     </div>
 </div>
 
@@ -331,7 +417,10 @@ a {
         <div class="bar_left">
             <!--category-->
             <div class="dropdown">
-                <div class="dropbtn"><div class="btn"><span class="noselect"><a href="javascript:void(0)" onclick="onClickLink('all')">Category</a></span></div></div>
+                <div class="dropbtn">
+                    <div class="btn"><span class="noselect"><a href="javascript:void(0)"
+                                onclick="onClickLink('all')">Category</a></span></div>
+                </div>
                 <div class="dropdown-content">
                     <a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a>
                     <a href="javascript:void(0)" onclick="onClickLink('model')">Model</a>
@@ -398,40 +487,59 @@ a {
 
 
     <!--with_brand_list-->
-    <div class="content">
-        <div class="infinite-container">
+    <div class="">
+        <div class="grid">
             {% for with_brand in with_brands %}
-
-            <div class="infinite-item">
+            {% for i in "x"|rjust:"10" %}
+            <div class="grid-item">
                 <div class="item_top with_brand-{{with_brand.pk}}">
                     <div>
-                        User : {{ with_brand.user }}
-
-
-
+                        <a href="{% url 'myApp:profile_detail' with_brand.user.pk %}">
+                            <div class="brand_owner">
+                                <div class="user_img">
+                                    {% if with_brand.user.image %}
+                                    <img class="profile_image" src="{{ with_brand.user.image.url }}" alt="">
+                                    {% else %}
+                                    <img class="profile_image"
+                                        src="https://cdn.iconscout.com/icon/free/png-512/account-profile-avatar-man-circle-round-user-30452.png"
+                                        alt="profile_image">
+                                    {% endif %}
+                                </div>
+                                <div>{{ with_brand.user }}</div>
+                                <div style="font-size:smaller;">{{ with_brand.user.category }}</div>
+                            </div>
+                        </a>
                     </div>
-                    <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
-                        <div style="font-weight:bolder;">{{ with_brand.title }}</div>
-                    </a>
-                    <div>
-                        <!--user_img and category-->
-
-
-                        {% if with_brand.user.image %}
-                        <img src="{{ with_brand.user.image.url }}" alt="">
-                        {% endif %}
-                        {{ with_brand.user.category }}
+                    <div class="title">
+                        <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
+                            <div style="font-weight:bolder;">{{ with_brand.title }}</div>
+                        </a>
                     </div>
                     <div class="thumbnail_desc">
-                        <img src="{{ with_brand.thumbnail.url }}" alt="">
+                        <a href="{% url 'myApp:with_brand_detail' with_brand.pk %}">
+                            <img src="{{ with_brand.thumbnail.url }}" alt="">
+                        </a>
                     </div>
                     <div class="pay_date">
-                        {% if with_brand.pay == 0 %}
-                        Pay : 상호 무페이
-                        {% else %}
-                        Pay : {{ with_brand.pay }}원
-                        {% endif %}
+                        <div>
+                            {% if with_brand.pay == 0 %}
+                            Pay : 상호 무페이
+                            {% else %}
+                            Pay : {{ with_brand.pay }}원
+                            {% endif %}
                         <!-- 촬영날짜나 isclosed check되었으면 마감알림 -->
+                        </div>
+                        <div>
+                            {% if with_brand.is_closed %}
+                            마감
+                            {% else %}
+                            <p>{{ with_brand.start_date|datefilter }}</p>
+                            <!--시작날짜-->
+                            <p>~{{ with_brand.end_date|datefilter }}</p>
+                            <!--끝날짜-->
+                            {% endif %}
+
+                        </div>
                     </div>
                 </div>
 
@@ -443,11 +551,11 @@ a {
 
                     <div class="save save-{{with_brand.id}}">
                         {% if request_user in with_brand.save_users.all %}
-                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})"
-                            name="type" value="save"></i>
+                        <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})" name="type"
+                            value="save"></i>
                         {% else %}
-                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})"
-                            name="type" value="save"></i>
+                        <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ with_brand.id }})" name="type"
+                            value="save"></i>
                         {% endif %}
                         <span class="save__content">{{ with_brand.save_users.count }}</span>
                     </div>
@@ -455,21 +563,13 @@ a {
                 </div>
 
 
-                <!--
-                <div class="caption">
-                    <div class="caption-content">
-                        <p>더 알아보기<i style="font-size: 1em;" class="fas fa-search"></i> </p>
-                    </div>
-                </div>
-                -->
+               
             </div>
-
+            {% endfor %}
             {% endfor %}
         </div>
 
         <div onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-circle-up"></i></div>
-
-
 
         {% if with_brands.has_next %}
         <a class="infinite-more-link" href="?page={{ with_brands.next_page_number }}">
@@ -477,239 +577,258 @@ a {
         </a>
         {% endif %}
 
-        <!--filter form-->
-        <div style="height: 0;">
-            <form id="searchForm" method="get" action="{% url 'myApp:with_brand_list' %}">
-                <!--category-->
-                <input type="hidden" id="category" name="category" value="{{ category }}">
-                <!--sort-->
-                <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
-                <!--search-->
-                <input type="hidden" id="sort" name="sort" value="{{ sort }}">
-                <!--상호무페이-->
-                <input type="hidden" id="no_pay" name="no_pay" value="{{no_pay}}">
-            </form>
-        </div>
+
+    </div>
+    <!--filter form-->
+    <div style="height: 0;">
+        <form id="searchForm" method="get" action="{% url 'myApp:with_brand_list' %}">
+            <!--category-->
+            <input type="hidden" id="category" name="category" value="{{ category }}">
+            <!--sort-->
+            <input type="hidden" id="search" name="search" value="{{ search|default_if_none:'' }}">
+            <!--search-->
+            <input type="hidden" id="sort" name="sort" value="{{ sort }}">
+            <!--상호무페이-->
+            <input type="hidden" id="no_pay" name="no_pay" value="{{no_pay}}">
+        </form>
     </div>
 
-<div>
-        {% endblock content %}
+</div>
+{% endblock content %}
 
 
 
-        <!--js-->
-        {% block script %}
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-        <script src="{% static 'js/infinite.min.js' %}"></script>
-        <script src="{% static 'js/with_brand.js' %}" defer></script>
+<!--js-->
+{% block script %}
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+<script src="{% static 'js/with_brand.js' %}" defer></script>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script type="text/javascript"
-            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
-        <script src="{% static 'js/with_brand/with_brand_list_map.js' %}"></script>
-
-
-        <script>
-
-            //top_button
-            //Get the button:
-            mybutton = document.getElementById("myBtn");
-
-            // When the user scrolls down 20px from the top of the document, show the button
-            window.onscroll = function() {scrollFunction()};
-
-            function scrollFunction() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                mybutton.style.display = "block";
-            } else {
-                mybutton.style.display = "none";
-            }
-            }
-
-            // When the user clicks on the button, scroll to the top of the document
-            function topFunction() {
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-            }
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+<script src="{% static 'js/with_brand/with_brand_list_map.js' %}"></script>
 
 
-            var infinite = new Waypoint.Infinite({
-                element: $('.infinite-container')[0],
-                onBeforePageLoad: function () {
-                    $('.loading').show();
-                },
-                onAfterPageLoad: function ($items) {
-                    $('.loading').hide();
-                }
-            });
+<script>
+    //top_button
+    //Get the button:
+    mybutton = document.getElementById("myBtn");
 
-            //Save
-            const onClickSave = async (with_brand_id) => {
-                try {
-                    // const url = '/with_brand/';
-                    // const {
-                    //     data
-                    // } = await axios.post(url, {
-                    //     with_brand_id,
-                    // })
-                    // modify(data.with_brand_id, data.is_saved)
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunction()
+    };
 
-                    const options = {
-                        url: '/with_brand/save/',
-                        method: 'POST',
-                        data: {
-                            with_brand_id: with_brand_id,
-                        }
-                    }
-                    const response = await axios(options)
-                    const responseOK = response && response.status === 200 && response.statusText === 'OK'
-                    if (responseOK) {
-                        const data = response.data
-                        //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
-                        modify(data.with_brand_id, data.is_saved)
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            }
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
 
-            const modify = (with_brand_id, is_saved) => {
-                const save = document.querySelector(`.save-${with_brand_id} i`);
-                const save_content = document.querySelector(`.save-${with_brand_id} .save__content`)
-                const num = save_content.innerText; // [ {{ with_brand.save_users.count }} ]
-                console.log(num)
-                if (is_saved === true) {
-
-                    save.className = "fas fa-bookmark";
-
-                    const count = Number(num) + 1;
-                    save_content.innerHTML = count
-                } else {
-                    save.className = "far fa-bookmark";
-
-                    const count = Number(num) - 1;
-                    save_content.innerHTML = count
-                }
-
-            }
-            //category
-            const onClickLink = (category) => {
-                const categoryIdInput = document.querySelector('#category')
-                categoryIdInput.value = category
-                const searchForm = document.querySelector('#searchForm')
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
 
 
+    let infinite = new Waypoint.Infinite({
 
-
-                searchForm.submit()
-            }
-
-            //search
-            const searchButton = document.querySelector('.btn_search')
-            searchButton.addEventListener('click', () => {
-                const searchClassInput = document.querySelector('.search')
-                const searchIdInput = document.querySelector('#search')
-                const searchForm = document.querySelector('#searchForm')
-                searchIdInput.value = searchClassInput.value
-
-                searchForm.submit()
+        element: $('.grid')[0],
+        items: '.grid-item',
+        onBeforePageLoad: function () {
+            console.log("here here")
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            console.log("here here2")
+            $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
             })
+        }
+    });
+    let msnry = new Masonry('.grid', {
+        // optionsW
+        itemSelector: '.grid-item',
+        gutter: 10,
+        // columnWidth: 200
+    });
 
+    //
+    //Save
+    const onClickSave = async (with_brand_id) => {
+        try {
+            // const url = '/with_brand/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     with_brand_id,
+            // })
+            // modify(data.with_brand_id, data.is_saved)
 
-            //sort
-            const sortClassInput = document.querySelector('.sort')
-            sortClassInput.addEventListener('input', (e) => {
-                const sortIdInput = document.querySelector('#sort')
-                const searchForm = document.querySelector('#searchForm')
-                sortIdInput.value = e.target.value
-
-                searchForm.submit()
-            })
-
-            $(function () {
-                var test = localStorage.input === 'true' ? true : false;
-                $('.no_pay').prop('checked', test || false);
-            });
-            $('.no_pay').on('click', function () {
-                localStorage.input = $(this).is(':checked');
-            });
-
-            const nopayClassInput = document.querySelector('.no_pay')
-            const nopayIdInput = document.querySelector('#no_pay')
-            // const searchForm = document.querySelector('#searchForm')
-            if (localStorage.input === 'true') {
-                nopayIdInput.value = true
-            } else {
-                nopayIdInput.value = false
-            }
-
-            nopayClassInput.addEventListener('click', () => {
-                const nopayIdInput = document.querySelector('#no_pay')
-                const searchForm = document.querySelector('#searchForm')
-                if (localStorage.input === 'true') {
-                    nopayIdInput.value = true
-                } else {
-                    nopayIdInput.value = false
+            const options = {
+                url: '/with_brand/save/',
+                method: 'POST',
+                data: {
+                    with_brand_id: with_brand_id,
                 }
-                searchForm.submit()
-            })
-
-
-            function modal(id) {
-                var zIndex = 9999;
-                var modal = document.getElementById(id);
-
-                // 모달 div 뒤에 희끄무레한 레이어
-                var bg = document.createElement('div');
-                bg.setStyle({
-                    position: 'fixed',
-                    zIndex: zIndex,
-                    left: '0px',
-                    top: '0px',
-                    width: '100%',
-                    height: '100%',
-                    overflow: 'auto',
-                    // 레이어 색갈은 여기서 바꾸면 됨
-                    backgroundColor: 'rgba(0,0,0,0.4)'
-                });
-                document.body.append(bg);
-
-                // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
-                modal.querySelector('.modal_close_btn').addEventListener('click', function () {
-                    bg.remove();
-                    modal.style.display = 'none';
-                });
-
-                modal.setStyle({
-                    position: 'fixed',
-                    display: 'block',
-                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-
-                    // 시꺼먼 레이어 보다 한칸 위에 보이기
-                    zIndex: zIndex + 1,
-
-                    // div center 정렬
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    msTransform: 'translate(-50%, -50%)',
-                    webkitTransform: 'translate(-50%, -50%)'
-                });
             }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modify(data.with_brand_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-            // Element 에 style 한번에 오브젝트로 설정하는 함수 추가
-            Element.prototype.setStyle = function (styles) {
-                for (var k in styles) this.style[k] = styles[k];
-                return this;
-            };
+    const modify = (with_brand_id, is_saved) => {
+        const save = document.querySelector(`.save-${with_brand_id} i`);
+        const save_content = document.querySelector(`.save-${with_brand_id} .save__content`)
+        const num = save_content.innerText; // [ {{ with_brand.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
 
-            document.getElementById('popup_open_btn').addEventListener('click', function () {
-                // 모달창 띄우기
-                modal('my_modal');
-            });
-        </script>
+            save.className = "fas fa-bookmark";
 
-        {% endblock script %}
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+    //category
+    const onClickLink = (category) => {
+        const categoryIdInput = document.querySelector('#category')
+        categoryIdInput.value = category
+        const searchForm = document.querySelector('#searchForm')
+
+
+
+
+        searchForm.submit()
+    }
+
+    //search
+    const searchButton = document.querySelector('.btn_search')
+    searchButton.addEventListener('click', () => {
+        const searchClassInput = document.querySelector('.search')
+        const searchIdInput = document.querySelector('#search')
+        const searchForm = document.querySelector('#searchForm')
+        searchIdInput.value = searchClassInput.value
+
+        searchForm.submit()
+    })
+
+
+    //sort
+    const sortClassInput = document.querySelector('.sort')
+    sortClassInput.addEventListener('input', (e) => {
+        const sortIdInput = document.querySelector('#sort')
+        const searchForm = document.querySelector('#searchForm')
+        sortIdInput.value = e.target.value
+
+        searchForm.submit()
+    })
+
+    $(function () {
+        var test = localStorage.input === 'true' ? true : false;
+        $('.no_pay').prop('checked', test || false);
+    });
+    $('.no_pay').on('click', function () {
+        localStorage.input = $(this).is(':checked');
+    });
+
+    const nopayClassInput = document.querySelector('.no_pay')
+    const nopayIdInput = document.querySelector('#no_pay')
+    // const searchForm = document.querySelector('#searchForm')
+    if (localStorage.input === 'true') {
+        nopayIdInput.value = true
+    } else {
+        nopayIdInput.value = false
+    }
+
+    nopayClassInput.addEventListener('click', () => {
+        const nopayIdInput = document.querySelector('#no_pay')
+        const searchForm = document.querySelector('#searchForm')
+        if (localStorage.input === 'true') {
+            nopayIdInput.value = true
+        } else {
+            nopayIdInput.value = false
+        }
+        searchForm.submit()
+    })
+
+
+    function modal(id) {
+        var zIndex = 9999;
+        var modal = document.getElementById(id);
+
+        // 모달 div 뒤에 희끄무레한 레이어
+        var bg = document.createElement('div');
+        bg.setStyle({
+            position: 'fixed',
+            zIndex: zIndex,
+            left: '0px',
+            top: '0px',
+            width: '100%',
+            height: '100%',
+            overflow: 'auto',
+            // 레이어 색갈은 여기서 바꾸면 됨
+            backgroundColor: 'rgba(0,0,0,0.4)'
+        });
+        document.body.append(bg);
+
+        // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
+        modal.querySelector('.modal_close_btn').addEventListener('click', function () {
+            bg.remove();
+            modal.style.display = 'none';
+        });
+
+        modal.setStyle({
+            position: 'fixed',
+            display: 'block',
+            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+
+            // 시꺼먼 레이어 보다 한칸 위에 보이기
+            zIndex: zIndex + 1,
+
+            // div center 정렬
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            msTransform: 'translate(-50%, -50%)',
+            webkitTransform: 'translate(-50%, -50%)'
+        });
+    }
+
+    // Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+    Element.prototype.setStyle = function (styles) {
+        for (var k in styles) this.style[k] = styles[k];
+        return this;
+    };
+
+    document.getElementById('popup_open_btn').addEventListener('click', function () {
+        // 모달창 띄우기
+        modal('my_modal');
+    });
+</script>
+
+{% endblock script %}
