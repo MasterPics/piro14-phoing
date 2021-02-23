@@ -1,0 +1,197 @@
+{% extends 'myApp/layout.html' %}
+{% load static %}
+{% block stylesheet %}
+{% endblock stylesheet %}
+{% block content %}
+<!--tag_list-->
+<div>
+    <div>
+        <a href="{% url 'myApp:reference_list' %}">from pinterest</a>
+        <a href="{% url 'myApp:local_list' %}">from phoing</a>
+    </div>
+
+    <div class="grid">
+        {% for tag in tags %}
+        <div class="grid-item">
+
+            <div class=" item_top tag-{{tag.pk}}">
+                <div>
+                    <a href="{% url 'myApp:local_detail' tag.tag %}">
+                        <p>#{{ tag.tag }}</p>
+                    </a>
+                </div>
+            </div>
+            <div class="item_bottom">
+                <div class="like like-{{tag.id}}">
+                    {% if request_user in tag.like_users.all %}
+                    <i class="fas fa-heart" type="submit" onclick="onClickLike({{ tag.id }})" name="type"
+                        value="like"></i>
+                    {% else %}
+                    <i class="far fa-heart" type="submit" onclick="onClickLike({{ tag.id }})" name="type"
+                        value="like"></i>
+                    {% endif %}
+                    <span class="like__content">{{ tag.like_users.count }}</span>
+                </div>
+                <div class="save save-{{tag.id}}">
+                    {% if request_user in tag.save_users.all %}
+                    <i class="fas fa-bookmark" type="submit" onclick="onClickSave({{ tag.id }})" name="type"
+                        value="save"></i>
+                    {% else %}
+                    <i class="far fa-bookmark" type="submit" onclick="onClickSave({{ tag.id }})" name="type"
+                        value="save"></i>
+                    {% endif %}
+                    <span class="save__content">{{ tag.save_users.count }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% if tags.has_next %}
+    <a class="infinite-more-link" href="?page={{ tags.next_page_number }}">
+        <div class="loading" style="display: none;">Loading...</div>
+    </a>
+    {% endif %}
+</div>
+{% endblock content %}
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+<script src="{% static 'js/contact.js' %}" defer></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+<script src="{% static 'js/contact/contact_list_map.js' %}"></script>
+
+<script>
+    let infinite = new Waypoint.Infinite({
+        element: $('.grid')[0],
+        items: '.grid-item',
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
+            })
+        }
+    });
+    let msnry = new Masonry('.grid', {
+        // optionsW
+        itemSelector: '.grid-item',
+        gutter: 10,
+        // columnWidth: 200
+    });
+    // like
+    const onClickLike = async (tag_id) => {
+        try {
+            // const url = '/tag/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     tag_id,
+            // })
+            // modify(data.tag_id, data.is_liked)
+
+            const options = {
+                url: '/tag/like/',
+                method: 'POST',
+                data: {
+                    tag_id: tag_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                modifyLike(data.tag_id, data.is_liked)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modifyLike = (tag_id, is_liked) => {
+        const like = document.querySelector(`.like-${tag_id} i`);
+        const like_content = document.querySelector(`.like-${tag_id} .like__content`)
+        const num = like_content.innerText; // [ {{ tag.like_users.count }} ]
+        console.log(num)
+        if (is_liked === true) {
+
+            like.className = "fas fa-heart";
+
+            const count = Number(num) + 1;
+            like_content.innerHTML = count
+        } else {
+            like.className = "far fa-heart";
+
+            const count = Number(num) - 1;
+            like_content.innerHTML = count
+        }
+
+    }
+
+
+    // save
+    const onClickSave = async (tag_id) => {
+        try {
+            // const url = '/tag/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     tag_id,
+            // })
+            // modify(data.tag_id, data.is_saved)
+
+            const options = {
+                url: '/tag/save/',
+                method: 'POST',
+                data: {
+                    tag_id: tag_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modifySave(data.tag_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modifySave = (tag_id, is_saved) => {
+        const save = document.querySelector(`.save-${tag_id} i`);
+        const save_content = document.querySelector(`.save-${tag_id} .save__content`)
+        const num = save_content.innerText; // [ {{ tag.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+</script>
+
+
+{% endblock script %}

@@ -253,6 +253,21 @@
       display: none;
     }
 
+    .here {
+      background: none;
+      border: none;
+      font-family: "NanumSquare", sans-serif;
+      font-size: 16px;
+    }
+
+    .here:active {
+      cursor: pointer;
+    }
+
+    .here:focus {
+      outline: 0;
+    }
+
     /* 위 아래 버튼 (버튼 없애기를 함) */
   </style>
 
@@ -298,29 +313,32 @@
         <li><a href="{% url 'myApp:contact_list' %}">Contact</a></li>
         <li><a href="{% url 'myApp:portfolio_list' %}">Portfolio</a></li>
         <li><a href="{% url 'myApp:reference_list' %}">Reference</a></li>
-        <li><a href="#">Place</a></li>
+        <li><a href="{% url 'place:place_list' %}">Place</a></li>
         <li><a href="{% url 'myApp:with_brand_list' %}">Collaboration</a></li>
-        <h1>{{ request.user.username }}</h1>
       </ul>
-      <ul class="nav__profile">
+      <ul class="nav__profile" style="float: right;">
+
         {% if not user.is_authenticated %}
+
         <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
         <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
         {% else %}
         {% url 'myApp:profile_detail' user.id as profile_path %}
 
-        {% if request.path ==  profile_path %}
-        <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
-        <li><a href="{% url 'account_logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
-        {% else %}
-        <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
-        <li><a href="{% url 'account_logout' %}?next={{ request.path }}" onclick="return confirm('Are you sure?');">Log
-            Out</a></li>
-        {% endif %}
 
+        <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
 
-        <li><a href="{% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i class="far fa-user-circle"></i></a>
+        <form method="post" action="{% url 'account_logout' %}">
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <input class="here" type="submit" value="Log Out" onclick="return confirm('Are you sure?');"></input>
+        </form>
+
+        <li><a href=" {% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i class="far fa-user-circle"></i></a>
         </li>
+        <p>{{ request.user.username }}</p>
         {% endif %}
 
       </ul>
