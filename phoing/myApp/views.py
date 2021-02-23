@@ -344,6 +344,7 @@ def portfolio_create(request):
             for form in formset.cleaned_data:
                 if form:
                     image = form['image']
+                    
                     photo = Images(portfolio=portfolio, image=image)
                     photo.save()
             messages.success(request, "posted!")
