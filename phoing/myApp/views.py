@@ -17,7 +17,7 @@ from django.contrib.auth import login as auth_login
 from .utils import *
 from place.forms import LocationForm
 
-# category filtering
+# category filteringx
 from django.db.models import Count, Q
 
 # infinite loading
@@ -344,6 +344,7 @@ def portfolio_create(request):
             for form in formset.cleaned_data:
                 if form:
                     image = form['image']
+                    
                     photo = Images(portfolio=portfolio, image=image)
                     photo.save()
             messages.success(request, "posted!")
@@ -638,6 +639,12 @@ def contact_create(request):
             group.save()
             print("down")
 
+            # save tag
+            tags = Tag.add_tags(contact.tag_str)
+            for tag in tags:
+                contact.tags.add(tag)
+
+                contact=contact,
             return redirect('myApp:contact_detail', contact.pk)
 
     else:
@@ -658,6 +665,10 @@ def contact_map(request):
     return render(request, 'myApp/contact/contact_map.html', context=ctx)
 
 
+def general_login(request):
+    form 
+    return render(request, 'allauth/account/general_login.html', context={})
+
 ###################### reference section ######################
 ###################### 1. from phoing    ######################
 def local_list(request):
@@ -668,17 +679,16 @@ def local_list(request):
         'tags': tags,
         'request_user': request.user,
     }
-    return render(request, 'myApp/local/local_list.html', context=context)
+    return render(request, 'myApp/reference_local/local_list.html', context=context)
 
 
 def local_detail(request, tag):
     portfolios_taged = Portfolio.objects.filter(tags__tag=tag)
-    print(portfolios_taged)
 
     context = {
         'portfolios_taged': portfolios_taged,
     }
-    return render(request, 'myApp/local/local_detail.html', context=context)
+    return render(request, 'myApp/reference_local/local_detail.html', context=context)
 
 
 # def local_create(request, prev_tags):

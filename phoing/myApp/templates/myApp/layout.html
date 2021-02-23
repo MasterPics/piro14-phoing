@@ -93,15 +93,15 @@
       z-index: 1;
     }
 
-    .nav_left{
+    .nav_left {
       display: flex;
     }
 
-    .nav__profile{
+    .nav__profile {
       display: flex;
       align-items: center;
     }
-  
+
 
     .nav__logo {
       display: flex;
@@ -121,15 +121,15 @@
     }
 
 
-    .nav__profile li{
+    .nav__profile li {
       display: flex;
       align-items: center;
       padding-right: 20px;
 
     }
 
-    .nav__profile .padding{
-      padding-right:5px;
+    .nav__profile .padding {
+      padding-right: 5px;
     }
 
     .nav__menu li a:hover {
@@ -137,7 +137,7 @@
       cursor: pointer;
     }
 
-   
+
 
     .nav__profile i {
       font-size: 20px;
@@ -150,7 +150,7 @@
 
     .nav__toggleBtn {
       display: none;
-      
+
       font-size: 24px;
     }
 
@@ -273,6 +273,21 @@
       display: none;
     }
 
+    .here {
+      background: none;
+      border: none;
+      font-family: "NanumSquare", sans-serif;
+      font-size: 16px;
+    }
+
+    .here:active {
+      cursor: pointer;
+    }
+
+    .here:focus {
+      outline: 0;
+    }
+
     /* 위 아래 버튼 (버튼 없애기를 함) */
   </style>
 
@@ -324,34 +339,34 @@
           <h1>{{ request.user.username }}</h1>
         </ul>
       </div>
-      <div class="nav_right">
-        <ul class="nav__profile">
-          {% if not user.is_authenticated %}
-          <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
-          <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
-          {% else %}
-          {% url 'myApp:profile_detail' user.id as profile_path %}
-  
-          {% if request.path ==  profile_path %}
-          <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
-          <li><a href="{% url 'account_logout' %}" onclick="return confirm('Are you sure?');">Log Out</a></li>
-          {% else %}
-          <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
-          <li><a href="{% url 'account_logout' %}?next={{ request.path }}" onclick="return confirm('Are you sure?');">Log
-              Out</a></li>
+
+      <ul class="nav__profile" style="float: right;">
+
+        {% if not user.is_authenticated %}
+
+        <li><a href="{% url 'account_login' %}?next={{ request.path }}">Log In/Sign Up</a></li>
+        <li><a href="{% url 'account_login' %}">My profile&nbsp;<i class="far fa-user-circle"></i></a></li>
+        {% else %}
+        {% url 'myApp:profile_detail' user.id as profile_path %}
+
+
+        <li><a href="{% url 'chat:chat_home' request.user.pk %}">Messages</a></li>
+
+        <form method="post" action="{% url 'account_logout' %}">
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
           {% endif %}
-  
-  
-          <li class="padding"><a href="{% url 'myApp:profile_detail' user.id %}">My profile</a>
-          </li>
-          <li><a href="{% url 'myApp:profile_detail' user.id %}">
-            <i class="far fa-user-circle"></i></a>
-          </li>
-          {% endif %}
-        </ul>
-        <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>
-      </div>
-     
+          <input class="here" type="submit" value="Log Out" onclick="return confirm('Are you sure?');"></input>
+        </form>
+
+        <li><a href=" {% url 'myApp:profile_detail' user.id %}">My profile&nbsp;<i class="far fa-user-circle"></i></a>
+        </li>
+        <p>{{ request.user.username }}</p>
+        {% endif %}
+
+      </ul>
+      <a href="#" class="nav__toggleBtn"><i class="fas fa-bars"></i></a>
     </nav>
   </head>
   <section class="container">

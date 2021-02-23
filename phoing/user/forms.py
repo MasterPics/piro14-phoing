@@ -39,7 +39,10 @@ class MyCustomSignupForm(SignupForm):
         # .save() returns a User object.
         user = super(MyCustomSignupForm, self).save(request)
         # user.username = self.cleaned_data['username']
+        # user.first_name = self.cleaned_data['first_name']
+        # user.last_name = self.cleaned_data['last_name']
         user.email = self.cleaned_data['email']
+        user.category = self.cleaned_data['category']
         user.image = self.cleaned_data['image']
         user.desc = self.cleaned_data['desc']
         user.save()

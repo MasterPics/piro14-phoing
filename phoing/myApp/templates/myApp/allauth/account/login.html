@@ -10,10 +10,10 @@
   .login-form {
     width: 340px;
     margin: 30px auto;
-    margin-bottom: 15px; 
-    bacground : #f7f7f7;
+    margin-bottom: 15px;
+    bacground: #f7f7f7;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-    padding:30px;
+    padding: 30px;
   }
 
   .login-form .Sign_In {
@@ -21,7 +21,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
+  }
 
   .login-form .Sign_In .h1 {
     margin: 0 0 15px;
@@ -32,7 +32,6 @@
     padding-bottom: 15px;
     text-align: center;
   }
-  
 </style>
 {% endblock stylesheet %}
 
@@ -46,9 +45,9 @@
 
     {% get_providers as socialaccount_providers %}
     {% if socialaccount_providers %}
-    <p>{% blocktrans with site.name as site_name %}Please sign in with one 
-    of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-    for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+    <p>{% blocktrans with site.name as site_name %}{% trans 'Please sign in with one 
+      of your existing third party accounts. Or, ' %}<a href="{{ signup_url }}">sign up</a>
+      for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
   </div>
 
   <div class="socialaccount_ballot">
@@ -62,7 +61,7 @@
 
   {% else %}
   <p>{% blocktrans %}If you have not created an account yet, then please
-  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
   {% endif %}
 
   <form class="login" method="POST" action="{% url 'account_login' %}">

@@ -1,0 +1,238 @@
+{% extends 'myApp/layout.html' %}
+
+{% load static %}
+{% block stylesheet %}
+<!-- <link rel="stylesheet" href="{% static 'css/portfolio/portfolio_list.css' %}"> -->
+<script src="https://kit.fontawesome.com/9ada8679dc.js" crossorigin="anonymous"></script>
+{% endblock stylesheet %}
+
+{% block content %}
+<div class="portfolio_container">
+    <!-- category -->
+    <div class="category">
+        <ul>
+            <li><a href="javascript:void(0)" onclick="onClickLink('all')">All</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('photographer')">Photographer</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('model')">Model</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('HairMakeup')">Hair&Makeup</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('stylist')">Stylist</a></li>
+            <li><a href="javascript:void(0)" onclick="onClickLink('otheruse')">Others</a></li>
+        </ul>
+    </div>
+
+    <!--sort-->
+    <div>
+        <select name="" id="" class="form-control sort ">
+            <option value="recent" {% if sort == 'recent' %}selected{% endif %}>
+                최신순
+            </option>
+            <option value="view" {% if sort == 'view' %}selected{% endif %}>
+                조회순
+            </option>
+            <option value="like" {% if sort == 'like' %}selected{% endif %}>
+                좋아요순
+            </option>
+            <option value="save" {% if sort == 'save' %}selected{% endif %}>
+                저장순
+            </option>
+        </select>
+    </div>
+
+
+
+    <div class="grid ">
+        <!--portfolio_content-->
+
+        {% for portfolio in portfolios_taged %}
+        <div class="grid-item">
+            <img src="{{ portfolio.thumbnail.url }}" alt="">
+            <!--portfolio list랑 똑강티-->
+        </div>
+        {% endfor %}
+
+        {% if portfolios_taged.has_next %}
+        <a class="infinite-more-link" href="?page={{ portfolios_taged.next_page_number }}">
+            <div class="loading" style="display: none;">Loading...</div>
+        </a>
+        {% endif %}
+
+    </div>
+</div>
+
+
+
+<!--filter form-->
+<div style="height: 0;">
+    <form id="searchForm" method="get" action="{% url 'myApp:portfolio_list' %}">
+        <!--category-->
+        <input type="hidden" id="category" name="category" value="{{ category }}">
+        <!--sort-->
+        <input type="hidden" id="sort" name="sort" value="{{ sort }}">
+    </form>
+</div>
+
+{% endblock content%}
+
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+<script src="{% static 'js/contact.js' %}" defer></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6bc437b6340a6a287508c2a0e89a88b&libraries=services"></script>
+<script src="{% static 'js/contact/contact_list_map.js' %}"></script>
+
+
+<script type='text/javascript'>
+    // infinite scroll
+    let infinite = new Waypoint.Infinite({
+        element: $('.grid')[0],
+        items: '.grid-item',
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            $('.loading').hide();
+            let msnry = new Masonry('.grid', {
+                itemSelector: '.grid-item',
+                gutter: 10,
+            })
+        }
+    });
+    let msnry = new Masonry('.grid', {
+        // optionsW
+        itemSelector: '.grid-item',
+        gutter: 10,
+        // columnWidth: 200
+    });
+
+
+    // like
+    const onClickLike = async (portfolio_id) => {
+        try {
+            // const url = '/portfolio/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     portfolio_id,
+            // })
+            // modify(data.portfolio_id, data.is_liked)
+
+            const options = {
+                url: '/portfolio/like/',
+                method: 'POST',
+                data: {
+                    portfolio_id: portfolio_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                modifyLike(data.portfolio_id, data.is_liked)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modifyLike = (portfolio_id, is_liked) => {
+        const like = document.querySelector(`.like-${portfolio_id} i`);
+        const like_content = document.querySelector(`.like-${portfolio_id} .like__content`)
+        const num = like_content.innerText; // [ {{ portfolio.like_users.count }} ]
+        console.log(num)
+        if (is_liked === true) {
+
+            like.className = "fas fa-heart";
+
+            const count = Number(num) + 1;
+            like_content.innerHTML = count
+        } else {
+            like.className = "far fa-heart";
+
+            const count = Number(num) - 1;
+            like_content.innerHTML = count
+        }
+
+    }
+
+
+    // save
+    const onClickSave = async (portfolio_id) => {
+        try {
+            // const url = '/portfolio/';
+            // const {
+            //     data
+            // } = await axios.post(url, {
+            //     portfolio_id,
+            // })
+            // modify(data.portfolio_id, data.is_saved)
+
+            const options = {
+                url: '/portfolio/save/',
+                method: 'POST',
+                data: {
+                    portfolio_id: portfolio_id,
+                }
+            }
+            const response = await axios(options)
+            const responseOK = response && response.status === 200 && response.statusText === 'OK'
+            if (responseOK) {
+                const data = response.data
+                //modify에서는 이미 뒤집힌 is_saved 값이 들어감!
+                modifySave(data.portfolio_id, data.is_saved)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const modifySave = (portfolio_id, is_saved) => {
+        const save = document.querySelector(`.save-${portfolio_id} i`);
+        const save_content = document.querySelector(`.save-${portfolio_id} .save__content`)
+        const num = save_content.innerText; // [ {{ portfolio.save_users.count }} ]
+        console.log(num)
+        if (is_saved === true) {
+
+            save.className = "fas fa-bookmark";
+
+            const count = Number(num) + 1;
+            save_content.innerHTML = count
+        } else {
+            save.className = "far fa-bookmark";
+
+            const count = Number(num) - 1;
+            save_content.innerHTML = count
+        }
+
+    }
+
+
+
+
+    // category
+    const onClickLink = (category) => {
+        const categoryIdInput = document.querySelector('#category')
+        categoryIdInput.value = category
+        const searchForm = document.querySelector('#searchForm')
+        searchForm.submit()
+    }
+
+    //sort
+    const sortClassInput = document.querySelector('.sort')
+    sortClassInput.addEventListener('input', (e) => {
+        const sortIdInput = document.querySelector('#sort')
+        const searchForm = document.querySelector('#searchForm')
+        sortIdInput.value = e.target.value
+        searchForm.submit()
+    })
+</script>
+{% endblock script %}
