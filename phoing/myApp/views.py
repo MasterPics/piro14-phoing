@@ -668,7 +668,7 @@ def local_list(request):
         'tags': tags,
         'request_user': request.user,
     }
-    return render(request, 'myApp/local/local_list.html', context=context)
+    return render(request, 'myApp/reference_local/local_list.html', context=context)
 
 
 def local_detail(request, tag):
@@ -678,7 +678,7 @@ def local_detail(request, tag):
     context = {
         'portfolios_taged': portfolios_taged,
     }
-    return render(request, 'myApp/local/local_detail.html', context=context)
+    return render(request, 'myApp/reference_local/local_detail.html', context=context)
 
 
 # def local_create(request, prev_tags):
