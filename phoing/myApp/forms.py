@@ -98,9 +98,4 @@ class WithArtistForm(forms.ModelForm):
             #self.fields[''].widget = forms.HiddenInput()
 
 
-class ImageForm(forms.ModelForm):
-    image = forms.ImageField(label='Image')
 
-    class Meta:
-        model = Images
-        fields = ('image', )

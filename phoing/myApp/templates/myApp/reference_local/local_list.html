@@ -35,13 +35,13 @@
 <div>
     <div class="top_nav">
         <div class="pinterest">
-            <a href="{% url 'myApp:reference_list' %}" style="color: black;">from pinterest</a>
+            <a style="color: black;" href="{% url 'myApp:reference_list' %}">from phoing</a>
+    
         </div>
         <div class="local">
-            <a href="{% url 'myApp:local_list' %}" style="color: black;">from phoing</a>
+            <a style="color: black;" href="{% url 'myApp:local_list' %}">from pinterest</a>
         </div>
     </div>
-
     <div class="grid">
         {% for tag in tags %}
         <div class="grid-item">

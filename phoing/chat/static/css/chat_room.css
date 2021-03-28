@@ -73,7 +73,7 @@
   grid-template-rows: 8% 92%;
 }
 
-.content {
+.content-jebal {
   display: grid;
   grid-template-columns: 40% auto;
   grid-template-rows: 100%;
@@ -178,6 +178,10 @@
     display: grid;
     grid-template-columns: 60px auto;
   }
+}
+
+.contact {
+  height: 70px;
 }
 
 .message-list .host {
@@ -343,7 +347,7 @@
 }
 
 .chat .comment {
-  min-height: 50px;
+  min-height: 60px;
   width: 100%;
   float: left;
   margin: 5px 0px;
@@ -358,7 +362,7 @@
 .chat .comment img {
   filter: grayscale(1);
   height: 50px;
-  width: auto;
+  width: 50px;
   border-radius: 50%;
   float: left;
   margin: auto auto;
